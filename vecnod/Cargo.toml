@@ -1,0 +1,62 @@
+[package]
+name = "vecnod"
+description = "Vecnod full node daemon"
+keywords = ["vecnod", "vecno", "blockdag"]
+rust-version.workspace = true
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+include.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[lib]
+name = "vecnod_lib"
+crate-type = ["cdylib", "lib"]
+
+[dependencies]
+vecno-alloc.workspace = true # This changes the global allocator for all of the next dependencies so should be kept first
+
+vecno-addresses.workspace = true
+vecno-addressmanager.workspace = true
+vecno-consensus-core.workspace = true
+vecno-consensus-notify.workspace = true
+vecno-consensus.workspace = true
+vecno-consensusmanager.workspace = true
+vecno-core.workspace = true
+vecno-database.workspace = true
+vecno-grpc-server.workspace = true
+vecno-hashes.workspace = true
+vecno-index-processor.workspace = true
+vecno-mining.workspace = true
+vecno-notify.workspace = true
+vecno-p2p-flows.workspace = true
+vecno-perf-monitor.workspace = true
+vecno-rpc-core.workspace = true
+vecno-rpc-service.workspace = true
+vecno-txscript.workspace = true
+vecno-utils.workspace = true
+vecno-utils-tower.workspace = true
+vecno-utxoindex.workspace = true
+vecno-wrpc-server.workspace = true
+
+async-channel.workspace = true
+clap.workspace = true
+dhat = { workspace = true, optional = true }
+serde.workspace = true
+dirs.workspace = true
+futures-util.workspace = true
+log.workspace = true
+num_cpus.workspace = true
+rand.workspace = true
+rayon.workspace = true
+tempfile.workspace = true
+thiserror.workspace = true
+tokio = { workspace = true, features = ["rt", "macros", "rt-multi-thread"] }
+workflow-log.workspace = true
+toml = "0.8.10"
+serde_with = "3.7.0"
+
+[features]
+heap = ["dhat", "vecno-alloc/heap"]
+devnet-prealloc = ["vecno-consensus/devnet-prealloc"]

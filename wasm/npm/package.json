@@ -1,0 +1,28 @@
+{
+  "name": "vecno",
+  "version": "0.13.5",
+  "description": "Vecno SDK",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Vecno-Foundation/vecnod.git"
+  },
+  "keywords": [
+    "vecno",
+    "wasm",
+    "sdk"
+  ],
+  "author": "Vecno developers",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Vecno-Foundation/vecnod/issues"
+  },
+  "homepage": "https://github.com/Vecno-Foundation/vecnod#readme",
+  "dependencies": {
+    "websocket": "1.0.34",
+    "vecno-wasm": "0.13.5"
+  }
+}

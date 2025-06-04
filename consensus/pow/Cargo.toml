@@ -1,0 +1,31 @@
+[package]
+name = "vecno-pow"
+description = "Vecno proof-of-work"
+rust-version.workspace = true
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+include.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[features]
+wasm32-sdk = []
+
+[dependencies]
+js-sys.workspace = true
+vecno-consensus-core.workspace = true
+vecno-consensus-client.workspace = true
+vecno-hashes.workspace = true
+vecno-math.workspace = true
+vecno-utils.workspace = true
+wasm-bindgen.workspace = true
+workflow-wasm.workspace = true
+num.workspace = true
+
+[dev-dependencies]
+criterion.workspace = true
+
+[[bench]]
+name = "bench"
+harness = false

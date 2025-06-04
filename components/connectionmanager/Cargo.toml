@@ -1,0 +1,23 @@
+[package]
+name = "vecno-connectionmanager"
+description = "Vecno connection manager"
+rust-version.workspace = true
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+include.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[dependencies]
+duration-string.workspace = true
+futures-util.workspace = true
+itertools.workspace = true
+vecno-addressmanager.workspace = true
+vecno-core.workspace = true
+vecno-p2p-lib.workspace = true
+vecno-utils.workspace = true
+log.workspace = true
+parking_lot.workspace = true
+rand.workspace = true
+tokio.workspace = true

@@ -1,0 +1,3 @@
+#!/bin/bash
+
+wasm-pack build --target nodejs --out-name vecno-rpc --out-dir nodejs/vecno-rpc --features wasm32-sdk

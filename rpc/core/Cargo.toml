@@ -1,0 +1,58 @@
+[package]
+name = "vecno-rpc-core"
+description = "Vecno RPC core"
+rust-version.workspace = true
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+include.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[features]
+wasm32-sdk = [
+    "vecno-consensus-client/wasm32-sdk",
+    "vecno-consensus-wasm/wasm32-sdk"
+]
+
+[dependencies]
+vecno-addresses.workspace = true
+vecno-consensus-core.workspace = true
+vecno-consensus-client.workspace = true
+vecno-consensus-notify.workspace = true
+vecno-consensus-wasm.workspace = true
+vecno-core.workspace = true
+vecno-hashes.workspace = true
+vecno-index-core.workspace = true
+vecno-math.workspace = true
+vecno-mining-errors.workspace = true
+vecno-notify.workspace = true
+vecno-txscript.workspace = true
+vecno-utils.workspace = true
+vecno-rpc-macros.workspace = true
+
+async-channel.workspace = true
+async-trait.workspace = true
+borsh.workspace = true
+cfg-if.workspace = true
+derive_more.workspace = true
+downcast.workspace = true
+faster-hex.workspace = true
+hex.workspace = true
+js-sys.workspace = true
+log.workspace = true
+paste.workspace = true
+serde-wasm-bindgen.workspace = true
+serde.workspace = true
+smallvec.workspace = true
+thiserror.workspace = true
+uuid.workspace = true
+wasm-bindgen.workspace = true
+workflow-core.workspace = true
+workflow-wasm.workspace = true
+
+[dev-dependencies]
+serde_json.workspace = true
+
+[lints.clippy]
+empty_docs = "allow"

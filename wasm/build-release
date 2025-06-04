@@ -1,0 +1,90 @@
+#!/bin/bash
+# This script builds the Rusty Vecno WASM32 SDK release.
+
+# make the script fail for any failed command
+set -e
+
+rm -rf release/*
+rm -rf web/*
+rm -rf nodejs/*
+rm -rf docs/*
+rm -rf examples/nodejs/typescript/lib
+
+mkdir -p release/vecno-wasm32-sdk/web
+mkdir -p release/vecno-wasm32-sdk/nodejs
+mkdir -p release/vecno-wasm32-sdk/docs
+
+# pushd .
+# cd ../rpc/wrpc/wasm
+# wasm-pack build --target web --out-name vecno-rpc --out-dir web/vecno-rpc --features wasm32-sdk $@
+# popd
+
+wasm-pack build --weak-refs --target web --out-name vecno --out-dir web/vecno-keygen --features wasm32-keygen $@
+wasm-pack build --weak-refs --dev --target web --out-name vecno --out-dir web/vecno-keygen-dev --features wasm32-keygen $@
+
+wasm-pack build --weak-refs --target web --out-name vecno --out-dir web/vecno-rpc --features wasm32-rpc $@
+wasm-pack build --weak-refs --dev --target web --out-name vecno --out-dir web/vecno-rpc-dev --features wasm32-rpc $@
+
+wasm-pack build --weak-refs --target web --out-name vecno --out-dir web/vecno-core --features wasm32-core $@
+wasm-pack build --weak-refs --dev --target web --out-name vecno --out-dir web/vecno-core-dev --features wasm32-core $@
+
+wasm-pack build --weak-refs --target web --out-name vecno --out-dir web/vecno --features wasm32-sdk $@
+wasm-pack build --weak-refs --dev --target web --out-name vecno --out-dir web/vecno-dev --features wasm32-sdk $@
+
+wasm-pack build --weak-refs --target nodejs --out-name vecno --out-dir nodejs/vecno --features wasm32-sdk $@
+wasm-pack build --weak-refs --dev --target nodejs --out-name vecno --out-dir nodejs/vecno-dev --features wasm32-sdk $@
+
+# wasm-pack build --target web --dev --out-name vecno --out-dir build/docs/vecno --features wasm32-sdk $@
+typedoc --name "Vecno WASM32 SDK - Key Generation" --sourceLinkExternal --readme ./README.md --options ./build/docs/ --out docs/vecno-keygen ./build/docs/vecno-keygen.ts
+typedoc --name "Vecno WASM32 SDK - RPC" --sourceLinkExternal --readme ./README.md --options ./build/docs/ --out docs/vecno-rpc ./build/docs/vecno-rpc.ts
+typedoc --name "Vecno WASM32 SDK - Core" --sourceLinkExternal --readme ./README.md --options ./build/docs/ --out docs/vecno-core ./build/docs/vecno-core.ts
+typedoc --name "Vecno WASM32 SDK" --sourceLinkExternal --readme ./README.md --options ./build/docs/ --out docs/vecno ./build/docs/vecno.ts
+
+# cp -r ../rpc/wrpc/wasm/web/vecno-rpc release/vecno-wasm32-sdk/web/vecno-rpc
+cp -r web/vecno-keygen release/vecno-wasm32-sdk/web/vecno-keygen
+cp -r web/vecno-keygen-dev release/vecno-wasm32-sdk/web/vecno-keygen-dev
+
+cp -r web/vecno-rpc release/vecno-wasm32-sdk/web/vecno-rpc
+cp -r web/vecno-rpc-dev release/vecno-wasm32-sdk/web/vecno-rpc-dev
+
+cp -r web/vecno-core release/vecno-wasm32-sdk/web/vecno-core
+cp -r web/vecno-core-dev release/vecno-wasm32-sdk/web/vecno-core-dev
+
+cp -r web/vecno release/vecno-wasm32-sdk/web/vecno
+cp -r web/vecno-dev release/vecno-wasm32-sdk/web/vecno-dev
+
+cp -r nodejs/vecno release/vecno-wasm32-sdk/nodejs/vecno
+cp -r nodejs/vecno-dev release/vecno-wasm32-sdk/nodejs/vecno-dev
+
+cp -r docs/vecno-keygen release/vecno-wasm32-sdk/docs/vecno-keygen
+cp -r docs/vecno-rpc release/vecno-wasm32-sdk/docs/vecno-rpc
+cp -r docs/vecno-core release/vecno-wasm32-sdk/docs/vecno-core
+cp -r docs/vecno release/vecno-wasm32-sdk/docs/vecno
+
+mkdir -p release/vecno-wasm32-sdk/examples/data
+cp -r examples/data/.gitignore release/vecno-wasm32-sdk/examples/data/.gitignore
+cp -r examples/nodejs release/vecno-wasm32-sdk/examples/
+cp -r examples/web release/vecno-wasm32-sdk/examples/
+cp -r examples/init.js release/vecno-wasm32-sdk/examples/
+cp -r examples/jsconfig.json release/vecno-wasm32-sdk/examples/
+cp -r examples/package.json release/vecno-wasm32-sdk/examples/
+
+pushd .
+cd release/vecno-wasm32-sdk/examples
+npm install
+popd
+
+# tsc release/vecno-wasm32-sdk/examples/nodejs/typescript/
+
+cp index.html release/vecno-wasm32-sdk/index.html
+cp README.md release/vecno-wasm32-sdk/README.md
+cp CHANGELOG.md release/vecno-wasm32-sdk/CHANGELOG.md
+cp LICENSE release/vecno-wasm32-sdk/LICENSE
+
+node build/package-sizes.js
+cp package-sizes.js release/vecno-wasm32-sdk/package-sizes.js
+
+pushd .
+cd release
+zip -q -r vecno-wasm32-sdk.zip vecno-wasm32-sdk
+popd

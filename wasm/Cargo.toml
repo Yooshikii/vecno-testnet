@@ -1,0 +1,65 @@
+[package]
+name = "vecno-wasm"
+description = "VECNO WASM bindings"
+rust-version.workspace = true
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+include.workspace = true
+repository.workspace = true
+# wasm-pack requires this value to be a string
+# (it can not be derived from the workspace)
+license = "ISC"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+cfg-if.workspace = true
+js-sys.workspace = true
+vecno-addresses.workspace = true
+vecno-consensus-core.workspace = true
+vecno-consensus-wasm.workspace = true
+vecno-core.workspace = true
+vecno-math.workspace = true
+vecno-pow.workspace = true
+vecno-rpc-core.workspace = true
+vecno-utils.workspace = true
+vecno-wasm-core.workspace = true
+vecno-wallet-core.workspace = true
+vecno-wallet-keys.workspace = true
+vecno-wrpc-client.workspace = true
+vecno-wrpc-wasm.workspace = true
+num.workspace = true
+wasm-bindgen.workspace = true
+workflow-log.workspace = true
+workflow-core.workspace = true
+workflow-wasm.workspace = true
+
+[features] 
+wasm32-sdk = [
+    "vecno-wallet-core/wasm32-sdk",
+    "vecno-pow/wasm32-sdk",
+]
+wasm32-core = [
+    "vecno-wallet-core/wasm32-core",
+    "vecno-pow/wasm32-sdk",
+]
+wasm32-rpc = [
+    "vecno-consensus-core/wasm32-sdk",
+    "vecno-consensus-wasm/wasm32-sdk",
+    "vecno-wrpc-client/wasm32-sdk",
+    "vecno-wrpc-wasm/wasm32-sdk",
+]
+wasm32-keygen = []
+default = []
+
+[package.metadata.docs.rs]
+targets = ["wasm32-unknown-unknown"]
+
+[package.metadata.emanate.wasm]
+targets = [
+    { target = "nodejs", out-dir = "nodejs/vecno" },
+    { target = "web", out-dir = "web/vecno" }
+]
+folder = "setup"

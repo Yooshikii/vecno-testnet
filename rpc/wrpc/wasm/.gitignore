@@ -1,0 +1,6 @@
+/target
+/Cargo.lock
+/web/vecno-rpc
+/nodejs/vecno-rpc
+/nodejs/node_modules
+/nodejs/package-lock.json

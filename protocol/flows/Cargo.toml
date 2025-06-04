@@ -1,0 +1,38 @@
+[package]
+name = "vecno-p2p-flows"
+description = "Vecno p2p flows"
+rust-version.workspace = true
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+include.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[dependencies]
+vecno-core.workspace = true
+vecno-consensus-core.workspace = true
+vecno-consensus-notify.workspace = true
+vecno-p2p-lib.workspace = true
+vecno-utils.workspace = true
+vecno-utils-tower.workspace = true
+vecno-hashes.workspace = true
+vecno-muhash.workspace = true
+vecno-connectionmanager.workspace = true
+vecno-addressmanager.workspace = true
+vecno-consensusmanager.workspace = true
+vecno-mining.workspace = true
+vecno-notify.workspace = true
+
+async-trait.workspace = true
+futures = { workspace = true, features = ["alloc"] }
+indexmap.workspace = true
+itertools.workspace = true
+log.workspace = true
+parking_lot.workspace = true
+rand.workspace = true
+thiserror.workspace = true
+tokio = { workspace = true, features = ["rt-multi-thread", "macros", "signal"] }
+tokio-stream = { workspace = true, features = ["net"] }
+uuid = { workspace = true, features = ["v4", "fast-rng"] }
+chrono.workspace = true

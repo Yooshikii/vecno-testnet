@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="./resources/style.css">
+        <script type="module">
+            import { log, stringify, currentNetwork } from './resources/utils.js';
+
+            import * as vecno from '../../web/vecno-rpc/vecno.js';
+            let { Resolver, RpcClient, Encoding } = vecno;
+
+            (async () => {
+                await vecno.default('../../web/vecno-rpc/vecno_bg.wasm');
+
+                let networkId = currentNetwork();
+                log(`Connecting to Vecno network...`);
+                log(`Selected network is ${networkId}...`);
+                
+                const rpc = new RpcClient({
+                    resolver : new Resolver(),
+                    networkId,
+                });
+
+                await rpc.connect();
+                log("Connected to", rpc.url);
+                
+                log("GetBlockDagInfo request...");
+                const info = await rpc.getBlockDagInfo();
+                log("GetBlockDagInfo response:", info);
+
+                log("Disconnected...");
+                await rpc.disconnect();
+            })();
+
+        </script>
+    </head>
+    <body></body>
+</html>

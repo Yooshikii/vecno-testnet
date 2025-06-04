@@ -1,0 +1,12 @@
+<html>
+    <head>
+        <script type="module">
+            import * as vecno from './vecno-rpc/vecno-rpc.js';
+            (async () => {
+                await vecno.default('./vecno-rpc/vecno-rpc_bg.wasm');
+                console.log(vecno.version());
+            })();
+        </script>
+    </head>
+    <body></body>
+</html>

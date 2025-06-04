@@ -1,0 +1,43 @@
+[package]
+name = "vecno-consensus-client"
+description = "Vecno consensus client data structures"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+include.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[features]
+wasm32-sdk = []
+wasm32-types = []
+
+[dependencies]
+vecno-addresses.workspace = true
+vecno-consensus-core.workspace = true
+vecno-hashes.workspace = true
+vecno-math.workspace = true
+vecno-muhash.workspace = true
+vecno-txscript.workspace = true
+vecno-utils.workspace = true
+vecno-wasm-core.workspace = true
+
+ahash.workspace = true
+cfg-if.workspace = true
+faster-hex.workspace = true
+hex.workspace = true
+js-sys.workspace = true
+rand.workspace = true
+secp256k1.workspace = true
+serde_json.workspace = true
+serde-wasm-bindgen.workspace = true
+serde.workspace = true
+thiserror.workspace = true
+wasm-bindgen.workspace = true
+itertools.workspace = true
+
+workflow-wasm.workspace = true
+workflow-log.workspace = true
+
+[lints.clippy]
+empty_docs = "allow"

@@ -1,0 +1,4 @@
+#!/bin/bash
+set -e
+
+wasm-pack build --weak-refs --target nodejs --out-name vecno --out-dir nodejs/vecno --features wasm32-sdk

@@ -1,0 +1,77 @@
+[package]
+name = "vecno-testing-integration"
+publish = false
+rust-version.workspace = true
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+include.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[dependencies]
+vecno-alloc.workspace = true            # This changes the global allocator for all of the next dependencies so should be kept first
+
+vecno-addresses.workspace = true
+vecno-bip32.workspace = true
+vecno-consensus-core.workspace = true
+vecno-consensus-notify.workspace = true
+vecno-consensus.workspace = true
+vecno-consensusmanager.workspace = true
+vecno-core.workspace = true
+vecno-database.workspace = true
+vecno-grpc-client.workspace = true
+vecno-grpc-core.workspace = true
+vecno-grpc-server.workspace = true
+vecno-hashes.workspace = true
+vecno-index-processor.workspace = true
+vecno-math.workspace = true
+vecno-merkle.workspace = true
+vecno-muhash.workspace = true
+vecno-notify.workspace = true
+vecno-pow.workspace = true
+vecno-rpc-core.workspace = true
+vecno-rpc-service.workspace = true
+vecno-txscript.workspace = true
+vecno-utils.workspace = true
+vecno-utxoindex.workspace = true
+vecno-wrpc-server.workspace = true
+vecnod.workspace = true
+
+async-channel.workspace = true
+async-trait.workspace = true
+bincode.workspace = true
+clap.workspace = true
+chrono.workspace = true
+crossbeam-channel.workspace = true
+dhat = { workspace = true, optional = true }
+faster-hex.workspace = true
+flate2.workspace = true
+futures-util.workspace = true
+indexmap.workspace = true
+itertools.workspace = true
+log.workspace = true
+parking_lot.workspace = true
+rand_distr.workspace = true
+rand.workspace = true
+rayon.workspace = true
+rocksdb.workspace = true
+secp256k1.workspace = true
+serde_json.workspace = true
+serde.workspace = true
+smallvec.workspace = true
+tempfile.workspace = true
+thiserror.workspace = true
+tokio.workspace = true
+workflow-perf-monitor.workspace = true
+
+[dev-dependencies]
+criterion.workspace = true
+rand = { workspace = true, features = ["small_rng"] }
+tokio = { workspace = true, features = ["rt", "macros", "process"] }
+vecno-txscript-errors.workspace = true
+
+[features]
+heap = ["dhat"]
+html_reports = []
+devnet-prealloc = ["vecnod/devnet-prealloc"]
