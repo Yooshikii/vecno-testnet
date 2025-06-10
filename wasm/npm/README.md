@@ -24,5 +24,3 @@ SDK examples as well as information on building the project from source can be f
 ## Releases
 
 Official releases as well as releases for Web Browsers are available at [https://github.com/Vecno-Foundation/vecnod/releases](https://github.com/Vecno-Foundation/vecnod/releases).
-
-Nightly / developer builds are available at: [https://aspectron.org/en/projects/vecno-wasm.html](https://aspectron.org/en/projects/vecno-wasm.html)

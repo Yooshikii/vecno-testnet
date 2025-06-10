@@ -185,7 +185,7 @@ Vecno Testnet node built on rust, based on [rusty-kaspa](https://github.com/kasp
 Vecno CLI + Wallet
 </summary>
 `vecno-cli` crate provides cli-driven RPC interface to the node and a
-terminal interface to the Rusty Vecno Wallet runtime. These wallets are
+terminal interface to the Vecno Wallet runtime. These wallets are
 compatible with WASM SDK Wallet API and Vecno NG projects.
 
 ```bash
@@ -288,7 +288,7 @@ wRPC
 
   **Sidenote:**
 
-  Rusty Vecno integrates an optional wRPC
+  Vecno integrates an optional wRPC
   subsystem. wRPC is a high-performance, platform-neutral, Rust-centric, WebSocket-framed RPC
   implementation that can use [Borsh](https://borsh.io/) and JSON protocol encoding.
 

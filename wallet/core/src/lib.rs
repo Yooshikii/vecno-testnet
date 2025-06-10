@@ -47,7 +47,7 @@
 //! <https://github.com/Vecno-Foundation/vecnod/tree/master/wasm/nodejs>
 //!
 //! For pre-built browser-compatible WASM32 redistributables of this
-//! framework please see the releases section of the Rusty Vecno
+//! framework please see the releases section of Vecno
 //! repository at <https://github.com/Vecno-Foundation/vecnod/releases>.
 //!
 

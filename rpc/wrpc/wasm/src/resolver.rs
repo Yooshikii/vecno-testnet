@@ -135,7 +135,7 @@ impl Resolver {
     }
 
     /// Fetches a public Vecno wRPC endpoint for the given encoding and network identifier.
-    /// @see {@link Encoding}, {@link NetworkId}, {@link Node}
+    /// @see {@link Encoding}, {@link NetworkId}, {@link NodeDescriptor}
     #[wasm_bindgen(js_name = getNode)]
     pub async fn get_node(&self, encoding: Encoding, network_id: NetworkIdT) -> Result<NodeDescriptor> {
         self.resolver.get_node(encoding, *network_id.try_into_cast()?).await

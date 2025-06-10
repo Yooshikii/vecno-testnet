@@ -1,4 +1,4 @@
-## WASM32 bindings for Rusty Vecno SDK
+## WASM32 bindings for Vecno SDK
 
 Vecno WASM32 bindings offer direct integration of Rust code and Vecno
 codebase within JavaScript and TypeScript environments such as Node.js and Web Browsers.
@@ -16,7 +16,7 @@ The SDK is currently separated into the following top-level categories:
 
 - **RPC API** — RPC API for the Vecno node using WebSockets.
 - **Wallet SDK** — Bindings for primitives related to key management and transactions.
-- **Wallet API** — API for the Rusty Vecno Wallet framework.
+- **Wallet API** — API for the Vecno Wallet framework.
 
 ## WASM32 SDK release packages
 
@@ -35,13 +35,13 @@ The following is a brief overview of the SDK folder structure (as available in t
 - `web/vecno` - **full** Vecno WASM32 SDK bindings for use in web browsers.
 - `web/vecno-rpc` - only the RPC bindings for use in web browsers (reduced WASM binary size).
 - `nodejs/vecno` - **full** Vecno WASM32 SDK bindings for use with NodeJS.
-- `docs` - Rusty Vecno WASM32 SDK documentation.
+- `docs` - Vecno WASM32 SDK documentation.
 - `examples` folders contain examples for NodeJS and web browsers.
 - `examples/data` - folder user by examples for configuration and wallet data storage.
 - `examples/javascript` - JavaScript examples.
 - `examples/javascript/general` - General SDK examples (keys & derivation, addresses, encryption, etc.).
 - `examples/javascript/transactions` - Creating, sending and receiving transactions.
-- `examples/javascript/wallet` - Interfacing with the Rusty Vecno Wallet framework.
+- `examples/javascript/wallet` - Interfacing with the Vecno Wallet framework.
 - `examples/typescript` - TypeScript examples.
 
 If you are using JavaScript and Visual Studio Code, it is highly recommended you replicate
@@ -117,7 +117,7 @@ There are multiple ways to use RPC:
 - Use `RpcClient` class that handles the connectivity automatically and provides RPC interfaces in a form of async function calls.
 
 **NODEJS:** To use WASM RPC client in the Node.js environment, you need to introduce a W3C WebSocket object
-before loading the WASM32 library. The compatible WebSocket library is [WebSocket](https://www.npmjs.com/package/websocket) and is included in the `kaspa` NPM package. `kaspa` package is a wrapper around `vecno-wasm` that imports and installs this WebSocket shim in the `globalThis` object and then re-exports `vecno-wasm` exports.
+before loading the WASM32 library. The compatible WebSocket library is [WebSocket](https://www.npmjs.com/package/websocket) and is included in the `vecno` NPM package. `vecno` package is a wrapper around `vecno-wasm` that imports and installs this WebSocket shim in the `globalThis` object and then re-exports `vecno-wasm` exports.
 
 ## Loading in a Web App
 
@@ -125,9 +125,9 @@ before loading the WASM32 library. The compatible WebSocket library is [WebSocke
 <html>
     <head>
         <script type="module">
-            import * as kaspa from './vecno/vecno-wasm.js';
+            import * as vecno from './vecno/vecno-wasm.js';
             (async () => {
-                await kaspa.default('./vecno/vecno-wasm_bg.wasm');
+                await vecno.default('./vecno/vecno-wasm_bg.wasm');
                 console.log(vecno.version());
                 // ...
             })();
@@ -142,7 +142,7 @@ before loading the WASM32 library. The compatible WebSocket library is [WebSocke
 ```javascript
 //
 // W3C WebSocket module shim
-// this is provided by NPM `kaspa` module and is only needed
+// this is provided by NPM `vecno` module and is only needed
 // if you are building WASM libraries for NodeJS from source
 //
 // @ts-ignore
@@ -181,7 +181,7 @@ const rpc = new RpcClient({
 })();
 ```
 
-For more details, please follow the [**integrating with Vecno**](https://kaspa.aspectron.org/) guide.
+For more details, please follow the **integrating with Vecno** guide.
 
 ## Creating Documentation
 

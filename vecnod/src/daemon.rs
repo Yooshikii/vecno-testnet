@@ -39,7 +39,7 @@ use vecno_wrpc_server::service::{Options as WrpcServerOptions, WebSocketCounters
 /// for the vecnod process.
 pub const DESIRED_DAEMON_SOFT_FD_LIMIT: u64 = 8 * 1024;
 /// Minimum acceptable soft FD limit for the vecnod
-/// process. (Rusty Vecno will operate with the minimal
+/// process. (Vecno will operate with the minimal
 /// acceptable limit of `4096`, but a setting below
 /// this value may impact the database performance).
 pub const MINIMUM_DAEMON_SOFT_FD_LIMIT: u64 = 4 * 1024;
