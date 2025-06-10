@@ -8,7 +8,6 @@ use crate::{
 };
 use itertools::Itertools;
 use vecno_hashes::Hash;
-use vecno_muhash::Hash as Blake2Hash;
 use thiserror::Error;
 
 #[derive(Clone, Debug)]
@@ -132,7 +131,7 @@ pub enum RuleError {
     UnexpectedIndirectParents(TwoDimVecDisplay<Hash>, TwoDimVecDisplay<Hash>),
 
     #[error("block {0} UTXO commitment is invalid - block header indicates {1}, but calculated value is {2}")]
-    BadUTXOCommitment(Hash, Blake2Hash, Blake2Hash),
+    BadUTXOCommitment(Hash, Hash, Hash),
 
     #[error("block {0} accepted ID merkle root is invalid - block header indicates {1}, but calculated value is {2}")]
     BadAcceptedIDMerkleRoot(Hash, Hash, Hash),

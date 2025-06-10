@@ -1,6 +1,6 @@
 use crate::{block::Block, header::Header, subnets::SUBNETWORK_ID_COINBASE, tx::Transaction};
 use vecno_hashes::{Hash, ZERO_HASH};
-use vecno_muhash::{Hash as Blake2Hash, EMPTY_MUHASH};
+use vecno_muhash::EMPTY_MUHASH;
 
 /// The constants uniquely representing the genesis block
 #[derive(Clone, Debug)]
@@ -8,7 +8,7 @@ pub struct GenesisBlock {
     pub hash: Hash,
     pub version: u16,
     pub hash_merkle_root: Hash,
-    pub utxo_commitment: Blake2Hash,
+    pub utxo_commitment: Hash,
     pub timestamp: u64,
     pub bits: u32,
     pub nonce: u64,
@@ -78,7 +78,7 @@ pub const GENESIS: GenesisBlock = GenesisBlock {
         0xbd, 0xa2, 0x72, 0x52, 0xd0, 0x47, 0x4f, 0x6c,
         0x8a, 0xf5, 0x7d, 0x61, 0x0e, 0xda, 0x43, 0x77,
     ]),
-    utxo_commitment: Blake2Hash::from_bytes([
+    utxo_commitment: Hash::from_bytes([
         0x6f, 0x2c, 0x2e, 0x18, 0xaf, 0x95, 0x1c, 0x73,
         0x80, 0xaf, 0xde, 0xc8, 0x00, 0xac, 0x60, 0x9e,
         0xdb, 0xa3, 0xea, 0xba, 0x0d, 0xc7, 0x1e, 0x86,

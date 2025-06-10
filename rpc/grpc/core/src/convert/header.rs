@@ -1,6 +1,5 @@
 use crate::protowire;
 use crate::{from, try_from};
-use vecno_muhash::Hash as Blake2Hash;
 use vecno_rpc_core::{FromRpcHex, RpcError, RpcHash, RpcResult, ToRpcHex};
 use std::str::FromStr;
 
@@ -38,7 +37,7 @@ try_from!(item: &protowire::RpcBlockHeader, vecno_rpc_core::RpcHeader, {
         item.parents.iter().map(Vec::<RpcHash>::try_from).collect::<RpcResult<Vec<Vec<RpcHash>>>>()?,
         RpcHash::from_str(&item.hash_merkle_root)?,
         RpcHash::from_str(&item.accepted_id_merkle_root)?,
-        Blake2Hash::from_bytes(RpcHash::from_str(&item.utxo_commitment)?.as_bytes()),
+        RpcHash::from_str(&item.utxo_commitment)?,
         item.timestamp.try_into()?,
         item.bits,
         item.nonce,
@@ -56,7 +55,7 @@ try_from!(item: &protowire::RpcBlockLevelParents, Vec<RpcHash>, {
 #[cfg(test)]
 mod tests {
     use crate::protowire;
-    use vecno_muhash::Hash as Blake2Hash;
+    use vecno_muhash::Hash;
     use vecno_rpc_core::{RpcHash, RpcHeader};
 
     fn new_unique() -> RpcHash {
@@ -113,7 +112,7 @@ mod tests {
             vec![vec![new_unique(), new_unique(), new_unique()], vec![new_unique()], vec![new_unique(), new_unique()]],
             new_unique(),
             new_unique(),
-            Blake2Hash::from_bytes(new_unique().as_bytes()),
+            new_unique(),
             123,
             12345,
             98765,

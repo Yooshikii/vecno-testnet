@@ -3,7 +3,6 @@ use js_sys::{Array, Object};
 use vecno_consensus_core::hashing;
 use vecno_consensus_core::header as native;
 use vecno_hashes::Hash;
-use vecno_muhash::Hash as Blake2Hash;
 use vecno_utils::hex::ToHex;
 use serde::{Deserialize, Serialize};
 use serde_wasm_bindgen::*;
@@ -179,7 +178,7 @@ impl Header {
 
     #[wasm_bindgen(setter = utxoCommitment)]
     pub fn set_utxo_commitment_from_js_value(&mut self, js_value: JsValue) {
-        self.inner_mut().utxo_commitment = Blake2Hash::from_slice(&js_value.try_as_vec_u8().expect("utxo commitment"));
+        self.inner_mut().utxo_commitment = Hash::from_slice(&js_value.try_as_vec_u8().expect("utxo commitment"));
     }
 
     #[wasm_bindgen(getter = pruningPoint)]

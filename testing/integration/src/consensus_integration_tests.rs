@@ -52,7 +52,7 @@ use vecno_database::create_temp_db;
 use vecno_database::prelude::{CachePolicy, ConnBuilder};
 use vecno_index_processor::service::IndexService;
 use vecno_math::Uint256;
-use vecno_muhash::{Hash as Blake2Hash, MuHash};
+use vecno_muhash::{Hash, MuHash};
 use vecno_notify::subscription::context::SubscriptionContext;
 use vecno_txscript::caches::TxScriptCacheCounters;
 use vecno_utxoindex::api::{UtxoIndexApi, UtxoIndexProxy};
@@ -1122,7 +1122,7 @@ fn rpc_header_to_header(rpc_header: &RPCBlockHeader) -> Header {
             .collect(),
         Hash::from_str(&rpc_header.HashMerkleRoot).unwrap(),
         Hash::from_str(&rpc_header.AcceptedIDMerkleRoot).unwrap(),
-        Blake2Hash::from_str(&rpc_header.UTXOCommitment).unwrap(),
+        Hash::from_str(&rpc_header.UTXOCommitment).unwrap(),
         rpc_header.Timestamp,
         rpc_header.Bits,
         rpc_header.Nonce,

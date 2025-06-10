@@ -2,7 +2,6 @@ use crate::BlockLevel;
 
 use super::{block::RuleError, tx::TxRuleError};
 use vecno_hashes::Hash;
-use vecno_muhash::Hash as Blake2Hash;
 use thiserror::Error;
 
 #[derive(Error, Debug, Clone)]
@@ -53,7 +52,7 @@ pub enum PruningImportError {
     NewPruningPointTxMissingUTXOEntry(Hash),
 
     #[error("the imported multiset hash was expected to be {0} and was actually {1}")]
-    ImportedMultisetHashMismatch(Blake2Hash, Blake2Hash),
+    ImportedMultisetHashMismatch(Hash, Hash),
 
     #[error("pruning import data lead to validation rule error")]
     PruningImportRuleError(#[from] RuleError),

@@ -656,17 +656,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "blake2b_simd"
-version = "1.0.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "23285ad32269793932e830392f2fe2f83e26488fd3ec778883a93c8323735780"
-dependencies = [
- "arrayref",
- "arrayvec",
- "constant_time_eq",
-]
-
-[[package]]
 name = "blake3"
 version = "1.5.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -5679,7 +5668,6 @@ dependencies = [
 name = "vecno-muhash"
 version = "0.0.1"
 dependencies = [
- "blake2b_simd",
  "borsh",
  "criterion",
  "faster-hex 0.6.1",

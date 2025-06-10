@@ -16,7 +16,6 @@ vecno-utils.workspace = true
 rand_chacha.workspace = true
 serde.workspace = true
 sha2.workspace = true
-blake2b_simd.workspace = true
 once_cell.workspace = true
 wasm-bindgen.workspace = true
 hex.workspace = true
