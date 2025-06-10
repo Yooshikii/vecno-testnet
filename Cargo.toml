@@ -63,7 +63,7 @@ members = [
 [workspace.package]
 rust-version = "1.86.0"
 version = "0.0.1"
-authors = ["Vecno Foundation developers", "Vecno developers"]
+authors = ["Vecno developers", "Kaspa developers"]
 license = "ISC"
 repository = "https://github.com/Vecno-Foundation/vecnod"
 edition = "2021"
