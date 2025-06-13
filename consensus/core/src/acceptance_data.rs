@@ -1,5 +1,5 @@
-use vecno_hashes::Hash;
 use serde::{Deserialize, Serialize};
+use vecno_hashes::Hash;
 
 use crate::tx::TransactionId;
 

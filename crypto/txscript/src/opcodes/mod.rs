@@ -9,10 +9,10 @@ use crate::{
     SEQUENCE_LOCK_TIME_DISABLED, SEQUENCE_LOCK_TIME_MASK,
 };
 use core::cmp::{max, min};
-use vecno_consensus_core::hashing::sighash_type::SigHashType;
-use vecno_consensus_core::tx::VerifiableTransaction;
 use sha2::{Digest, Sha256};
 use std::fmt::{Debug, Formatter};
+use vecno_consensus_core::hashing::sighash_type::SigHashType;
+use vecno_consensus_core::tx::VerifiableTransaction;
 
 /// First value in the range formed by the "small integer" Op# opcodes
 pub const OP_SMALL_INT_MIN_VAL: u8 = 1;

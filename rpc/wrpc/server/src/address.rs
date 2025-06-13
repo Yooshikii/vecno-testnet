@@ -1,8 +1,8 @@
 use crate::service::WrpcEncoding;
-use vecno_consensus_core::network::NetworkType;
-use vecno_utils::networking::ContextualNetAddress;
 use serde::Deserialize;
 use std::{net::AddrParseError, str::FromStr};
+use vecno_consensus_core::network::NetworkType;
+use vecno_utils::networking::ContextualNetAddress;
 
 #[derive(Clone, Debug, Deserialize)]
 #[serde(rename = "lowercase")]

@@ -1,6 +1,6 @@
-use vecno_wrpc_client::error::Error as RpcError;
 use thiserror::Error;
 use toml::de::Error as TomlError;
+use vecno_wrpc_client::error::Error as RpcError;
 
 #[derive(Error, Debug)]
 pub enum Error {

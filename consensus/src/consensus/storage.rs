@@ -27,11 +27,11 @@ use crate::{
 
 use super::cache_policy_builder::CachePolicyBuilder as PolicyBuilder;
 use itertools::Itertools;
+use parking_lot::RwLock;
+use std::{mem::size_of, ops::DerefMut, sync::Arc};
 use vecno_consensus_core::{blockstatus::BlockStatus, BlockHashSet};
 use vecno_database::registry::DatabaseStorePrefixes;
 use vecno_hashes::Hash;
-use parking_lot::RwLock;
-use std::{mem::size_of, ops::DerefMut, sync::Arc};
 
 pub struct ConsensusStorage {
     // DB

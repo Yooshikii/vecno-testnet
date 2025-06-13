@@ -1,5 +1,6 @@
 use async_channel::{unbounded, Receiver};
 use async_trait::async_trait;
+use std::sync::Arc;
 use vecno_notify::events::EVENT_TYPE_ARRAY;
 use vecno_notify::listener::{ListenerId, ListenerLifespan};
 use vecno_notify::notifier::{Notifier, Notify};
@@ -8,7 +9,6 @@ use vecno_notify::subscription::context::SubscriptionContext;
 use vecno_notify::subscription::{MutationPolicies, UtxosChangedMutationPolicy};
 use vecno_rpc_core::{api::rpc::RpcApi, *};
 use vecno_rpc_core::{notify::connection::ChannelConnection, RpcResult};
-use std::sync::Arc;
 
 pub(super) type RpcCoreNotifier = Notifier<Notification, ChannelConnection>;
 

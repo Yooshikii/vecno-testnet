@@ -5,8 +5,8 @@ mod reindex;
 pub mod tests;
 mod tree;
 
-use vecno_database::prelude::StoreError;
 use thiserror::Error;
+use vecno_database::prelude::StoreError;
 
 #[derive(Error, Debug)]
 pub enum ReachabilityError {

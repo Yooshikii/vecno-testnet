@@ -1,6 +1,6 @@
 use criterion::{black_box, criterion_group, criterion_main, Criterion};
-use vecno_mining::model::topological_index::TopologicalIndex;
 use std::collections::{hash_set::Iter, HashMap, HashSet};
+use vecno_mining::model::topological_index::TopologicalIndex;
 
 #[derive(Default)]
 pub struct Dag<T>

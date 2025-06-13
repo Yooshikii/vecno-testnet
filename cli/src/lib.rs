@@ -12,5 +12,5 @@ pub mod result;
 pub mod utils;
 mod wizards;
 
-pub use cli::{vecno_cli, VecnoCli, Options, TerminalOptions, TerminalTarget};
+pub use cli::{vecno_cli, Options, TerminalOptions, TerminalTarget, VecnoCli};
 pub use workflow_terminal::Terminal;

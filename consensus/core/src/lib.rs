@@ -124,8 +124,8 @@ pub type BlockLevel = u8;
 #[cfg(test)]
 mod tests {
     use super::BlockHasher;
-    use vecno_hashes::Hash;
     use std::hash::{Hash as _, Hasher as _};
+    use vecno_hashes::Hash;
     #[test]
     fn test_block_hasher() {
         let hash = Hash::from_le_u64([1, 2, 3, 4]);

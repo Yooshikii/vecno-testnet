@@ -1,14 +1,14 @@
 use crate::{signals::Shutdown, task::service::AsyncServiceResult};
 use futures_util::future::{select_all, try_join_all};
-use vecno_core::core::Core;
-use vecno_core::service::Service;
-use vecno_core::task::service::AsyncService;
-use vecno_core::trace;
 use std::{
     sync::{Arc, Mutex},
     thread::{self, JoinHandle as ThreadJoinHandle},
 };
 use tokio::task::JoinHandle as TaskJoinHandle;
+use vecno_core::core::Core;
+use vecno_core::service::Service;
+use vecno_core::task::service::AsyncService;
+use vecno_core::trace;
 
 /// AsyncRuntime registers async services and provides
 /// a tokio Runtime to run them.

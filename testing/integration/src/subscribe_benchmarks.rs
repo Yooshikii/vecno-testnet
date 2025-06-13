@@ -17,6 +17,8 @@ use crate::{
     },
 };
 use itertools::Itertools;
+use rand::thread_rng;
+use std::{sync::Arc, time::Duration};
 use vecno_addresses::Address;
 use vecno_alloc::init_allocator_with_default_settings;
 use vecno_consensus::params::Params;
@@ -26,8 +28,6 @@ use vecno_math::Uint256;
 use vecno_notify::scope::VirtualDaaScoreChangedScope;
 use vecno_rpc_core::api::rpc::RpcApi;
 use vecno_txscript::pay_to_address_script;
-use rand::thread_rng;
-use std::{sync::Arc, time::Duration};
 
 // Constants
 const BLOCK_COUNT: usize = usize::MAX;

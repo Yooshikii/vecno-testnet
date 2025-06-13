@@ -1,11 +1,11 @@
 use super::{error::ConversionError, option::TryIntoOptionEx};
 use crate::pb as protowire;
+use std::sync::Arc;
 use vecno_consensus_core::{
     trusted::{ExternalGhostdagData, TrustedGhostdagData, TrustedHeader},
     BlockHashMap, BlueWorkType, HashMapCustomHasher, KType,
 };
 use vecno_hashes::Hash;
-use std::sync::Arc;
 
 // ----------------------------------------------------------------------------
 // consensus_core to protowire

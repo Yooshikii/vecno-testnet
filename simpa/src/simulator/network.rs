@@ -1,8 +1,8 @@
 use async_channel::unbounded;
-use vecno_consensus_notify::root::ConsensusNotificationRoot;
-use vecno_core::time::unix_now;
 use std::sync::Arc;
 use std::thread::JoinHandle;
+use vecno_consensus_notify::root::ConsensusNotificationRoot;
+use vecno_core::time::unix_now;
 
 use super::miner::Miner;
 

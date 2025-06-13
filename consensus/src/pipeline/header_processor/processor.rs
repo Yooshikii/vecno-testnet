@@ -29,6 +29,10 @@ use crate::{
 };
 use crossbeam_channel::{Receiver, Sender};
 use itertools::Itertools;
+use parking_lot::RwLock;
+use rayon::ThreadPool;
+use rocksdb::WriteBatch;
+use std::sync::{atomic::Ordering, Arc};
 use vecno_consensus_core::{
     blockhash::{BlockHashes, ORIGIN},
     blockstatus::BlockStatus::{self, StatusHeaderOnly, StatusInvalid},
@@ -40,10 +44,6 @@ use vecno_consensusmanager::SessionLock;
 use vecno_database::prelude::{StoreResultEmptyTuple, StoreResultExtensions};
 use vecno_hashes::Hash;
 use vecno_utils::vec::VecExtensions;
-use parking_lot::RwLock;
-use rayon::ThreadPool;
-use rocksdb::WriteBatch;
-use std::sync::{atomic::Ordering, Arc};
 
 use super::super::ProcessingCounters;
 

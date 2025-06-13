@@ -1,3 +1,3 @@
 mod supply;
 
-pub use {vecno_index_core::indexed_utxos::*, supply::*};
+pub use {supply::*, vecno_index_core::indexed_utxos::*};

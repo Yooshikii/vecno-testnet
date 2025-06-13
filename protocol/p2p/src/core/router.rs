@@ -3,8 +3,6 @@ use crate::pb::RejectMessage;
 use crate::pb::{vecnod_message::Payload as VecnodMessagePayload, VecnodMessage};
 use crate::{common::ProtocolError, VecnodMessagePayloadType};
 use crate::{make_message, Peer};
-use vecno_core::{debug, error, info, trace, warn};
-use vecno_utils::networking::PeerId;
 use parking_lot::{Mutex, RwLock};
 use seqlock::SeqLock;
 use std::fmt::{Debug, Display};
@@ -18,6 +16,8 @@ use tokio::sync::mpsc::error::TrySendError;
 use tokio::sync::mpsc::{channel as mpsc_channel, Receiver as MpscReceiver, Sender as MpscSender};
 use tokio::sync::oneshot::{channel as oneshot_channel, Sender as OneshotSender};
 use tonic::Streaming;
+use vecno_core::{debug, error, info, trace, warn};
+use vecno_utils::networking::PeerId;
 
 use super::peer::{PeerKey, PeerProperties};
 

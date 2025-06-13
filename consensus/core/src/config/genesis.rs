@@ -87,7 +87,7 @@ pub const GENESIS: GenesisBlock = GenesisBlock {
         0x01, // Varint
         0x00, // OP-FALSE
         0x65, 0x74, 0x65, 0x72, 0x6e, 0x61, 0x6c, 0x6c,  // eternally, for ever
-        0x79, 0x2c, 0x20, 0x66, 0x6f, 0x72, 0x20, 0x65, 
+        0x79, 0x2c, 0x20, 0x66, 0x6f, 0x72, 0x20, 0x65,
         0x76, 0x65, 0x72,
     ],
 };
@@ -207,16 +207,16 @@ mod tests {
     pub fn calculate_genesis_hash() -> Hash {
         // create a temporary Block object
         let block = Block::from(&GENESIS);
-        
+
         // compute genesis hash
         let hash = block.hash();
-        
+
         // print new genesis hash
         println!("New genesis hash: {:?}", hash);
-        
+
         hash
     }
-    
+
     #[test]
     fn print_new_genesis_hash() {
         let hash = calculate_genesis_hash();
@@ -260,20 +260,16 @@ mod tests {
         let new_hash = block.hash();
 
         println!("New genesis hash: {}", new_hash);
-        println!("New genesis hash bytes:\n[{}]", new_hash
-            .as_bytes()
-            .iter()
-            .map(|b| format!("0x{:02x}", b))
-            .collect::<Vec<_>>()
-            .join(", "));
-            
+        println!(
+            "New genesis hash bytes:\n[{}]",
+            new_hash.as_bytes().iter().map(|b| format!("0x{:02x}", b)).collect::<Vec<_>>().join(", ")
+        );
+
         println!("\nNew hash_merkle_root: {}", hash_merkle_root);
-        println!("New hash_merkle_root bytes:\n[{}]", hash_merkle_root
-            .as_bytes()
-            .iter()
-            .map(|b| format!("0x{:02x}", b))
-            .collect::<Vec<_>>()
-            .join(", "));
+        println!(
+            "New hash_merkle_root bytes:\n[{}]",
+            hash_merkle_root.as_bytes().iter().map(|b| format!("0x{:02x}", b)).collect::<Vec<_>>().join(", ")
+        );
     }
 
     fn assert_hashes_eq(got: Hash, expected: Hash) {
@@ -309,20 +305,15 @@ mod tests {
     #[test]
     fn test_bytes_to_string() {
         // Test bytes array of normal string
-        let text_bytes = [
-            0x65, 0x74, 0x65, 0x72, 0x6e, 0x61, 0x6c, 0x6c,
-            0x79, 0x2c, 0x20, 0x66, 0x6f, 0x72, 0x20, 0x65,
-            0x76, 0x65, 0x72,
-        ];
-        
+        let text_bytes =
+            [0x65, 0x74, 0x65, 0x72, 0x6e, 0x61, 0x6c, 0x6c, 0x79, 0x2c, 0x20, 0x66, 0x6f, 0x72, 0x20, 0x65, 0x76, 0x65, 0x72];
+
         // Convert to UTF-8 string
         let text = String::from_utf8_lossy(&text_bytes);
         println!("Text from bytes: {}", text);
-        
+
         // Convert to hex string
-        let hex = text_bytes.iter()
-            .map(|b| format!("{:02x}", b))
-            .collect::<String>();
+        let hex = text_bytes.iter().map(|b| format!("{:02x}", b)).collect::<String>();
         println!("Hex string: 0x{}", hex);
     }
 
@@ -331,10 +322,7 @@ mod tests {
         println!("Bytes array format:");
         println!("[");
         for chunk in text.as_bytes().chunks(8) {
-            let bytes = chunk.iter()
-                .map(|b| format!("0x{:02x}", b))
-                .collect::<Vec<_>>()
-                .join(", ");
+            let bytes = chunk.iter().map(|b| format!("0x{:02x}", b)).collect::<Vec<_>>().join(", ");
             println!("    {},", bytes);
         }
         println!("]");
@@ -363,28 +351,25 @@ mod tests {
     #[test]
     fn test_parse_enx_value() {
         let subsidy_bytes = [0x00, 0xE1, 0xF5, 0x05, 0x00, 0x00, 0x00, 0x00];
-        
+
         // Print each byte position and value
         println!("Byte positions (0-7): ");
         for (i, byte) in subsidy_bytes.iter().enumerate() {
             println!("Position {}: 0x{:02x}", i, byte);
         }
-        
+
         // Try little endian
         let value_le = u64::from_le_bytes(subsidy_bytes);
         let enx_value_le = value_le as u64 / 100_000_000;
         println!("\nLittle Endian:");
         println!("Raw value (sats): {}", value_le);
         println!("VE value: {} VE", enx_value_le);
-        
+
         // Test expected value of 1 VE
         let expected_value: u64 = 1 * 100_000_000;
         let expected_bytes = expected_value.to_le_bytes();
         println!("\nExpected bytes for 1 VE:");
-        println!("Raw bytes: [{}]", expected_bytes.iter()
-            .map(|b| format!("0x{:02x}", b))
-            .collect::<Vec<_>>()
-            .join(", "));
+        println!("Raw bytes: [{}]", expected_bytes.iter().map(|b| format!("0x{:02x}", b)).collect::<Vec<_>>().join(", "));
     }
 
     /// Generate ENX value bytes
@@ -393,13 +378,10 @@ mod tests {
         let enx_value: u64 = 1;
         let sats_value = enx_value * 100_000_000;
         let bytes = sats_value.to_le_bytes();
-        
+
         println!("For {} VE:", enx_value);
         println!("Sats value: {}", sats_value);
-        println!("Bytes (little endian): [{}]", bytes.iter()
-            .map(|b| format!("0x{:02x}", b))
-            .collect::<Vec<_>>()
-            .join(", "));
+        println!("Bytes (little endian): [{}]", bytes.iter().map(|b| format!("0x{:02x}", b)).collect::<Vec<_>>().join(", "));
     }
 
     /// Hexadecimal to decimal test function

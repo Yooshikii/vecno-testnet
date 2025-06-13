@@ -20,6 +20,9 @@ use crate::{
     MempoolCountersSnapshot, MiningCounters, P2pTxCountSample,
 };
 use itertools::Itertools;
+use parking_lot::RwLock;
+use std::sync::Arc;
+use tokio::sync::mpsc::UnboundedSender;
 use vecno_consensus_core::{
     api::ConsensusApi,
     block::{BlockTemplate, TemplateBuildMode},
@@ -30,9 +33,6 @@ use vecno_consensus_core::{
 use vecno_consensusmanager::{spawn_blocking, ConsensusProxy};
 use vecno_core::{debug, error, info, time::Stopwatch, warn};
 use vecno_mining_errors::{manager::MiningManagerError, mempool::RuleError};
-use parking_lot::RwLock;
-use std::sync::Arc;
-use tokio::sync::mpsc::UnboundedSender;
 
 pub struct MiningManager {
     config: Arc<Config>,

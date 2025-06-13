@@ -1,11 +1,11 @@
 use std::{cmp::min, ops::Deref, sync::Arc};
 
 use itertools::Itertools;
+use parking_lot::RwLock;
 use vecno_consensus_core::errors::sync::{SyncManagerError, SyncManagerResult};
 use vecno_database::prelude::StoreResultExtensions;
 use vecno_hashes::Hash;
 use vecno_math::uint::malachite_base::num::arithmetic::traits::CeilingLogBase2;
-use parking_lot::RwLock;
 
 use crate::model::{
     services::reachability::{MTReachabilityService, ReachabilityService},

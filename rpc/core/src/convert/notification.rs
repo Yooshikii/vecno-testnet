@@ -3,9 +3,9 @@ use crate::{
     NewBlockTemplateNotification, Notification, PruningPointUtxoSetOverrideNotification, RpcAcceptedTransactionIds,
     SinkBlueScoreChangedNotification, UtxosChangedNotification, VirtualChainChangedNotification, VirtualDaaScoreChangedNotification,
 };
+use std::sync::Arc;
 use vecno_consensus_notify::notification as consensus_notify;
 use vecno_index_core::notification as index_notify;
-use std::sync::Arc;
 
 // ----------------------------------------------------------------------------
 // consensus_core to rpc_core

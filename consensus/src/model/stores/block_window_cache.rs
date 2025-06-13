@@ -1,14 +1,14 @@
 use crate::processes::ghostdag::ordering::SortableBlock;
-use vecno_consensus_core::BlockHasher;
-use vecno_database::prelude::Cache;
-use vecno_hashes::Hash;
-use vecno_utils::mem_size::MemSizeEstimator;
 use std::{
     cmp::Reverse,
     collections::BinaryHeap,
     ops::{Deref, DerefMut},
     sync::Arc,
 };
+use vecno_consensus_core::BlockHasher;
+use vecno_database::prelude::Cache;
+use vecno_hashes::Hash;
+use vecno_utils::mem_size::MemSizeEstimator;
 
 #[derive(Clone, Copy)]
 pub enum WindowOrigin {

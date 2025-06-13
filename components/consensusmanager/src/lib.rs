@@ -1,8 +1,8 @@
 use itertools::Itertools;
-use vecno_consensus_core::api::{ConsensusApi, DynConsensus};
-use vecno_core::{core::Core, debug, service::Service};
 use parking_lot::RwLock;
 use std::{collections::VecDeque, ops::Deref, sync::Arc, thread::JoinHandle};
+use vecno_consensus_core::api::{ConsensusApi, DynConsensus};
+use vecno_core::{core::Core, debug, service::Service};
 
 mod batch;
 mod session;

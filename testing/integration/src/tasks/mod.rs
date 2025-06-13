@@ -2,9 +2,9 @@ use self::stop::StopTask;
 use async_trait::async_trait;
 use futures_util::future::join_all;
 use itertools::Itertools;
-use vecno_utils::triggers::SingleTrigger;
 use std::sync::Arc;
 use tokio::task::JoinHandle;
+use vecno_utils::triggers::SingleTrigger;
 
 pub mod block;
 pub mod daemon;

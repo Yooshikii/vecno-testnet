@@ -1,3 +1,5 @@
+use parking_lot::RwLock;
+use std::{collections::HashSet, fmt::Debug, sync::Arc};
 use vecno_consensus_core::{
     tx::{ScriptPublicKeys, TransactionOutpoint},
     utxo::utxo_diff::UtxoDiff,
@@ -7,8 +9,6 @@ use vecno_consensusmanager::spawn_blocking;
 use vecno_database::prelude::StoreResult;
 use vecno_hashes::Hash;
 use vecno_index_core::indexed_utxos::BalanceByScriptPublicKey;
-use parking_lot::RwLock;
-use std::{collections::HashSet, fmt::Debug, sync::Arc};
 
 use crate::{
     errors::UtxoIndexResult,

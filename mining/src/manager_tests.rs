@@ -13,6 +13,8 @@ mod tests {
         testutils::consensus_mock::ConsensusMock,
         MiningCounters,
     };
+    use std::sync::Arc;
+    use tokio::sync::mpsc::{error::TryRecvError, unbounded_channel};
     use vecno_addresses::{Address, Prefix, Version};
     use vecno_consensus_core::{
         api::ConsensusApi,
@@ -32,8 +34,6 @@ mod tests {
         pay_to_address_script, pay_to_script_hash_signature_script,
         test_helpers::{create_transaction, op_true_script},
     };
-    use std::sync::Arc;
-    use tokio::sync::mpsc::{error::TryRecvError, unbounded_channel};
 
     const TARGET_TIME_PER_BLOCK: u64 = 1_000;
     const MAX_BLOCK_MASS: u64 = 500_000;

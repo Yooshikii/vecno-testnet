@@ -1,7 +1,7 @@
 use vecno_consensus_core::subnets::SubnetworkId;
 use vecno_core::{
-    vecnod_env::{name, version},
     time::unix_now,
+    vecnod_env::{name, version},
 };
 use vecno_utils::networking::{NetAddress, PeerId};
 

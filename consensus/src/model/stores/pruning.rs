@@ -1,12 +1,12 @@
 use std::sync::Arc;
 
+use rocksdb::WriteBatch;
+use serde::{Deserialize, Serialize};
 use vecno_database::prelude::StoreResult;
 use vecno_database::prelude::DB;
 use vecno_database::prelude::{BatchDbWriter, CachedDbItem, DirectDbWriter};
 use vecno_database::registry::DatabaseStorePrefixes;
 use vecno_hashes::Hash;
-use rocksdb::WriteBatch;
-use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Copy, Serialize, Deserialize)]
 pub struct PruningPointInfo {

@@ -24,6 +24,17 @@ use crate::{
 };
 use crossbeam_channel::Receiver as CrossbeamReceiver;
 use itertools::Itertools;
+use parking_lot::RwLockUpgradableReadGuard;
+use rocksdb::WriteBatch;
+use std::{
+    collections::VecDeque,
+    ops::Deref,
+    sync::{
+        atomic::{AtomicBool, Ordering},
+        Arc,
+    },
+    time::{Duration, Instant},
+};
 use vecno_consensus_core::{
     blockhash::ORIGIN,
     blockstatus::BlockStatus::StatusHeaderOnly,
@@ -39,17 +50,6 @@ use vecno_database::prelude::{BatchDbWriter, MemoryWriter, StoreResultExtensions
 use vecno_hashes::Hash;
 use vecno_muhash::MuHash;
 use vecno_utils::iter::IterExtensions;
-use parking_lot::RwLockUpgradableReadGuard;
-use rocksdb::WriteBatch;
-use std::{
-    collections::VecDeque,
-    ops::Deref,
-    sync::{
-        atomic::{AtomicBool, Ordering},
-        Arc,
-    },
-    time::{Duration, Instant},
-};
 
 pub enum PruningProcessingMessage {
     Exit,

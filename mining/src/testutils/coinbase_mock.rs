@@ -1,10 +1,10 @@
+use std::mem::size_of;
 use vecno_consensus_core::{
     coinbase::{CoinbaseData, CoinbaseTransactionTemplate, MinerData},
     constants::{SOMPI_PER_VECNO, TX_VERSION},
     subnets::SUBNETWORK_ID_COINBASE,
     tx::{Transaction, TransactionOutput},
 };
-use std::mem::size_of;
 
 const LENGTH_OF_BLUE_SCORE: usize = size_of::<u64>();
 const LENGTH_OF_SUBSIDY: usize = size_of::<u64>();

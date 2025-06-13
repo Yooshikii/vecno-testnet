@@ -1,6 +1,6 @@
-use vecno_consensus_core::BlueWorkType;
 use smallvec::{smallvec, SmallVec};
 use std::str;
+use vecno_consensus_core::BlueWorkType;
 
 // TODO combine this with vecno-utils::hex
 

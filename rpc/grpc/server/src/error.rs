@@ -1,6 +1,6 @@
-use vecno_grpc_core::ops::VecnodPayloadOps;
 use thiserror::Error;
 use tokio::sync::mpsc::error::TrySendError;
+use vecno_grpc_core::ops::VecnodPayloadOps;
 
 #[derive(Debug, Error)]
 pub enum GrpcServerError {

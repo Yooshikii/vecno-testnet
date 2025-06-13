@@ -7,8 +7,8 @@ use crate::{
     BlueWorkType,
 };
 use itertools::Itertools;
-use vecno_hashes::Hash;
 use thiserror::Error;
+use vecno_hashes::Hash;
 
 #[derive(Clone, Debug)]
 pub struct VecDisplay<T: Display>(pub Vec<T>);

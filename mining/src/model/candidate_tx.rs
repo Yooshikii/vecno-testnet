@@ -1,5 +1,5 @@
-use vecno_consensus_core::tx::{MutableTransaction, Transaction};
 use std::sync::Arc;
+use vecno_consensus_core::tx::{MutableTransaction, Transaction};
 
 /// Transaction with additional metadata needed in order to be a candidate
 /// in the transaction selection algorithm

@@ -6,10 +6,10 @@ use crate::derivation::AddressDerivationMeta;
 use crate::imports::*;
 use borsh::{BorshDeserialize, BorshSerialize};
 use convert_case::{Case, Casing};
-use vecno_addresses::Address;
-use vecno_wallet_macros::declare_typescript_wasm_interface as declare;
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
+use vecno_addresses::Address;
+use vecno_wallet_macros::declare_typescript_wasm_interface as declare;
 
 /// @category Wallet API
 #[derive(Clone, Debug, Serialize, Deserialize, BorshSerialize, BorshDeserialize)]

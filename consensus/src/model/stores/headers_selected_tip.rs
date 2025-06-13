@@ -1,10 +1,10 @@
 use crate::processes::ghostdag::ordering::SortableBlock;
+use rocksdb::WriteBatch;
+use std::sync::Arc;
 use vecno_database::prelude::StoreResult;
 use vecno_database::prelude::DB;
 use vecno_database::prelude::{BatchDbWriter, CachedDbItem, DirectDbWriter};
 use vecno_database::registry::DatabaseStorePrefixes;
-use rocksdb::WriteBatch;
-use std::sync::Arc;
 
 /// Reader API for `SelectedTipStore`.
 pub trait HeadersSelectedTipStoreReader {

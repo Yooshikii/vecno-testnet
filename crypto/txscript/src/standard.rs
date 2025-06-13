@@ -3,11 +3,11 @@ use crate::{
     script_builder::{ScriptBuilder, ScriptBuilderResult},
     script_class::ScriptClass,
 };
+use smallvec::SmallVec;
+use std::iter::once;
 use vecno_addresses::{Address, Prefix, Version};
 use vecno_consensus_core::tx::{ScriptPublicKey, ScriptVec};
 use vecno_txscript_errors::TxScriptError;
-use smallvec::SmallVec;
-use std::iter::once;
 
 mod multisig;
 

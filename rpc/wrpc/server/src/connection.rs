@@ -1,3 +1,7 @@
+use std::{
+    fmt::{Debug, Display},
+    sync::{Arc, Mutex},
+};
 use vecno_grpc_client::{GrpcClient, GrpcClientNotify};
 use vecno_notify::{
     connection::Connection as ConnectionT,
@@ -7,10 +11,6 @@ use vecno_notify::{
     notifier::Notify,
 };
 use vecno_rpc_core::{api::ops::RpcApiOps, notify::mode::NotificationMode, Notification};
-use std::{
-    fmt::{Debug, Display},
-    sync::{Arc, Mutex},
-};
 use workflow_log::log_trace;
 use workflow_rpc::{
     server::{prelude::*, result::Result as WrpcResult},

@@ -4,12 +4,12 @@ use crate::{
     connection_handler::ServerContext,
     error::{GrpcServerError, GrpcServerResult},
 };
+use std::fmt::Debug;
+use std::{collections::HashMap, sync::Arc};
 use vecno_grpc_core::{
     ops::VecnodPayloadOps,
     protowire::{VecnodRequest, VecnodResponse},
 };
-use std::fmt::Debug;
-use std::{collections::HashMap, sync::Arc};
 
 pub type VecnodMethod = Method<ServerContext, Connection, VecnodRequest, VecnodResponse>;
 pub type DynVecnodMethod = Arc<dyn MethodTrait<ServerContext, Connection, VecnodRequest, VecnodResponse>>;

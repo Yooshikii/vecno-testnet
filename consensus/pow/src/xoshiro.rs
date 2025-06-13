@@ -1,5 +1,5 @@
-use vecno_hashes::Hash;
 use std::num::Wrapping;
+use vecno_hashes::Hash;
 
 pub struct XoShiRo256PlusPlus {
     s0: Wrapping<u64>,

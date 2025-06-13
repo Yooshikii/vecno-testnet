@@ -1,7 +1,7 @@
+use std::{str::FromStr, sync::Arc, time::Duration};
 use vecno_core::debug;
 use vecno_p2p_lib::echo::EchoFlowInitializer;
 use vecno_utils::networking::NetAddress;
-use std::{str::FromStr, sync::Arc, time::Duration};
 
 #[tokio::main]
 async fn main() {

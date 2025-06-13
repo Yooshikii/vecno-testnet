@@ -1,10 +1,10 @@
 use async_trait::async_trait;
+use std::sync::Arc;
 use vecno_consensus_core::config::Config;
 use vecno_index_core::indexed_utxos::UtxoSetByScriptPublicKey;
 use vecno_index_core::notification::{self as index_notify, Notification as IndexNotification};
 use vecno_notify::converter::Converter;
 use vecno_rpc_core::{utxo_set_into_rpc, Notification, RpcUtxosByAddressesEntry, UtxosChangedNotification};
-use std::sync::Arc;
 
 /// Conversion of consensus_core to rpc_core structures
 #[derive(Debug)]

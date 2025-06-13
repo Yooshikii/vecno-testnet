@@ -1,11 +1,11 @@
 use super::rpc_core_mock::RpcCoreMock;
 use crate::{adaptor::Adaptor, manager::Manager};
+use std::sync::Arc;
 use vecno_core::info;
 use vecno_grpc_client::GrpcClient;
 use vecno_notify::scope::{NewBlockTemplateScope, Scope};
 use vecno_rpc_core::api::rpc::RpcApi;
 use vecno_utils::networking::{ContextualNetAddress, NetAddress};
-use std::sync::Arc;
 
 #[tokio::test]
 async fn test_client_server_sanity_check() {

@@ -14,8 +14,8 @@ use crate::utxo::{
     Maturity, NetworkParams, OutgoingTransaction, PendingUtxoEntryReference, UtxoContextBinding, UtxoEntryId, UtxoEntryReference,
     UtxoEntryReferenceExtension, UtxoProcessor,
 };
-use vecno_hashes::Hash;
 use sorted_insert::SortedInsertBinaryByKey;
+use vecno_hashes::Hash;
 
 static UTXO_CONTEXT_ID_SEQUENCER: AtomicU64 = AtomicU64::new(0);
 fn next_utxo_context_id() -> Hash {

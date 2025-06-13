@@ -1,4 +1,5 @@
 use crate::{flow_context::FlowContext, flow_trait::Flow};
+use std::sync::Arc;
 use vecno_consensus_core::errors::consensus::ConsensusError;
 use vecno_core::debug;
 use vecno_hashes::Hash;
@@ -8,7 +9,6 @@ use vecno_p2p_lib::{
     pb::{vecnod_message::Payload, BlockHeadersMessage, DoneHeadersMessage},
     IncomingRoute, Router,
 };
-use std::sync::Arc;
 
 pub struct HandleAntipastRequests {
     ctx: FlowContext,

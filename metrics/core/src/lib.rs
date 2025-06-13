@@ -6,13 +6,13 @@ pub use data::{Metric, MetricGroup, MetricsData, MetricsSnapshot};
 
 use crate::result::Result;
 use futures::{pin_mut, select, FutureExt, StreamExt};
-use vecno_rpc_core::{api::rpc::RpcApi, GetMetricsResponse};
 use std::{
     future::Future,
     pin::Pin,
     sync::{Arc, Mutex},
     time::Duration,
 };
+use vecno_rpc_core::{api::rpc::RpcApi, GetMetricsResponse};
 use workflow_core::channel::DuplexChannel;
 use workflow_core::task::interval;
 use workflow_core::task::spawn;

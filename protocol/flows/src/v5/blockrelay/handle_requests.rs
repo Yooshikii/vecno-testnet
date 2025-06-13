@@ -1,4 +1,5 @@
 use crate::{flow_context::FlowContext, flow_trait::Flow};
+use std::sync::Arc;
 use vecno_core::debug;
 use vecno_p2p_lib::{
     common::ProtocolError,
@@ -6,7 +7,6 @@ use vecno_p2p_lib::{
     pb::{vecnod_message::Payload, InvRelayBlockMessage},
     IncomingRoute, Router,
 };
-use std::sync::Arc;
 
 pub struct HandleRelayBlockRequests {
     ctx: FlowContext,

@@ -14,9 +14,9 @@ use crate::v5::{
 };
 use crate::{flow_context::FlowContext, flow_trait::Flow};
 
-use vecno_p2p_lib::{VecnodMessagePayloadType, Router, SharedIncomingRoute};
-use vecno_utils::channel;
 use std::sync::Arc;
+use vecno_p2p_lib::{Router, SharedIncomingRoute, VecnodMessagePayloadType};
+use vecno_utils::channel;
 
 use crate::v6::request_pruning_point_and_anticone::PruningPointAndItsAnticoneRequestsFlow;
 

@@ -4,8 +4,8 @@ use crate::{
     tx::{Transaction, TransactionId},
     BlueWorkType,
 };
-use vecno_hashes::Hash;
 use std::sync::Arc;
+use vecno_hashes::Hash;
 
 /// A mutable block structure where header and transactions within can still be mutated.
 #[derive(Debug, Clone)]

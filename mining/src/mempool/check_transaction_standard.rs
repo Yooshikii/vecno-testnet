@@ -234,6 +234,8 @@ mod tests {
         mempool::config::{Config, DEFAULT_MINIMUM_RELAY_TRANSACTION_FEE},
         MiningCounters,
     };
+    use smallvec::smallvec;
+    use std::sync::Arc;
     use vecno_addresses::{Address, Prefix, Version};
     use vecno_consensus_core::{
         config::params::Params,
@@ -246,8 +248,6 @@ mod tests {
         opcodes::codes::{OpReturn, OpTrue},
         script_builder::ScriptBuilder,
     };
-    use smallvec::smallvec;
-    use std::sync::Arc;
 
     #[test]
     fn test_calc_min_required_tx_relay_fee() {

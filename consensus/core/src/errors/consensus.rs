@@ -1,5 +1,5 @@
-use vecno_hashes::Hash;
 use thiserror::Error;
+use vecno_hashes::Hash;
 
 use super::{difficulty::DifficultyError, sync::SyncManagerError, traversal::TraversalError};
 

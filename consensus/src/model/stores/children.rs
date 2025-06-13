@@ -1,3 +1,5 @@
+use rocksdb::WriteBatch;
+use std::sync::Arc;
 use vecno_consensus_core::BlockHashSet;
 use vecno_consensus_core::BlockHasher;
 use vecno_consensus_core::BlockLevel;
@@ -11,8 +13,6 @@ use vecno_database::prelude::StoreResult;
 use vecno_database::prelude::DB;
 use vecno_database::registry::DatabaseStorePrefixes;
 use vecno_hashes::Hash;
-use rocksdb::WriteBatch;
-use std::sync::Arc;
 
 pub trait ChildrenStoreReader {
     fn get(&self, hash: Hash) -> StoreResult<ReadLock<BlockHashSet>>;

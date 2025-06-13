@@ -3,15 +3,15 @@ use crate::{
     tasks::{Stopper, Task},
 };
 use async_trait::async_trait;
+use parking_lot::Mutex;
+use std::sync::Arc;
+use tokio::task::JoinHandle;
 use vecno_addresses::Address;
 use vecno_core::warn;
 use vecno_grpc_client::GrpcClient;
 use vecno_notify::{listener::ListenerId, scope::NewBlockTemplateScope};
 use vecno_rpc_core::{api::rpc::RpcApi, GetBlockTemplateResponse, Notification};
 use vecno_utils::{channel::Channel, triggers::SingleTrigger};
-use parking_lot::Mutex;
-use std::sync::Arc;
-use tokio::task::JoinHandle;
 
 pub struct BlockTemplateReceiverTask {
     client: Arc<GrpcClient>,

@@ -1,5 +1,6 @@
 use std::sync::Arc;
 
+use rocksdb::WriteBatch;
 use vecno_consensus_core::BlockHashSet;
 use vecno_consensus_core::BlockHasher;
 use vecno_database::prelude::CachedDbSetItem;
@@ -11,7 +12,6 @@ use vecno_database::prelude::DB;
 use vecno_database::prelude::{BatchDbWriter, DirectDbWriter};
 use vecno_database::registry::DatabaseStorePrefixes;
 use vecno_hashes::Hash;
-use rocksdb::WriteBatch;
 
 /// Reader API for `TipsStore`.
 pub trait TipsStoreReader {

@@ -1,4 +1,9 @@
 use itertools::Itertools;
+use rocksdb::WriteBatch;
+use std::collections::hash_map::Entry;
+use std::collections::HashSet;
+use std::iter::once;
+use std::sync::Arc;
 use vecno_consensus_core::BlockHashSet;
 use vecno_consensus_core::{blockhash::BlockHashes, BlockHashMap, BlockHasher, BlockLevel};
 use vecno_database::prelude::{BatchDbWriter, CachePolicy, DbWriter};
@@ -8,11 +13,6 @@ use vecno_database::prelude::{ReadLock, StoreError};
 use vecno_database::prelude::{StoreResult, DB};
 use vecno_database::registry::{DatabaseStorePrefixes, SEPARATOR};
 use vecno_hashes::Hash;
-use rocksdb::WriteBatch;
-use std::collections::hash_map::Entry;
-use std::collections::HashSet;
-use std::iter::once;
-use std::sync::Arc;
 
 use super::children::{ChildrenStore, ChildrenStoreReader, DbChildrenStore};
 

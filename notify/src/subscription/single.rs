@@ -10,9 +10,6 @@ use crate::{
     },
 };
 use itertools::Itertools;
-use vecno_addresses::{Address, Prefix};
-use vecno_consensus_core::tx::ScriptPublicKey;
-use vecno_core::trace;
 use parking_lot::{RwLock, RwLockReadGuard, RwLockWriteGuard};
 use std::{
     collections::hash_set,
@@ -23,6 +20,9 @@ use std::{
         Arc,
     },
 };
+use vecno_addresses::{Address, Prefix};
+use vecno_consensus_core::tx::ScriptPublicKey;
+use vecno_core::trace;
 
 /// Subscription with a all or none scope.
 ///

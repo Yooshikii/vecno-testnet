@@ -1,4 +1,5 @@
 use super::MiningCounters;
+use std::{sync::Arc, time::Duration};
 use vecno_core::{
     debug, info,
     task::{
@@ -8,7 +9,6 @@ use vecno_core::{
     trace,
 };
 use vecno_txscript::caches::TxScriptCacheCounters;
-use std::{sync::Arc, time::Duration};
 
 const MONITOR: &str = "mempool-monitor";
 

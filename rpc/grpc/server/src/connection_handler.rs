@@ -5,6 +5,22 @@ use crate::{
     request_handler::{factory::Factory, interface::Interface},
 };
 use futures::{FutureExt, Stream};
+use std::fmt::Debug;
+use std::{
+    pin::Pin,
+    sync::{
+        atomic::{AtomicBool, Ordering},
+        Arc,
+    },
+    time::Duration,
+};
+use tokio::sync::mpsc::{channel as mpsc_channel, Sender as MpscSender};
+use tokio::{
+    sync::oneshot::{channel as oneshot_channel, Sender as OneshotSender},
+    time::timeout,
+};
+use tokio_stream::{wrappers::ReceiverStream, StreamExt};
+use tonic::{codec::CompressionEncoding, transport::Server as TonicServer, Request, Response};
 use vecno_core::{debug, info, warn};
 use vecno_grpc_core::{
     protowire::{
@@ -31,22 +47,6 @@ use vecno_utils_tower::{
     counters::TowerConnectionCounters,
     middleware::{measure_request_body_size_layer, CountBytesBody, MapResponseBodyLayer},
 };
-use std::fmt::Debug;
-use std::{
-    pin::Pin,
-    sync::{
-        atomic::{AtomicBool, Ordering},
-        Arc,
-    },
-    time::Duration,
-};
-use tokio::sync::mpsc::{channel as mpsc_channel, Sender as MpscSender};
-use tokio::{
-    sync::oneshot::{channel as oneshot_channel, Sender as OneshotSender},
-    time::timeout,
-};
-use tokio_stream::{wrappers::ReceiverStream, StreamExt};
-use tonic::{codec::CompressionEncoding, transport::Server as TonicServer, Request, Response};
 
 #[derive(Clone)]
 pub struct ServerContext {

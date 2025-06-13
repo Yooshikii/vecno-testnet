@@ -1,7 +1,7 @@
 use crate::error::Error;
 use crate::result::Result;
-use vecno_consensus_core::constants::SOMPI_PER_VECNO;
 use std::fmt::Display;
+use vecno_consensus_core::constants::SOMPI_PER_VECNO;
 
 pub fn try_parse_required_nonzero_vecno_as_sompi_u64<S: ToString + Display>(vecno_amount: Option<S>) -> Result<u64> {
     if let Some(vecno_amount) = vecno_amount {

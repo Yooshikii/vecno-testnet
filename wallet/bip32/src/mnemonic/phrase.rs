@@ -7,10 +7,10 @@ use super::{
 use crate::Result;
 use crate::{Error, KEY_SIZE};
 use borsh::{BorshDeserialize, BorshSerialize};
-use vecno_utils::hex::*;
 use rand_core::{CryptoRng, RngCore};
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
+use vecno_utils::hex::*;
 use wasm_bindgen::prelude::*;
 use zeroize::{Zeroize, Zeroizing};
 use {super::seed::Seed, hmac::Hmac, sha2::Sha512};

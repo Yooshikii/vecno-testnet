@@ -1,12 +1,12 @@
 use std::sync::Arc;
 
+use log::debug;
 use vecno_p2p_lib::{
     common::ProtocolError,
     dequeue_with_request_id, make_response,
     pb::{vecnod_message::Payload, PruningPointProofMessage},
     IncomingRoute, Router,
 };
-use log::debug;
 
 use crate::{flow_context::FlowContext, flow_trait::Flow};
 

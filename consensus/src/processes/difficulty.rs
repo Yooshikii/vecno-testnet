@@ -3,18 +3,18 @@ use crate::model::stores::{
     ghostdag::{GhostdagData, GhostdagStoreReader},
     headers::HeaderStoreReader,
 };
-use vecno_consensus_core::{
-    config::params::MIN_DIFFICULTY_WINDOW_LEN,
-    errors::difficulty::{DifficultyError, DifficultyResult},
-    BlockHashSet, BlueWorkType,
-};
-use vecno_math::{Uint256, Uint320};
 use std::{
     cmp::{max, Ordering},
     iter::once_with,
     ops::Deref,
     sync::Arc,
 };
+use vecno_consensus_core::{
+    config::params::MIN_DIFFICULTY_WINDOW_LEN,
+    errors::difficulty::{DifficultyError, DifficultyResult},
+    BlockHashSet, BlueWorkType,
+};
+use vecno_math::{Uint256, Uint320};
 
 use super::ghostdag::ordering::SortableBlock;
 use itertools::Itertools;

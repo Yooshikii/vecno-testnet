@@ -1,8 +1,8 @@
 use std::ops::Deref;
 use std::sync::Arc;
 
-use vecno_consensus_core::blockhash;
 use parking_lot::RwLock;
+use vecno_consensus_core::blockhash;
 
 use crate::model::stores::reachability::ReachabilityStoreReader;
 use crate::processes::reachability::{inquirer, Result};

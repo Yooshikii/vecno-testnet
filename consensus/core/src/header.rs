@@ -1,7 +1,7 @@
 use crate::{hashing, BlueWorkType};
 use borsh::{BorshDeserialize, BorshSerialize};
-use vecno_hashes::Hash;
 use serde::{Deserialize, Serialize};
+use vecno_hashes::Hash;
 
 /// @category Consensus
 #[derive(Clone, Debug, Serialize, Deserialize, BorshSerialize, BorshDeserialize)]
@@ -95,8 +95,8 @@ impl Header {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use vecno_math::Uint192;
     use serde_json::Value;
+    use vecno_math::Uint192;
 
     #[test]
     fn test_header_ser() {

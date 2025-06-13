@@ -1,6 +1,6 @@
+use std::sync::Arc;
 use vecno_consensus_core::blockhash::ORIGIN;
 use vecno_hashes::Hash;
-use std::sync::Arc;
 
 use crate::model::{
     services::reachability::{MTReachabilityService, ReachabilityService},

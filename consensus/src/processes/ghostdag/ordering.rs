@@ -1,8 +1,8 @@
 use std::cmp::Ordering;
 
+use serde::{Deserialize, Serialize};
 use vecno_consensus_core::BlueWorkType;
 use vecno_hashes::Hash;
-use serde::{Deserialize, Serialize};
 
 use crate::model::{
     services::reachability::ReachabilityService,

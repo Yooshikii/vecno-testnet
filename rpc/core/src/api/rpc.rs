@@ -7,8 +7,8 @@
 use crate::{model::*, notify::connection::ChannelConnection, RpcResult};
 use async_trait::async_trait;
 use downcast::{downcast_sync, AnySync};
-use vecno_notify::{listener::ListenerId, scope::Scope, subscription::Command};
 use std::sync::Arc;
+use vecno_notify::{listener::ListenerId, scope::Scope, subscription::Command};
 
 pub const MAX_SAFE_WINDOW_SIZE: u32 = 10_000;
 

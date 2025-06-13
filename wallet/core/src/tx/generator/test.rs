@@ -5,13 +5,13 @@ use crate::result::Result;
 use crate::tx::{Fees, MassCalculator, PaymentDestination};
 use crate::utxo::UtxoEntryReference;
 use crate::{tx::PaymentOutputs, utils::vecno_to_sompi};
-use vecno_addresses::Address;
-use vecno_consensus_core::network::{NetworkId, NetworkType};
-use vecno_consensus_core::tx::Transaction;
 use rand::prelude::*;
 use std::cell::RefCell;
 use std::fmt::Debug;
 use std::rc::Rc;
+use vecno_addresses::Address;
+use vecno_consensus_core::network::{NetworkId, NetworkType};
+use vecno_consensus_core::tx::Transaction;
 use workflow_log::style;
 
 use super::*;

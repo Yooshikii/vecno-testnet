@@ -1,5 +1,5 @@
 use crate::protowire::{
-    vecnod_response::Payload, BlockAddedNotificationMessage, VecnodResponse, NewBlockTemplateNotificationMessage, RpcNotifyCommand,
+    vecnod_response::Payload, BlockAddedNotificationMessage, NewBlockTemplateNotificationMessage, RpcNotifyCommand, VecnodResponse,
 };
 use crate::protowire::{
     FinalityConflictNotificationMessage, FinalityConflictResolvedNotificationMessage, NotifyPruningPointUtxoSetOverrideRequestMessage,
@@ -10,10 +10,10 @@ use crate::protowire::{
     VirtualChainChangedNotificationMessage, VirtualDaaScoreChangedNotificationMessage,
 };
 use crate::{from, try_from};
-use vecno_notify::subscription::Command;
-use vecno_rpc_core::{Notification, RpcError, RpcHash};
 use std::str::FromStr;
 use std::sync::Arc;
+use vecno_notify::subscription::Command;
+use vecno_rpc_core::{Notification, RpcError, RpcHash};
 
 // ----------------------------------------------------------------------------
 // rpc_core to protowire

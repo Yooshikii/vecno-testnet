@@ -44,7 +44,7 @@ Vecno Testnet node built on rust, based on [rusty-kaspa](https://github.com/kasp
 7. Clone the repo
 
    ```bash
-   git clone https://github.com/Vecno-Foundation/vecnod
+   git clone https://github.com/Vecno-Foundation/vecno-testnet
    cd vecnod
    ```
 
@@ -78,7 +78,7 @@ Vecno Testnet node built on rust, based on [rusty-kaspa](https://github.com/kasp
 7. Clone the repo
 
    ```bash
-   git clone https://github.com/Vecno-Foundation/vecnod
+   git clone https://github.com/Vecno-Foundation/vecno-testnet
    cd vecnod
    ```
 
@@ -147,7 +147,7 @@ Vecno Testnet node built on rust, based on [rusty-kaspa](https://github.com/kasp
 6. Clone the repo
 
    ```bash
-   git clone https://github.com/Vecno-Foundation/vecnod
+   git clone https://github.com/Vecno-Foundation/vecno-testnet
    cd vecnod
    ```
 
@@ -176,7 +176,7 @@ Vecno Testnet node built on rust, based on [rusty-kaspa](https://github.com/kasp
 
 ### Builds & documentation
 
-- Release builds: https://github.com/Vecno-Foundation/vecnod/releases
+- Release builds: https://github.com/Vecno-Foundation/vecno-testnet/releases
 
 </details>
 <details>
@@ -186,7 +186,7 @@ Vecno CLI + Wallet
 </summary>
 `vecno-cli` crate provides cli-driven RPC interface to the node and a
 terminal interface to the Vecno Wallet runtime. These wallets are
-compatible with WASM SDK Wallet API and Vecno NG projects.
+compatible with WASM SDK Wallet API.
 
 ```bash
 cd cli
@@ -217,16 +217,10 @@ The framework is compatible with all major desktop and mobile browsers.
 
 ## Running the node
 
-  **Start a mainnet node**
+  **Start a Vecno-Testnet node**
 
 ```bash
   cargo run --release --bin vecnod
-```
-
-  **Start a testnet node**
-
-```bash
-cargo run --release --bin vecnod -- --testnet
 ```
 
 <details>
@@ -249,12 +243,10 @@ cargo run --release --bin vecnod -- -C /path/to/configfile.toml
   For example:
 
 ```
-testnet = true
 utxoindex = false
 disable-upnp = true
 perf-metrics = true
 appdir = "some-dir"
-netsuffix = 11
 addpeer = ["10.0.0.1", "1.2.3.4"]
 ```
 
@@ -321,12 +313,10 @@ Mining is currently supported on mainnet and testnet.
 2. In a separate terminal run the vecno-miner:
 
    ```
-   vecno-miner --testnet --miningaddr vecnotest:qrcqat6l9zcjsu7swnaztqzrv0s7hu04skpaezxk43y4etj8ncwfk308jlcew
+   ./vecno-miner --mining-address "vecno:qqtsqwxa3q4aw968753rya4tazahmr7jyn5zu7vkncqlvk2aqlsdsah9ut65e" --port 7110
    ```
 
    This will create and feed a DAG with the miner getting block templates from the node and submitting them back when mined. The node processes and stores the blocks while applying all currently implemented logic. Execution can be stopped and resumed, the data is persisted in a database.
-
-   You can replace the above mining address with your own address by creating one as described [here](https://github.com/kaspanet/docs/blob/main/Getting%20Started/Full%20Node%20Installation.md#creating-a-wallet-optional).
 
 </details>
 

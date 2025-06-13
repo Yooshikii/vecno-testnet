@@ -1,9 +1,9 @@
 use crate::mempool::tx::Priority;
-use vecno_consensus_core::{tx::MutableTransaction, tx::TransactionId};
 use std::{
     cmp::Ordering,
     fmt::{Display, Formatter},
 };
+use vecno_consensus_core::{tx::MutableTransaction, tx::TransactionId};
 
 pub(crate) struct MempoolTransaction {
     pub(crate) mtx: MutableTransaction,

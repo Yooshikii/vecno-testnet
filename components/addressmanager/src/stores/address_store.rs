@@ -1,3 +1,6 @@
+use serde::{Deserialize, Serialize};
+use std::net::Ipv6Addr;
+use std::{error::Error, fmt::Display, sync::Arc};
 use vecno_database::{
     prelude::DB,
     prelude::{CachePolicy, StoreError, StoreResult},
@@ -5,9 +8,6 @@ use vecno_database::{
     registry::DatabaseStorePrefixes,
 };
 use vecno_utils::mem_size::MemSizeEstimator;
-use serde::{Deserialize, Serialize};
-use std::net::Ipv6Addr;
-use std::{error::Error, fmt::Display, sync::Arc};
 
 use super::AddressKey;
 use crate::NetAddress;

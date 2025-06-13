@@ -1,9 +1,9 @@
 use crate::model::stores::relations::RelationsStoreReader;
+use parking_lot::RwLock;
+use std::sync::Arc;
 use vecno_consensus_core::BlockHashSet;
 use vecno_database::prelude::{ReadLock, StoreError, StoreResult};
 use vecno_hashes::Hash;
-use parking_lot::RwLock;
-use std::sync::Arc;
 
 /// Multi-threaded block-relations service imp
 #[derive(Clone)]

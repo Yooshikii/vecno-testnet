@@ -2,7 +2,7 @@ use std::time::Duration;
 
 use crate::pb::{vecnod_message::Payload, ReadyMessage, VerackMessage, VersionMessage};
 use crate::{common::ProtocolError, dequeue_with_timeout, make_message};
-use crate::{IncomingRoute, VecnodMessagePayloadType, Router};
+use crate::{IncomingRoute, Router, VecnodMessagePayloadType};
 use vecno_core::debug;
 
 /// Implements the Vecno peer-to-peer handshake protocol

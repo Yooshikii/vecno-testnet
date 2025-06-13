@@ -9,10 +9,6 @@ use std::{
 use duration_string::DurationString;
 use futures_util::future::join_all;
 use itertools::Itertools;
-use vecno_addressmanager::{AddressManager, NetAddress};
-use vecno_core::{debug, info, warn};
-use vecno_p2p_lib::{common::ProtocolError, ConnectionError, Peer};
-use vecno_utils::triggers::SingleTrigger;
 use parking_lot::Mutex as ParkingLotMutex;
 use rand::{seq::SliceRandom, thread_rng};
 use tokio::{
@@ -23,6 +19,10 @@ use tokio::{
     },
     time::{interval, MissedTickBehavior},
 };
+use vecno_addressmanager::{AddressManager, NetAddress};
+use vecno_core::{debug, info, warn};
+use vecno_p2p_lib::{common::ProtocolError, ConnectionError, Peer};
+use vecno_utils::triggers::SingleTrigger;
 
 pub struct ConnectionManager {
     p2p_adaptor: Arc<vecno_p2p_lib::Adaptor>,

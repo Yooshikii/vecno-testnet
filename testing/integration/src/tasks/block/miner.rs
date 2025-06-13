@@ -1,11 +1,6 @@
 use crate::tasks::{Stopper, Task};
 use async_channel::Sender;
 use async_trait::async_trait;
-use vecno_addresses::Address;
-use vecno_core::warn;
-use vecno_grpc_client::GrpcClient;
-use vecno_rpc_core::{api::rpc::RpcApi, GetBlockTemplateResponse, RpcBlock};
-use vecno_utils::triggers::SingleTrigger;
 use parking_lot::Mutex;
 use rand::thread_rng;
 use rand_distr::{Distribution, Exp};
@@ -18,6 +13,11 @@ use std::{
     time::Duration,
 };
 use tokio::{task::JoinHandle, time::sleep};
+use vecno_addresses::Address;
+use vecno_core::warn;
+use vecno_grpc_client::GrpcClient;
+use vecno_rpc_core::{api::rpc::RpcApi, GetBlockTemplateResponse, RpcBlock};
+use vecno_utils::triggers::SingleTrigger;
 
 pub const COMMUNICATION_DELAY: u64 = 1_000;
 

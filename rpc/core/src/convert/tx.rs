@@ -23,11 +23,7 @@ impl From<&Transaction> for RpcTransaction {
 
 impl From<&TransactionOutput> for RpcTransactionOutput {
     fn from(item: &TransactionOutput) -> Self {
-        Self {
-            value: item.value,
-            script_public_key: item.script_public_key.clone(),
-            verbose_data: None,
-        }
+        Self { value: item.value, script_public_key: item.script_public_key.clone(), verbose_data: None }
     }
 }
 

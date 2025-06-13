@@ -2,6 +2,8 @@ use std::ops::Deref;
 use std::sync::Arc;
 
 use arc_swap::ArcSwap;
+use rocksdb::WriteBatch;
+use serde::{Deserialize, Serialize};
 use vecno_consensus_core::api::stats::VirtualStateStats;
 use vecno_consensus_core::{
     block::VirtualStateApproxId, coinbase::BlockRewardData, config::genesis::GenesisBlock, tx::TransactionId,
@@ -13,8 +15,6 @@ use vecno_database::prelude::{StoreError, DB};
 use vecno_database::registry::DatabaseStorePrefixes;
 use vecno_hashes::Hash;
 use vecno_muhash::MuHash;
-use rocksdb::WriteBatch;
-use serde::{Deserialize, Serialize};
 
 use super::ghostdag::GhostdagData;
 use super::utxo_set::DbUtxoSetStore;

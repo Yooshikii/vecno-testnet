@@ -7,6 +7,8 @@ use crate::{
     },
     processes::ghostdag::ordering::SortableBlock,
 };
+use once_cell::unsync::Lazy;
+use std::{cmp::Reverse, iter::once, ops::Deref, sync::Arc};
 use vecno_consensus_core::{
     blockhash::BlockHashExtensions,
     config::genesis::GenesisBlock,
@@ -16,8 +18,6 @@ use vecno_consensus_core::{
 use vecno_hashes::Hash;
 use vecno_math::Uint256;
 use vecno_utils::refs::Refs;
-use once_cell::unsync::Lazy;
-use std::{cmp::Reverse, iter::once, ops::Deref, sync::Arc};
 
 use super::{
     difficulty::{FullDifficultyManager, SampledDifficultyManager},

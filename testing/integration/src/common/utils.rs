@@ -1,5 +1,14 @@
 use super::client::ListeningClient;
 use itertools::Itertools;
+use rayon::prelude::{IntoParallelIterator, ParallelIterator};
+use secp256k1::Keypair;
+use std::{
+    collections::{hash_map::Entry::Occupied, HashMap, HashSet},
+    future::Future,
+    sync::Arc,
+    time::Duration,
+};
+use tokio::time::timeout;
 use vecno_addresses::Address;
 use vecno_consensus_core::{
     constants::TX_VERSION,
@@ -18,15 +27,6 @@ use vecno_core::info;
 use vecno_grpc_client::GrpcClient;
 use vecno_rpc_core::{api::rpc::RpcApi, BlockAddedNotification, Notification, VirtualDaaScoreChangedNotification};
 use vecno_txscript::pay_to_address_script;
-use rayon::prelude::{IntoParallelIterator, ParallelIterator};
-use secp256k1::Keypair;
-use std::{
-    collections::{hash_map::Entry::Occupied, HashMap, HashSet},
-    future::Future,
-    sync::Arc,
-    time::Duration,
-};
-use tokio::time::timeout;
 
 pub(crate) const EXPAND_FACTOR: u64 = 1;
 pub(crate) const CONTRACT_FACTOR: u64 = 1;

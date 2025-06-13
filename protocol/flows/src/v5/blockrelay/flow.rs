@@ -3,6 +3,7 @@ use crate::{
     flow_trait::Flow,
     flowcontext::orphans::OrphanOutput,
 };
+use std::{collections::VecDeque, sync::Arc};
 use vecno_consensus_core::{api::BlockValidationFutures, block::Block, blockstatus::BlockStatus, errors::block::RuleError};
 use vecno_consensusmanager::{BlockProcessingBatch, ConsensusProxy};
 use vecno_core::debug;
@@ -14,7 +15,6 @@ use vecno_p2p_lib::{
     IncomingRoute, Router, SharedIncomingRoute,
 };
 use vecno_utils::channel::{JobSender, JobTrySendError as TrySendError};
-use std::{collections::VecDeque, sync::Arc};
 
 pub struct RelayInvMessage {
     hash: Hash,

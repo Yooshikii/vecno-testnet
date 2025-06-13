@@ -1,6 +1,6 @@
 use crate::{BlockHashSet, HashMapCustomHasher};
-use vecno_hashes::{Hash, HASH_SIZE};
 use std::sync::Arc;
+use vecno_hashes::{Hash, HASH_SIZE};
 
 pub type BlockHashes = Arc<Vec<Hash>>;
 

@@ -1,11 +1,11 @@
 use crate::{common::ProtocolError, pb::VecnodMessage, ConnectionInitializer, Peer, Router};
-use vecno_core::{debug, info, warn};
 use parking_lot::RwLock;
 use std::{
     collections::{hash_map::Entry::Occupied, HashMap},
     sync::Arc,
 };
 use tokio::sync::mpsc::Receiver as MpscReceiver;
+use vecno_core::{debug, info, warn};
 
 use super::peer::PeerKey;
 use rand::prelude::IteratorRandom;

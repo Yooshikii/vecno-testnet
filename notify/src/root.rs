@@ -13,9 +13,9 @@ use crate::{
 };
 use async_channel::Sender;
 use async_trait::async_trait;
-use vecno_core::{debug, trace};
 use parking_lot::RwLock;
 use std::sync::Arc;
+use vecno_core::{debug, trace};
 
 /// Root of a notification system
 ///

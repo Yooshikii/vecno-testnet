@@ -8,12 +8,12 @@ use crate::{
     network::{NetworkId, NetworkType},
     BlockLevel, KType,
 };
-use vecno_addresses::Prefix;
-use vecno_math::Uint256;
 use std::{
     cmp::min,
     time::{SystemTime, UNIX_EPOCH},
 };
+use vecno_addresses::Prefix;
+use vecno_math::Uint256;
 
 /// Consensus parameters. Contains settings and configurations which are consensus-sensitive.
 /// Changing one of these on a network node would exclude and prevent it from reaching consensus

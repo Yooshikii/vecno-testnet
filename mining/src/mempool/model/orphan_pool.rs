@@ -8,13 +8,13 @@ use crate::mempool::{
     },
     tx::Priority,
 };
+use std::sync::Arc;
 use vecno_consensus_core::{
     tx::MutableTransaction,
     tx::{TransactionId, TransactionOutpoint},
 };
 use vecno_core::{debug, warn};
 use vecno_utils::iter::IterExtensions;
-use std::sync::Arc;
 
 /// Pool of orphan transactions depending on some missing utxo entries
 ///

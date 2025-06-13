@@ -1,5 +1,6 @@
 use std::{cmp::max, sync::Arc};
 
+use log::debug;
 use vecno_consensus_core::api::ConsensusApi;
 use vecno_hashes::Hash;
 use vecno_p2p_lib::{
@@ -8,7 +9,6 @@ use vecno_p2p_lib::{
     pb::{self, vecnod_message::Payload, BlockHeadersMessage, DoneHeadersMessage},
     IncomingRoute, Router,
 };
-use log::debug;
 
 use crate::{flow_context::FlowContext, flow_trait::Flow};
 

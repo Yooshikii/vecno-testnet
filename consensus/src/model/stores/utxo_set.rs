@@ -1,3 +1,5 @@
+use rocksdb::WriteBatch;
+use std::{error::Error, fmt::Display, sync::Arc};
 use vecno_consensus_core::{
     tx::{TransactionIndexType, TransactionOutpoint, UtxoEntry},
     utxo::{
@@ -10,8 +12,6 @@ use vecno_database::prelude::DB;
 use vecno_database::prelude::{BatchDbWriter, CachedDbAccess, DirectDbWriter};
 use vecno_database::prelude::{CachePolicy, StoreError};
 use vecno_hashes::Hash;
-use rocksdb::WriteBatch;
-use std::{error::Error, fmt::Display, sync::Arc};
 
 type UtxoCollectionIterator<'a> = Box<dyn Iterator<Item = Result<(TransactionOutpoint, UtxoEntry), Box<dyn Error>>> + 'a>;
 

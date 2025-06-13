@@ -12,15 +12,15 @@ use crate::{
     },
     model::{candidate_tx::CandidateTransaction, topological_index::TopologicalIndex},
 };
+use std::{
+    collections::{hash_map::Keys, hash_set::Iter, HashSet},
+    sync::Arc,
+};
 use vecno_consensus_core::{
     tx::TransactionId,
     tx::{MutableTransaction, TransactionOutpoint},
 };
 use vecno_core::{time::unix_now, trace, warn};
-use std::{
-    collections::{hash_map::Keys, hash_set::Iter, HashSet},
-    sync::Arc,
-};
 
 /// Pool of transactions to be included in a block template
 ///

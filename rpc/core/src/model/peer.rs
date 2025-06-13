@@ -1,6 +1,6 @@
 use borsh::{BorshDeserialize, BorshSerialize};
-use vecno_utils::networking::{ContextualNetAddress, IpAddress, NetAddress, PeerId};
 use serde::{Deserialize, Serialize};
+use vecno_utils::networking::{ContextualNetAddress, IpAddress, NetAddress, PeerId};
 
 pub type RpcNodeId = PeerId;
 pub type RpcIpAddress = IpAddress;

@@ -1,4 +1,5 @@
 use crate::{processor::Processor, IDENT};
+use std::sync::Arc;
 use vecno_consensus_notify::{
     connection::ConsensusChannelConnection, notification::Notification as ConsensusNotification, notifier::ConsensusNotifier,
 };
@@ -16,7 +17,6 @@ use vecno_notify::{
 };
 use vecno_utils::{channel::Channel, triggers::SingleTrigger};
 use vecno_utxoindex::api::UtxoIndexProxy;
-use std::sync::Arc;
 
 const INDEX_SERVICE: &str = IDENT;
 

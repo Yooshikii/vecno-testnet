@@ -1,10 +1,10 @@
 use async_trait::async_trait;
 use core::fmt::Debug;
-use vecno_core::{debug, trace};
 use std::sync::{
     atomic::{AtomicBool, Ordering},
     Arc,
 };
+use vecno_core::{debug, trace};
 extern crate derive_more;
 use crate::events::{EventSwitches, EventType};
 

@@ -9,8 +9,8 @@ use crate::{
         TransactionIdSet,
     },
 };
-use vecno_consensus_core::tx::{MutableTransaction, TransactionId};
 use std::collections::{hash_set::Iter, HashMap, HashSet, VecDeque};
+use vecno_consensus_core::tx::{MutableTransaction, TransactionId};
 
 pub(crate) type TransactionsEdges = HashMap<TransactionId, TransactionIdSet>;
 

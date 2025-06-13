@@ -6,6 +6,11 @@ use crate::{
     update_container::UtxoIndexChanges,
     IDENT,
 };
+use parking_lot::RwLock;
+use std::{
+    fmt::Debug,
+    sync::{Arc, Weak},
+};
 use vecno_consensus_core::{tx::ScriptPublicKeys, utxo::utxo_diff::UtxoDiff, BlockHashSet};
 use vecno_consensusmanager::{ConsensusManager, ConsensusResetHandler};
 use vecno_core::{info, trace};
@@ -13,11 +18,6 @@ use vecno_database::prelude::{StoreError, StoreResult, DB};
 use vecno_hashes::Hash;
 use vecno_index_core::indexed_utxos::BalanceByScriptPublicKey;
 use vecno_utils::arc::ArcExtensions;
-use parking_lot::RwLock;
-use std::{
-    fmt::Debug,
-    sync::{Arc, Weak},
-};
 
 const RESYNC_CHUNK_SIZE: usize = 2048;
 
@@ -214,6 +214,7 @@ impl ConsensusResetHandler for UtxoIndexConsensusResetHandler {
 #[cfg(test)]
 mod tests {
     use crate::{api::UtxoIndexApi, model::CirculatingSupply, testutils::virtual_change_emulator::VirtualChangeEmulator, UtxoIndex};
+    use std::{collections::HashSet, sync::Arc, time::Instant};
     use vecno_consensus::{
         config::Config,
         consensus::test_consensus::TestConsensus,
@@ -231,7 +232,6 @@ mod tests {
     use vecno_core::info;
     use vecno_database::create_temp_db;
     use vecno_database::prelude::ConnBuilder;
-    use std::{collections::HashSet, sync::Arc, time::Instant};
 
     /// TODO: use proper Simnet when implemented.
     #[test]

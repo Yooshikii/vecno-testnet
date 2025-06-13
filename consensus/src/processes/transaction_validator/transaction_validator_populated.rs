@@ -161,14 +161,14 @@ mod tests {
     use super::super::errors::TxRuleError;
     use core::str::FromStr;
     use itertools::Itertools;
+    use secp256k1::Secp256k1;
+    use smallvec::SmallVec;
+    use std::iter::once;
     use vecno_consensus_core::sign::sign;
     use vecno_consensus_core::subnets::SubnetworkId;
     use vecno_consensus_core::tx::{MutableTransaction, PopulatedTransaction, ScriptVec, TransactionId, UtxoEntry};
     use vecno_consensus_core::tx::{ScriptPublicKey, Transaction, TransactionInput, TransactionOutpoint, TransactionOutput};
     use vecno_txscript_errors::TxScriptError;
-    use secp256k1::Secp256k1;
-    use smallvec::SmallVec;
-    use std::iter::once;
 
     use crate::{params::MAINNET_PARAMS, processes::transaction_validator::TransactionValidator};
 

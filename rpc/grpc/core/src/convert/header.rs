@@ -1,7 +1,7 @@
 use crate::protowire;
 use crate::{from, try_from};
-use vecno_rpc_core::{FromRpcHex, RpcError, RpcHash, RpcResult, ToRpcHex};
 use std::str::FromStr;
+use vecno_rpc_core::{FromRpcHex, RpcError, RpcHash, RpcResult, ToRpcHex};
 
 // ----------------------------------------------------------------------------
 // rpc_core to protowire

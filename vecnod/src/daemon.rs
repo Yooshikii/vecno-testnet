@@ -7,7 +7,7 @@ use vecno_consensus_core::{
 };
 use vecno_consensus_notify::{root::ConsensusNotificationRoot, service::NotifyService};
 use vecno_core::{core::Core, info, trace};
-use vecno_core::{vecnod_env::version, task::tick::TickService};
+use vecno_core::{task::tick::TickService, vecnod_env::version};
 use vecno_database::prelude::CachePolicy;
 use vecno_grpc_server::service::GrpcService;
 use vecno_notify::{address::tracker::Tracker, subscription::context::SubscriptionContext};

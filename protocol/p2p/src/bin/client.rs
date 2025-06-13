@@ -1,6 +1,6 @@
+use std::{sync::Arc, time::Duration};
 use vecno_core::debug;
 use vecno_p2p_lib::echo::EchoFlowInitializer;
-use std::{sync::Arc, time::Duration};
 
 #[tokio::main]
 async fn main() {

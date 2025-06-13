@@ -1,4 +1,8 @@
 use crate::model::{CirculatingSupply, CirculatingSupplyDiff};
+#[cfg(test)]
+use rand::Rng;
+use rand::{rngs::SmallRng, SeedableRng};
+use std::sync::Arc;
 use vecno_consensus::test_helpers::*;
 use vecno_consensus_core::{
     tx::ScriptPublicKey,
@@ -6,10 +10,6 @@ use vecno_consensus_core::{
     BlockHashSet, HashMapCustomHasher,
 };
 use vecno_hashes::Hash;
-#[cfg(test)]
-use rand::Rng;
-use rand::{rngs::SmallRng, SeedableRng};
-use std::sync::Arc;
 
 pub struct VirtualChangeEmulator {
     pub utxo_collection: UtxoCollection,

@@ -1,5 +1,6 @@
 use super::process_queue::ProcessQueue;
 use itertools::Itertools;
+use std::time::{Duration, Instant};
 use vecno_consensus_core::tx::TransactionId;
 use vecno_core::debug;
 use vecno_p2p_lib::{
@@ -7,7 +8,6 @@ use vecno_p2p_lib::{
     pb::{vecnod_message::Payload, InvTransactionsMessage, VecnodMessage},
     Hub,
 };
-use std::time::{Duration, Instant};
 
 /// Interval between mempool scanning tasks (in seconds)
 const SCANNING_TASK_INTERVAL: u64 = 10;

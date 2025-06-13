@@ -3,13 +3,13 @@ use crate::constants;
 use crate::errors::{BlockProcessResult, RuleError};
 use crate::model::services::reachability::ReachabilityService;
 use crate::model::stores::statuses::StatusesStoreReader;
+use std::cmp::max;
 use vecno_consensus_core::blockhash::BlockHashExtensions;
 use vecno_consensus_core::blockstatus::BlockStatus::StatusInvalid;
 use vecno_consensus_core::header::Header;
 use vecno_consensus_core::BlockLevel;
 use vecno_core::time::unix_now;
 use vecno_database::prelude::StoreResultExtensions;
-use std::cmp::max;
 
 impl HeaderProcessor {
     /// Validates the header in isolation including pow check against header declared bits.

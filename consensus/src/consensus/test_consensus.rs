@@ -1,4 +1,5 @@
 use async_channel::Sender;
+use parking_lot::RwLock;
 use vecno_consensus_core::coinbase::MinerData;
 use vecno_consensus_core::tx::ScriptPublicKey;
 use vecno_consensus_core::{
@@ -11,12 +12,11 @@ use vecno_core::{core::Core, service::Service};
 use vecno_database::utils::DbLifetime;
 use vecno_hashes::Hash;
 use vecno_notify::subscription::context::SubscriptionContext;
-use parking_lot::RwLock;
 
-use vecno_database::create_temp_db;
-use vecno_database::prelude::ConnBuilder;
 use std::future::Future;
 use std::{sync::Arc, thread::JoinHandle};
+use vecno_database::create_temp_db;
+use vecno_database::prelude::ConnBuilder;
 
 use crate::pipeline::virtual_processor::test_block_builder::TestBlockBuilder;
 use crate::processes::window::WindowManager;

@@ -1,4 +1,8 @@
 use clap::{arg, Arg, ArgAction, Command};
+use serde::Deserialize;
+use serde_with::{serde_as, DisplayFromStr};
+use std::{ffi::OsString, fs};
+use toml::from_str;
 use vecno_consensus_core::{
     config::Config,
     network::{NetworkId, NetworkType},
@@ -7,19 +11,15 @@ use vecno_core::vecnod_env::version;
 use vecno_notify::address::tracker::Tracker;
 use vecno_utils::networking::ContextualNetAddress;
 use vecno_wrpc_server::address::WrpcNetAddress;
-use serde::Deserialize;
-use serde_with::{serde_as, DisplayFromStr};
-use std::{ffi::OsString, fs};
-use toml::from_str;
 
+#[cfg(feature = "devnet-prealloc")]
+use std::sync::Arc;
 #[cfg(feature = "devnet-prealloc")]
 use vecno_addresses::Address;
 #[cfg(feature = "devnet-prealloc")]
 use vecno_consensus_core::tx::{TransactionOutpoint, UtxoEntry};
 #[cfg(feature = "devnet-prealloc")]
 use vecno_txscript::pay_to_address_script;
-#[cfg(feature = "devnet-prealloc")]
-use std::sync::Arc;
 
 #[serde_as]
 #[derive(Debug, Clone, Deserialize)]

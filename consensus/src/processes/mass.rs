@@ -138,12 +138,12 @@ impl MassCalculator {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::str::FromStr;
     use vecno_consensus_core::{
         constants::{SOMPI_PER_VECNO, STORAGE_MASS_PARAMETER},
         subnets::SubnetworkId,
         tx::*,
     };
-    use std::str::FromStr;
 
     #[test]
     fn test_mass_storage() {

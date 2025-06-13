@@ -20,6 +20,10 @@ use crate::{
     processes::{coinbase::CoinbaseManager, mass::MassCalculator, transaction_validator::TransactionValidator},
 };
 use crossbeam_channel::{Receiver, Sender};
+use parking_lot::RwLock;
+use rayon::ThreadPool;
+use rocksdb::WriteBatch;
+use std::sync::{atomic::Ordering, Arc};
 use vecno_consensus_core::{
     block::Block,
     blockstatus::BlockStatus::{self, StatusHeaderOnly, StatusInvalid},
@@ -33,10 +37,6 @@ use vecno_consensus_notify::{
 use vecno_consensusmanager::SessionLock;
 use vecno_hashes::Hash;
 use vecno_notify::notifier::Notify;
-use parking_lot::RwLock;
-use rayon::ThreadPool;
-use rocksdb::WriteBatch;
-use std::sync::{atomic::Ordering, Arc};
 
 pub struct BlockBodyProcessor {
     // Channels

@@ -1,7 +1,7 @@
+use std::sync::Arc;
 use vecno_core::warn;
 use vecno_p2p_lib::{common::ProtocolError, Router};
 use vecno_utils::any::type_name_short;
-use std::sync::Arc;
 
 #[async_trait::async_trait]
 pub trait Flow

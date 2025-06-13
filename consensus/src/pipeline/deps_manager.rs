@@ -1,12 +1,12 @@
 use crate::errors::BlockProcessResult;
-use vecno_consensus_core::{block::Block, blockstatus::BlockStatus};
-use vecno_hashes::Hash;
 use parking_lot::{Condvar, Mutex};
 use std::collections::{
     hash_map::Entry::{Occupied, Vacant},
     HashMap, VecDeque,
 };
 use tokio::sync::oneshot;
+use vecno_consensus_core::{block::Block, blockstatus::BlockStatus};
+use vecno_hashes::Hash;
 
 pub type BlockResultSender = oneshot::Sender<BlockProcessResult<BlockStatus>>;
 

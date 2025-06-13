@@ -10,10 +10,11 @@ use std::{
 };
 
 use itertools::Itertools;
-use vecno_math::int::SignedInteger;
 use parking_lot::{Mutex, RwLock};
 use rocksdb::WriteBatch;
+use vecno_math::int::SignedInteger;
 
+use thiserror::Error;
 use vecno_consensus_core::{
     blockhash::{self, BlockHashExtensions, BlockHashes, ORIGIN},
     errors::{
@@ -30,7 +31,6 @@ use vecno_database::prelude::{CachePolicy, ConnBuilder, StoreResultEmptyTuple, S
 use vecno_hashes::Hash;
 use vecno_pow::calc_block_level;
 use vecno_utils::{binary_heap::BinaryHeapExtensions, vec::VecExtensions};
-use thiserror::Error;
 
 use crate::{
     consensus::{

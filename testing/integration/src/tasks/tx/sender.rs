@@ -1,16 +1,16 @@
 use crate::tasks::{tx::submitter::IndexedTransaction, Stopper, Task};
 use async_channel::Sender;
 use async_trait::async_trait;
-use vecno_consensus_core::tx::Transaction;
-use vecno_core::{info, warn};
-use vecno_grpc_client::GrpcClient;
-use vecno_rpc_core::api::rpc::RpcApi;
-use vecno_utils::triggers::SingleTrigger;
 use std::{sync::Arc, time::Duration};
 use tokio::{
     task::JoinHandle,
     time::{sleep, Instant},
 };
+use vecno_consensus_core::tx::Transaction;
+use vecno_core::{info, warn};
+use vecno_grpc_client::GrpcClient;
+use vecno_rpc_core::api::rpc::RpcApi;
+use vecno_utils::triggers::SingleTrigger;
 
 pub struct TransactionSenderTask {
     client: Arc<GrpcClient>,

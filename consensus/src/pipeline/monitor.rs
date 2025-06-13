@@ -1,4 +1,8 @@
 use super::ProcessingCounters;
+use std::{
+    sync::Arc,
+    time::{Duration, Instant},
+};
 use vecno_core::{
     info,
     task::{
@@ -6,10 +10,6 @@ use vecno_core::{
         tick::{TickReason, TickService},
     },
     trace,
-};
-use std::{
-    sync::Arc,
-    time::{Duration, Instant},
 };
 
 const MONITOR: &str = "consensus-monitor";

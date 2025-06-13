@@ -7,10 +7,10 @@
 
 use crate::utils::*;
 use borsh::{BorshDeserialize, BorshSerialize};
-use vecno_consensus_core::network::{NetworkId, NetworkType};
-use vecno_consensus_core::tx::TransactionId;
 use serde::{Deserialize, Serialize};
 use std::fmt;
+use vecno_consensus_core::network::{NetworkId, NetworkType};
+use vecno_consensus_core::tx::TransactionId;
 
 #[derive(Clone, Debug, Serialize, Deserialize, BorshSerialize, BorshDeserialize)]
 pub struct GeneratorSummary {

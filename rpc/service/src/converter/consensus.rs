@@ -1,4 +1,5 @@
 use async_trait::async_trait;
+use std::{collections::HashMap, fmt::Debug, sync::Arc};
 use vecno_addresses::Address;
 use vecno_consensus_core::{
     block::Block,
@@ -19,7 +20,6 @@ use vecno_rpc_core::{
     RpcTransactionVerboseData,
 };
 use vecno_txscript::{extract_script_pub_key_address, script_class::ScriptClass};
-use std::{collections::HashMap, fmt::Debug, sync::Arc};
 
 /// Conversion of consensus_core to rpc_core structures
 pub struct ConsensusConverter {

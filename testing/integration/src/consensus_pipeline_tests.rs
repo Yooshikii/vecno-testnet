@@ -1,4 +1,7 @@
 use futures_util::future::try_join_all;
+use rand_distr::{Distribution, Poisson};
+use std::cmp::min;
+use tokio::join;
 use vecno_alloc::init_allocator_with_default_settings;
 use vecno_consensus::{
     config::ConfigBuilder, consensus::test_consensus::TestConsensus, params::MAINNET_PARAMS,
@@ -7,9 +10,6 @@ use vecno_consensus::{
 use vecno_consensus_core::{api::ConsensusApi, blockhash};
 use vecno_database::prelude::CachePolicy;
 use vecno_hashes::Hash;
-use rand_distr::{Distribution, Poisson};
-use std::cmp::min;
-use tokio::join;
 
 #[tokio::test]
 async fn test_concurrent_pipeline() {

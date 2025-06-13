@@ -7,11 +7,23 @@ use async_trait::async_trait;
 pub use client_pool::ClientPool;
 use connection_event::ConnectionEvent;
 use futures::{future::FutureExt, pin_mut, select};
+use regex::Regex;
+use std::{
+    sync::{
+        atomic::{AtomicBool, Ordering},
+        Arc,
+    },
+    time::Duration,
+};
+use tokio::sync::Mutex;
+use tonic::codec::CompressionEncoding;
+use tonic::codegen::Body;
+use tonic::Streaming;
 use vecno_core::{debug, error, trace};
 use vecno_grpc_core::{
     channel::NotificationChannel,
     ops::VecnodPayloadOps,
-    protowire::{vecnod_request, rpc_client::RpcClient, GetInfoRequestMessage, VecnodRequest, VecnodResponse},
+    protowire::{rpc_client::RpcClient, vecnod_request, GetInfoRequestMessage, VecnodRequest, VecnodResponse},
     RPC_MAX_MESSAGE_SIZE,
 };
 use vecno_notify::{
@@ -40,18 +52,6 @@ use vecno_utils_tower::{
     counters::TowerConnectionCounters,
     middleware::{measure_request_body_size_layer, CountBytesBody, MapResponseBodyLayer, ServiceBuilder},
 };
-use regex::Regex;
-use std::{
-    sync::{
-        atomic::{AtomicBool, Ordering},
-        Arc,
-    },
-    time::Duration,
-};
-use tokio::sync::Mutex;
-use tonic::codec::CompressionEncoding;
-use tonic::codegen::Body;
-use tonic::Streaming;
 
 mod connection_event;
 pub mod error;

@@ -13,14 +13,14 @@ use itertools::{
     Either::{Left, Right},
     Itertools,
 };
-use vecno_consensus_core::config::Config;
-use vecno_core::{debug, info, task::tick::TickService, time::unix_now, warn};
-use vecno_database::prelude::{CachePolicy, StoreResultExtensions, DB};
-use vecno_utils::networking::IpAddress;
 use local_ip_address::list_afinet_netifas;
 use parking_lot::Mutex;
 use stores::banned_address_store::{BannedAddressesStore, BannedAddressesStoreReader, ConnectionBanTimestamp, DbBannedAddressesStore};
 use thiserror::Error;
+use vecno_consensus_core::config::Config;
+use vecno_core::{debug, info, task::tick::TickService, time::unix_now, warn};
+use vecno_database::prelude::{CachePolicy, StoreResultExtensions, DB};
+use vecno_utils::networking::IpAddress;
 
 pub use stores::NetAddress;
 
@@ -337,12 +337,12 @@ mod address_store_with_cache {
     };
 
     use itertools::Itertools;
-    use vecno_database::prelude::{CachePolicy, DB};
-    use vecno_utils::networking::PrefixBucket;
     use rand::{
         distributions::{WeightedError, WeightedIndex},
         prelude::Distribution,
     };
+    use vecno_database::prelude::{CachePolicy, DB};
+    use vecno_utils::networking::PrefixBucket;
 
     use crate::{
         stores::{
@@ -515,14 +515,14 @@ mod address_store_with_cache {
 
         use super::*;
         use address_manager::AddressManager;
+        use statest::ks::KSTest;
+        use statrs::distribution::Uniform;
+        use std::net::{IpAddr, Ipv6Addr};
         use vecno_consensus_core::config::{params::SIMNET_PARAMS, Config};
         use vecno_core::task::tick::TickService;
         use vecno_database::create_temp_db;
         use vecno_database::prelude::ConnBuilder;
         use vecno_utils::networking::IpAddress;
-        use statest::ks::KSTest;
-        use statrs::distribution::Uniform;
-        use std::net::{IpAddr, Ipv6Addr};
 
         #[test]
         fn test_weighted_iterator() {

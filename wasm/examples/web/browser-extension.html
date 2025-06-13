@@ -15,20 +15,20 @@
                 log(`Connecting to Vecno network...`);
                 log(`Selected network is ${networkId}...`);
                 
-                // const rpc = new RpcClient({
-                //     resolver : new Resolver(),
-                //     networkId,
-                // });
+                const rpc = new RpcClient({
+                    resolver : new Resolver(),
+                    networkId,
+                });
 
-                // await rpc.connect();
-                // log("Connected to", rpc.url);
+                await rpc.connect();
+                log("Connected to", rpc.url);
                 
-                // log("GetBlockDagInfo request...");
-                // const info = await rpc.getBlockDagInfo();
-                // log("GetBlockDagInfo response:", info);
+                log("GetBlockDagInfo request...");
+                const info = await rpc.getBlockDagInfo();
+                log("GetBlockDagInfo response:", info);
 
-                // log("Disconnected...");
-                // await rpc.disconnect();
+                log("Disconnected...");
+                await rpc.disconnect();
 
 
                 const $ = q=>document.querySelector(q);

@@ -9,18 +9,6 @@ use crate::{
     tasks::{block::group::MinerGroupTask, daemon::DaemonTask, tx::group::TxSenderGroupTask, Stopper, TasksRunner},
 };
 use futures_util::future::join_all;
-use vecno_addresses::Address;
-use vecno_consensus::params::Params;
-use vecno_consensus_core::{constants::SOMPI_PER_VECNO, network::NetworkType, tx::Transaction};
-use vecno_core::{debug, info};
-use vecno_notify::{
-    listener::ListenerId,
-    scope::{NewBlockTemplateScope, Scope},
-};
-use vecno_rpc_core::{api::rpc::RpcApi, Notification, RpcError};
-use vecno_txscript::pay_to_address_script;
-use vecno_utils::fd_budget;
-use vecnod_lib::args::Args;
 use parking_lot::Mutex;
 use rand::thread_rng;
 use rand_distr::{Distribution, Exp};
@@ -33,6 +21,18 @@ use std::{
     time::{Duration, Instant},
 };
 use tokio::join;
+use vecno_addresses::Address;
+use vecno_consensus::params::Params;
+use vecno_consensus_core::{constants::SOMPI_PER_VECNO, network::NetworkType, tx::Transaction};
+use vecno_core::{debug, info};
+use vecno_notify::{
+    listener::ListenerId,
+    scope::{NewBlockTemplateScope, Scope},
+};
+use vecno_rpc_core::{api::rpc::RpcApi, Notification, RpcError};
+use vecno_txscript::pay_to_address_script;
+use vecno_utils::fd_budget;
+use vecnod_lib::args::Args;
 
 /// Run this benchmark with the following command line:
 /// `cargo test --release --package vecno-testing-integration --lib --features devnet-prealloc -- mempool_benchmarks::bench_bbt_latency --exact --nocapture --ignored`

@@ -12,8 +12,8 @@ use crate::model::{
         reachability::ReachabilityStoreReader,
     },
 };
-use vecno_hashes::Hash;
 use parking_lot::RwLock;
+use vecno_hashes::Hash;
 
 #[derive(Clone)]
 pub struct PruningPointManager<

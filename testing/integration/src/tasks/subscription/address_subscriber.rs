@@ -1,15 +1,15 @@
 use crate::tasks::{subscription::submitter::SubscribeCommand, Task};
 use async_channel::Sender;
 use async_trait::async_trait;
-use vecno_addresses::Address;
-use vecno_core::warn;
-use vecno_grpc_client::GrpcClient;
-use vecno_utils::triggers::SingleTrigger;
 use std::{
     sync::Arc,
     time::{Duration, Instant},
 };
 use tokio::{sync::oneshot::channel, task::JoinHandle, time::sleep};
+use vecno_addresses::Address;
+use vecno_core::warn;
+use vecno_grpc_client::GrpcClient;
+use vecno_utils::triggers::SingleTrigger;
 
 pub struct AddressSubscriberTask {
     clients: Vec<Arc<GrpcClient>>,

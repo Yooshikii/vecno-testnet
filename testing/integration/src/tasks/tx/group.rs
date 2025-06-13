@@ -7,10 +7,10 @@ use crate::{
 };
 use async_trait::async_trait;
 use itertools::chain;
-use vecno_consensus_core::tx::Transaction;
-use vecno_utils::triggers::SingleTrigger;
 use std::sync::Arc;
 use tokio::task::JoinHandle;
+use vecno_consensus_core::tx::Transaction;
+use vecno_utils::triggers::SingleTrigger;
 
 pub struct TxSenderGroupTask {
     submitter: Arc<TransactionSubmitterTask>,

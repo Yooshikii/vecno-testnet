@@ -1,10 +1,10 @@
 use crate::{cache::CachePolicy, db::DB, errors::StoreError};
 
 use super::prelude::{Cache, DbKey, DbWriter};
-use vecno_utils::mem_size::MemSizeEstimator;
 use rocksdb::{Direction, IterateBounds, IteratorMode, ReadOptions};
 use serde::{de::DeserializeOwned, Serialize};
 use std::{collections::hash_map::RandomState, error::Error, hash::BuildHasher, sync::Arc};
+use vecno_utils::mem_size::MemSizeEstimator;
 
 /// A concurrent DB store access with typed caching.
 #[derive(Clone)]
@@ -222,8 +222,8 @@ mod tests {
         create_temp_db,
         prelude::{BatchDbWriter, ConnBuilder, DirectDbWriter},
     };
-    use vecno_hashes::Hash;
     use rocksdb::WriteBatch;
+    use vecno_hashes::Hash;
 
     #[test]
     fn test_delete_all() {

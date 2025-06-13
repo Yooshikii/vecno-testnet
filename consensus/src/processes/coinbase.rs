@@ -1,3 +1,4 @@
+use std::{convert::TryInto, mem::size_of};
 use vecno_consensus_core::{
     coinbase::*,
     errors::coinbase::{CoinbaseError, CoinbaseResult},
@@ -5,7 +6,6 @@ use vecno_consensus_core::{
     tx::{ScriptPublicKey, ScriptVec, Transaction, TransactionOutput},
     BlockHashMap, BlockHashSet,
 };
-use std::{convert::TryInto, mem::size_of};
 
 use crate::{constants, model::stores::ghostdag::GhostdagData};
 
@@ -214,8 +214,7 @@ impl CoinbaseManager {
             return self.premine_phase_base_subsidy;
         }
 
-        let months_since_deflationary_phase_started =
-            ((daa_score - self.premine_daa_score) / self.blocks_per_month) as usize;
+        let months_since_deflationary_phase_started = ((daa_score - self.premine_daa_score) / self.blocks_per_month) as usize;
         if months_since_deflationary_phase_started >= self.subsidy_by_month_table.len() {
             *(self.subsidy_by_month_table).last().unwrap()
         } else {
@@ -391,11 +390,7 @@ mod tests {
                     daa_score: params.premine_daa_score + 35 * blocks_per_halving,
                     expected: 1,
                 },
-                Test {
-                    name: "after subsidy depleted",
-                    daa_score: params.premine_daa_score + 36 * blocks_per_halving,
-                    expected: 0,
-                },
+                Test { name: "after subsidy depleted", daa_score: params.premine_daa_score + 36 * blocks_per_halving, expected: 0 },
             ];
 
             for t in tests {

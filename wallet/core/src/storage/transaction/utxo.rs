@@ -3,8 +3,8 @@
 //!
 
 use crate::imports::*;
-use vecno_addresses::Address;
 use serde::{Deserialize, Serialize};
+use vecno_addresses::Address;
 
 pub use vecno_consensus_core::tx::TransactionId;
 

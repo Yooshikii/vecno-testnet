@@ -5,12 +5,6 @@ use crate::pb::{
 };
 use crate::{ConnectionInitializer, Router};
 use futures::FutureExt;
-use vecno_core::{debug, info};
-use vecno_utils::networking::NetAddress;
-use vecno_utils_tower::{
-    counters::TowerConnectionCounters,
-    middleware::{measure_request_body_size_layer, CountBytesBody, MapResponseBodyLayer, ServiceBuilder},
-};
 use std::net::ToSocketAddrs;
 use std::pin::Pin;
 use std::sync::Arc;
@@ -23,6 +17,12 @@ use tokio_stream::StreamExt;
 use tonic::codegen::Body;
 use tonic::transport::{Error as TonicError, Server as TonicServer};
 use tonic::{Request, Response, Status as TonicStatus, Streaming};
+use vecno_core::{debug, info};
+use vecno_utils::networking::NetAddress;
+use vecno_utils_tower::{
+    counters::TowerConnectionCounters,
+    middleware::{measure_request_body_size_layer, CountBytesBody, MapResponseBodyLayer, ServiceBuilder},
+};
 
 #[derive(Error, Debug)]
 pub enum ConnectionError {

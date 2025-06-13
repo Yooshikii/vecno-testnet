@@ -1,11 +1,11 @@
 use crate::error::Error;
 use js_sys::{Array, Object};
+use serde::{Deserialize, Serialize};
+use serde_wasm_bindgen::*;
 use vecno_consensus_core::hashing;
 use vecno_consensus_core::header as native;
 use vecno_hashes::Hash;
 use vecno_utils::hex::ToHex;
-use serde::{Deserialize, Serialize};
-use serde_wasm_bindgen::*;
 use wasm_bindgen::prelude::*;
 use wasm_bindgen::prelude::{JsError, JsValue};
 use workflow_wasm::prelude::*;

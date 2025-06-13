@@ -76,10 +76,7 @@ impl Account {
                                 "account import mnemonic bip32",
                                 "Import Bip32 (12 or 24 word mnemonics used by VecnoWallet, onekey, tangem etc.)",
                             ),
-                            (
-                                "account import mnemonic legacy",
-                                "Import accounts 12 word mnemonic used by legacy applications",
-                            ),
+                            ("account import mnemonic legacy", "Import accounts 12 word mnemonic used by legacy applications"),
                             (
                                 "account import mnemonic multisig [additional keys]",
                                 "Import mnemonic and additional keys for a multisig account",

@@ -1,9 +1,9 @@
 use borsh::{BorshDeserialize, BorshSerialize};
+use serde::{Deserialize, Serialize};
 use vecno_addresses::Address;
 use vecno_consensus_core::tx::{
     ScriptPublicKey, ScriptVec, TransactionId, TransactionInput, TransactionOutpoint, TransactionOutput, UtxoEntry,
 };
-use serde::{Deserialize, Serialize};
 
 use crate::prelude::{RpcHash, RpcScriptClass, RpcSubnetworkId};
 

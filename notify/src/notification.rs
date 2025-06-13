@@ -80,9 +80,9 @@ pub mod test_helpers {
 
     use super::*;
     use derive_more::Display;
+    use std::sync::Arc;
     use vecno_addresses::Address;
     use vecno_core::trace;
-    use std::sync::Arc;
 
     #[derive(Clone, Debug, Default, PartialEq, Eq)]
     pub struct BlockAddedNotification {

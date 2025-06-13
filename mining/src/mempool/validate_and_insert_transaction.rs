@@ -7,13 +7,13 @@ use crate::mempool::{
     tx::{Orphan, Priority},
     Mempool,
 };
+use std::sync::Arc;
 use vecno_consensus_core::{
     api::ConsensusApi,
     constants::UNACCEPTED_DAA_SCORE,
     tx::{MutableTransaction, Transaction, TransactionId, TransactionOutpoint, UtxoEntry},
 };
 use vecno_core::{debug, info};
-use std::sync::Arc;
 
 impl Mempool {
     pub(crate) fn pre_validate_and_populate_transaction(

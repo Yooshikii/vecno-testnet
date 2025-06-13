@@ -1,3 +1,5 @@
+use rocksdb::WriteBatch;
+use std::sync::Arc;
 use vecno_consensus_core::BlockHasher;
 use vecno_database::prelude::CachePolicy;
 use vecno_database::prelude::StoreError;
@@ -7,8 +9,6 @@ use vecno_database::registry::DatabaseStorePrefixes;
 use vecno_hashes::Hash;
 use vecno_math::Uint3072;
 use vecno_muhash::MuHash;
-use rocksdb::WriteBatch;
-use std::sync::Arc;
 
 pub trait UtxoMultisetsStoreReader {
     fn get(&self, hash: Hash) -> Result<MuHash, StoreError>;

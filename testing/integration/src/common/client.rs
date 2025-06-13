@@ -1,11 +1,11 @@
 use super::{daemon::Daemon, listener::Listener};
-use vecno_grpc_client::GrpcClient;
-use vecno_notify::{events::EventType, scope::Scope, subscription::Command};
-use vecno_rpc_core::RpcResult;
 use std::{
     collections::{hash_map::Entry, HashMap},
     ops::Deref,
 };
+use vecno_grpc_client::GrpcClient;
+use vecno_notify::{events::EventType, scope::Scope, subscription::Command};
+use vecno_rpc_core::RpcResult;
 
 /// A multi-listener gRPC client with event type dedicated listeners
 pub struct ListeningClient {

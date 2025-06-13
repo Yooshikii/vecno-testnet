@@ -4,13 +4,13 @@ use crate::model::{
     stores::{children::ChildrenStore, relations::RelationsStore},
 };
 use itertools::Itertools;
+use rocksdb::WriteBatch;
 use vecno_consensus_core::{
     blockhash::{BlockHashIteratorExtensions, BlockHashes, ORIGIN},
     BlockHashSet,
 };
 use vecno_database::prelude::{BatchDbWriter, DbWriter, DirectWriter, StoreError};
 use vecno_hashes::Hash;
-use rocksdb::WriteBatch;
 
 /// Initializes this relations store with an `origin` root
 pub fn init<S: RelationsStore + ChildrenStore + ?Sized>(relations: &mut S) {
@@ -152,10 +152,10 @@ impl<S: RelationsStore + ChildrenStore + ?Sized> RelationsStoreExtensions for S 
 mod tests {
     use super::*;
     use crate::model::stores::relations::{DbRelationsStore, RelationsStoreReader, StagingRelationsStore};
+    use std::sync::Arc;
     use vecno_core::assert_match;
     use vecno_database::prelude::{CachePolicy, ConnBuilder};
     use vecno_database::{create_temp_db, prelude::MemoryWriter};
-    use std::sync::Arc;
 
     #[test]
     fn test_delete_level_relations_zero_cache() {

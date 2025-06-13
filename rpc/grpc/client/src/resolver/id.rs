@@ -1,11 +1,6 @@
 use crate::{
     error::{Error, Result},
-    resolver::{VecnodResponseReceiver, VecnodResponseSender, Resolver},
-};
-use vecno_core::trace;
-use vecno_grpc_core::{
-    ops::VecnodPayloadOps,
-    protowire::{VecnodRequest, VecnodResponse},
+    resolver::{Resolver, VecnodResponseReceiver, VecnodResponseSender},
 };
 use std::{
     collections::HashMap,
@@ -13,6 +8,11 @@ use std::{
     time::Instant,
 };
 use tokio::sync::oneshot;
+use vecno_core::trace;
+use vecno_grpc_core::{
+    ops::VecnodPayloadOps,
+    protowire::{VecnodRequest, VecnodResponse},
+};
 
 #[derive(Debug)]
 struct Pending {

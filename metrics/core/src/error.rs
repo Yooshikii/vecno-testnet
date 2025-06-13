@@ -1,5 +1,5 @@
-use vecno_rpc_core::RpcError;
 use thiserror::Error;
+use vecno_rpc_core::RpcError;
 
 #[derive(Error, Debug)]
 pub enum Error {

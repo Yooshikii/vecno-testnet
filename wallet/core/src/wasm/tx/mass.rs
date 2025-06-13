@@ -2,10 +2,10 @@ use crate::imports::NetworkParams;
 use crate::result::Result;
 use crate::tx::mass;
 use crate::wasm::tx::*;
+use std::sync::Arc;
 use vecno_consensus_client::*;
 use vecno_consensus_core::config::params::Params;
 use vecno_consensus_core::tx as cctx;
-use std::sync::Arc;
 use wasm_bindgen::prelude::*;
 use workflow_wasm::convert::*;
 

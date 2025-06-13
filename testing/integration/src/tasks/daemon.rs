@@ -4,13 +4,13 @@ use crate::{
 };
 use async_trait::async_trait;
 use clap::Parser;
+use std::{iter::once, sync::Arc};
+use tokio::task::JoinHandle;
 use vecno_addresses::Address;
 use vecno_consensus_core::network::NetworkType;
 use vecno_core::{trace, warn};
 use vecno_utils::{fd_budget, triggers::SingleTrigger};
 use vecnod_lib::args::Args;
-use std::{iter::once, sync::Arc};
-use tokio::task::JoinHandle;
 
 /// Arguments for configuring a [`DaemonTask`]
 #[derive(Parser, Debug)]

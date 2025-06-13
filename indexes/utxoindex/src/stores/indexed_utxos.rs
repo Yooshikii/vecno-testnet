@@ -1,5 +1,10 @@
 use crate::core::model::{CompactUtxoCollection, CompactUtxoEntry, UtxoSetByScriptPublicKey};
 
+use serde::{Deserialize, Serialize};
+use std::collections::HashSet;
+use std::fmt::Display;
+use std::mem::size_of;
+use std::sync::Arc;
 use vecno_consensus_core::tx::{
     ScriptPublicKey, ScriptPublicKeyVersion, ScriptPublicKeys, ScriptVec, TransactionIndexType, TransactionOutpoint,
 };
@@ -8,11 +13,6 @@ use vecno_database::prelude::{CachePolicy, CachedDbAccess, DirectDbWriter, Store
 use vecno_database::registry::DatabaseStorePrefixes;
 use vecno_hashes::Hash;
 use vecno_index_core::indexed_utxos::BalanceByScriptPublicKey;
-use serde::{Deserialize, Serialize};
-use std::collections::HashSet;
-use std::fmt::Display;
-use std::mem::size_of;
-use std::sync::Arc;
 
 pub const VERSION_TYPE_SIZE: usize = size_of::<ScriptPublicKeyVersion>(); // Const since we need to re-use this a few times.
 

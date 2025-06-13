@@ -4,8 +4,8 @@
 
 use crate::account::Inner;
 use crate::imports::*;
-use vecno_addresses::Version;
 use secp256k1::{PublicKey, SecretKey};
+use vecno_addresses::Version;
 
 pub const RESIDENT_ACCOUNT_KIND: &str = "vecno-resident-standard";
 

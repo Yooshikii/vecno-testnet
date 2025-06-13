@@ -1,10 +1,6 @@
 use alloc::borrow::Cow;
 use borsh::{BorshDeserialize, BorshSerialize};
 use core::fmt::Formatter;
-use vecno_utils::{
-    hex::{FromHex, ToHex},
-    serde_bytes::FromHexVisitor,
-};
 use serde::{
     de::{Error, Visitor},
     Deserialize, Deserializer, Serialize, Serializer,
@@ -13,6 +9,10 @@ use smallvec::SmallVec;
 use std::{
     collections::HashSet,
     str::{self, FromStr},
+};
+use vecno_utils::{
+    hex::{FromHex, ToHex},
+    serde_bytes::FromHexVisitor,
 };
 use wasm_bindgen::prelude::*;
 use workflow_wasm::prelude::*;

@@ -1,4 +1,9 @@
 use indexmap::{map::Entry::Occupied, IndexMap};
+use rand::Rng;
+use std::{
+    collections::{HashMap, HashSet, VecDeque},
+    iter::once,
+};
 use vecno_consensus_core::{
     api::{BlockValidationFuture, BlockValidationFutures},
     block::Block,
@@ -6,11 +11,6 @@ use vecno_consensus_core::{
 use vecno_consensusmanager::{BlockProcessingBatch, ConsensusProxy};
 use vecno_core::debug;
 use vecno_hashes::Hash;
-use rand::Rng;
-use std::{
-    collections::{HashMap, HashSet, VecDeque},
-    iter::once,
-};
 
 use super::process_queue::ProcessQueue;
 
@@ -282,6 +282,8 @@ impl OrphanBlocksPool {
 mod tests {
     use super::*;
     use futures::future::try_join_all;
+    use parking_lot::RwLock;
+    use std::sync::Arc;
     use vecno_consensus_core::{
         api::{BlockValidationFutures, ConsensusApi},
         blockstatus::BlockStatus,
@@ -289,8 +291,6 @@ mod tests {
     };
     use vecno_consensusmanager::{ConsensusInstance, SessionLock};
     use vecno_core::assert_match;
-    use parking_lot::RwLock;
-    use std::sync::Arc;
 
     #[derive(Default)]
     struct MockProcessor {

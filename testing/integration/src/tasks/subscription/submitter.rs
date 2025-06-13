@@ -2,12 +2,6 @@ use crate::tasks::Task;
 use async_channel::Sender;
 use async_trait::async_trait;
 use itertools::Itertools;
-use vecno_addresses::Address;
-use vecno_core::warn;
-use vecno_grpc_client::GrpcClient;
-use vecno_notify::scope::{Scope, UtxosChangedScope};
-use vecno_rpc_core::api::rpc::RpcApi;
-use vecno_utils::{channel::Channel, triggers::SingleTrigger};
 use parking_lot::Mutex;
 use rand::thread_rng;
 use rand_distr::{Distribution, Exp};
@@ -17,6 +11,12 @@ use tokio::{
     task::JoinHandle,
     time::sleep,
 };
+use vecno_addresses::Address;
+use vecno_core::warn;
+use vecno_grpc_client::GrpcClient;
+use vecno_notify::scope::{Scope, UtxosChangedScope};
+use vecno_rpc_core::api::rpc::RpcApi;
+use vecno_utils::{channel::Channel, triggers::SingleTrigger};
 
 pub type JobId = u64;
 pub type Count = usize;

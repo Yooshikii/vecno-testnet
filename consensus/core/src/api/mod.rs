@@ -1,6 +1,6 @@
 use futures_util::future::BoxFuture;
-use vecno_muhash::MuHash;
 use std::sync::Arc;
+use vecno_muhash::MuHash;
 
 use crate::{
     acceptance_data::AcceptanceData,

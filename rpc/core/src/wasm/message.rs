@@ -3,12 +3,12 @@
 use crate::error::RpcError as Error;
 use crate::error::RpcResult as Result;
 use crate::model::*;
+pub use serde_wasm_bindgen::from_value;
 use vecno_addresses::Address;
 use vecno_addresses::AddressOrStringArrayT;
 use vecno_consensus_client::Transaction;
 use vecno_consensus_client::UtxoEntryReference;
 use vecno_rpc_macros::declare_typescript_wasm_interface as declare;
-pub use serde_wasm_bindgen::from_value;
 use wasm_bindgen::prelude::*;
 use workflow_wasm::convert::*;
 use workflow_wasm::extensions::*;

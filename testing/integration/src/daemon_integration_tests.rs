@@ -4,6 +4,8 @@ use crate::common::{
     daemon::Daemon,
     utils::{fetch_spendable_utxos, generate_tx, mine_block, wait_for},
 };
+use rand::thread_rng;
+use std::{sync::Arc, time::Duration};
 use vecno_addresses::Address;
 use vecno_alloc::init_allocator_with_default_settings;
 use vecno_consensus::params::SIMNET_PARAMS;
@@ -14,8 +16,6 @@ use vecno_notify::scope::{BlockAddedScope, UtxosChangedScope, VirtualDaaScoreCha
 use vecno_rpc_core::{api::rpc::RpcApi, Notification, RpcTransactionId};
 use vecno_txscript::pay_to_address_script;
 use vecnod_lib::args::Args;
-use rand::thread_rng;
-use std::{sync::Arc, time::Duration};
 
 #[tokio::test(flavor = "multi_thread", worker_threads = 1)]
 async fn daemon_sanity_test() {

@@ -1,5 +1,12 @@
 use indexmap::IndexSet;
 use itertools::Itertools;
+use rand::rngs::ThreadRng;
+use rand::Rng;
+use rand_distr::{Distribution, Exp};
+use rayon::prelude::{IntoParallelIterator, ParallelIterator};
+use std::cmp::max;
+use std::iter::once;
+use std::sync::Arc;
 use vecno_consensus::consensus::Consensus;
 use vecno_consensus::model::stores::virtual_state::VirtualStateStoreReader;
 use vecno_consensus::params::Params;
@@ -15,13 +22,6 @@ use vecno_consensus_core::tx::{
 use vecno_consensus_core::utxo::utxo_view::UtxoView;
 use vecno_core::trace;
 use vecno_utils::sim::{Environment, Process, Resumption, Suspension};
-use rand::rngs::ThreadRng;
-use rand::Rng;
-use rand_distr::{Distribution, Exp};
-use rayon::prelude::{IntoParallelIterator, ParallelIterator};
-use std::cmp::max;
-use std::iter::once;
-use std::sync::Arc;
 
 struct OnetimeTxSelector {
     txs: Option<Vec<Transaction>>,

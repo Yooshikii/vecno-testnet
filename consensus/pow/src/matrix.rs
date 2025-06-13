@@ -1,6 +1,6 @@
 use crate::xoshiro::XoShiRo256PlusPlus;
-use vecno_hashes::{Hash, KHeavyHash};
 use std::mem::MaybeUninit;
+use vecno_hashes::{Hash, KHeavyHash};
 
 #[derive(Debug, Ord, PartialOrd, Eq, PartialEq)]
 pub struct Matrix([[u16; 64]; 64]);

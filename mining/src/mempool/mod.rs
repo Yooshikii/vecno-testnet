@@ -12,9 +12,9 @@ use self::{
     model::{accepted_transactions::AcceptedTransactions, orphan_pool::OrphanPool, pool::Pool, transactions_pool::TransactionsPool},
     tx::Priority,
 };
+use std::sync::Arc;
 use vecno_consensus_core::tx::{MutableTransaction, TransactionId};
 use vecno_core::time::Stopwatch;
-use std::sync::Arc;
 
 pub(crate) mod check_transaction_standard;
 pub mod config;

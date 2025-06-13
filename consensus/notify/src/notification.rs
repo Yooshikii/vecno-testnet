@@ -1,4 +1,5 @@
 use derive_more::Display;
+use std::sync::Arc;
 use vecno_consensus_core::{acceptance_data::AcceptanceData, block::Block, utxo::utxo_diff::UtxoDiff};
 use vecno_hashes::Hash;
 use vecno_notify::{
@@ -11,7 +12,6 @@ use vecno_notify::{
         Subscription,
     },
 };
-use std::sync::Arc;
 
 full_featured! {
 #[derive(Clone, Debug, Display)]

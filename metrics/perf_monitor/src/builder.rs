@@ -1,6 +1,6 @@
 use crate::{CountersSnapshot, Monitor};
-use vecno_core::task::tick::TickService;
 use std::time::Duration;
+use vecno_core::task::tick::TickService;
 
 pub struct Unspecified {}
 

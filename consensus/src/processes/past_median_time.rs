@@ -1,6 +1,6 @@
 use crate::model::stores::{block_window_cache::BlockWindowHeap, headers::HeaderStoreReader};
-use vecno_consensus_core::errors::block::RuleError;
 use std::sync::Arc;
+use vecno_consensus_core::errors::block::RuleError;
 
 /// A past median manager conforming to the legacy golang implementation
 /// based on full, hence un-sampled, windows

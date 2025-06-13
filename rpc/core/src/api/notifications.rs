@@ -1,6 +1,8 @@
 use crate::model::message::*;
 use borsh::{BorshDeserialize, BorshSerialize};
 use derive_more::Display;
+use serde::{Deserialize, Serialize};
+use std::sync::Arc;
 use vecno_notify::{
     events::EventType,
     notification::{full_featured, Notification as NotificationTrait},
@@ -10,8 +12,6 @@ use vecno_notify::{
         Subscription,
     },
 };
-use serde::{Deserialize, Serialize};
-use std::sync::Arc;
 use wasm_bindgen::JsValue;
 use workflow_wasm::serde::to_value;
 

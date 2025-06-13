@@ -1,10 +1,10 @@
 use vecno_notify::{scope::Scope, subscription::Command};
 
 use crate::protowire::{
-    vecnod_request, vecnod_response, VecnodRequest, VecnodResponse, NotifyBlockAddedRequestMessage,
-    NotifyFinalityConflictRequestMessage, NotifyNewBlockTemplateRequestMessage, NotifyPruningPointUtxoSetOverrideRequestMessage,
-    NotifySinkBlueScoreChangedRequestMessage, NotifyUtxosChangedRequestMessage, NotifyVirtualChainChangedRequestMessage,
-    NotifyVirtualDaaScoreChangedRequestMessage,
+    vecnod_request, vecnod_response, NotifyBlockAddedRequestMessage, NotifyFinalityConflictRequestMessage,
+    NotifyNewBlockTemplateRequestMessage, NotifyPruningPointUtxoSetOverrideRequestMessage, NotifySinkBlueScoreChangedRequestMessage,
+    NotifyUtxosChangedRequestMessage, NotifyVirtualChainChangedRequestMessage, NotifyVirtualDaaScoreChangedRequestMessage,
+    VecnodRequest, VecnodResponse,
 };
 
 impl VecnodRequest {

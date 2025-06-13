@@ -1,7 +1,7 @@
-use vecno_consensus_core::{subnets::SubnetworkConversionError, tx::TransactionId};
-use vecno_utils::networking::IpAddress;
 use std::{net::AddrParseError, num::TryFromIntError};
 use thiserror::Error;
+use vecno_consensus_core::{subnets::SubnetworkConversionError, tx::TransactionId};
+use vecno_utils::networking::IpAddress;
 use workflow_core::channel::ChannelError;
 
 use crate::{api::ctl::RpcState, RpcHash, RpcTransactionId, SubmitBlockRejectReason};

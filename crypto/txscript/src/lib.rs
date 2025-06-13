@@ -12,14 +12,14 @@ use crate::caches::Cache;
 use crate::data_stack::{DataStack, Stack};
 use crate::opcodes::{deserialize_next_opcode, OpCodeImplementation};
 use itertools::Itertools;
-use vecno_consensus_core::hashing::sighash::{calc_ecdsa_signature_hash, calc_schnorr_signature_hash, SigHashReusedValues};
-use vecno_consensus_core::hashing::sighash_type::SigHashType;
-use vecno_consensus_core::tx::{ScriptPublicKey, TransactionInput, UtxoEntry, VerifiableTransaction};
-use vecno_txscript_errors::TxScriptError;
 use log::trace;
 use opcodes::codes::OpReturn;
 use opcodes::{codes, to_small_int, OpCond};
 use script_class::ScriptClass;
+use vecno_consensus_core::hashing::sighash::{calc_ecdsa_signature_hash, calc_schnorr_signature_hash, SigHashReusedValues};
+use vecno_consensus_core::hashing::sighash_type::SigHashType;
+use vecno_consensus_core::tx::{ScriptPublicKey, TransactionInput, UtxoEntry, VerifiableTransaction};
+use vecno_txscript_errors::TxScriptError;
 
 pub mod prelude {
     pub use super::standard::*;
@@ -508,10 +508,10 @@ mod tests {
     use crate::opcodes::codes::{OpBlake3, OpCheckSig, OpData1, OpData2, OpData32, OpDup, OpEqual, OpPushData1, OpTrue};
 
     use super::*;
+    use smallvec::SmallVec;
     use vecno_consensus_core::tx::{
         PopulatedTransaction, ScriptPublicKey, Transaction, TransactionId, TransactionOutpoint, TransactionOutput,
     };
-    use smallvec::SmallVec;
 
     struct ScriptTestCase {
         script: &'static [u8],

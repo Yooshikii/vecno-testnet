@@ -33,28 +33,28 @@ impl Inner {
                 // Check if the object store exists; create it if it doesn't
                 if !evt.db().object_store_names().any(|n| n == TRANSACTIONS_STORE_NAME) {
                     let object_store = evt.db().create_object_store(TRANSACTIONS_STORE_NAME)?;
-                    
+
                     // Index for TRANSACTIONS_STORE_ID_INDEX (unique)
-                    let mut params = IdbIndexParameters::new();
-                    params.unique(true);
+                    let params = IdbIndexParameters::new();
+                    params.set_unique(true);
                     object_store.create_index_with_params(
                         TRANSACTIONS_STORE_ID_INDEX,
                         &IdbKeyPath::str(TRANSACTIONS_STORE_ID_INDEX),
                         &params,
                     )?;
-                    
+
                     // Index for TRANSACTIONS_STORE_TIMESTAMP_INDEX (non-unique)
-                    let mut params = IdbIndexParameters::new();
-                    params.unique(false);
+                    let params = IdbIndexParameters::new();
+                    params.set_unique(false);
                     object_store.create_index_with_params(
                         TRANSACTIONS_STORE_TIMESTAMP_INDEX,
                         &IdbKeyPath::str(TRANSACTIONS_STORE_TIMESTAMP_INDEX),
                         &params,
                     )?;
-                    
+
                     // Index for TRANSACTIONS_STORE_DATA_INDEX (non-unique)
-                    let mut params = IdbIndexParameters::new();
-                    params.unique(false);
+                    let params = IdbIndexParameters::new();
+                    params.set_unique(false);
                     object_store.create_index_with_params(
                         TRANSACTIONS_STORE_DATA_INDEX,
                         &IdbKeyPath::str(TRANSACTIONS_STORE_DATA_INDEX),

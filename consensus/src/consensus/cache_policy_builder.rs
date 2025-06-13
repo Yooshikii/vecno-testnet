@@ -1,6 +1,6 @@
+use rand::Rng;
 use vecno_database::prelude::CachePolicy;
 use vecno_utils::mem_size::MemMode;
-use rand::Rng;
 
 /// Adds stochastic noise to cache sizes to avoid predictable and equal sizes across all network nodes
 fn noise(size: usize, magnitude: usize) -> usize {

@@ -1,9 +1,9 @@
 use indexmap::IndexSet;
 use itertools::Itertools;
-use vecno_consensus_core::{blockhash::ORIGIN, header::Header, BlockHashMap, BlockHasher, BlockLevel};
-use vecno_hashes::Hash;
 use smallvec::{smallvec, SmallVec};
 use std::sync::Arc;
+use vecno_consensus_core::{blockhash::ORIGIN, header::Header, BlockHashMap, BlockHasher, BlockLevel};
+use vecno_hashes::Hash;
 
 use crate::model::{
     services::reachability::{MTReachabilityService, ReachabilityService},
@@ -199,6 +199,7 @@ mod tests {
 
     use super::ParentsManager;
     use itertools::Itertools;
+    use parking_lot::RwLock;
     use vecno_consensus_core::{
         blockhash::{BlockHashes, ORIGIN},
         header::Header,
@@ -206,7 +207,6 @@ mod tests {
     };
     use vecno_database::prelude::{ReadLock, StoreError, StoreResult};
     use vecno_hashes::Hash;
-    use parking_lot::RwLock;
 
     struct HeaderStoreMock {
         map: RwLock<BlockHashMap<HeaderWithBlockLevel>>,

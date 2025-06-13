@@ -2,11 +2,11 @@
 //! General-purpose Id traits used by storage data collections.
 //!
 
-use vecno_consensus_core::tx::TransactionId;
-use vecno_utils::hex::ToHex;
 use std::cmp::Eq;
 use std::fmt::Debug;
 use std::hash::Hash;
+use vecno_consensus_core::tx::TransactionId;
+use vecno_utils::hex::ToHex;
 
 use crate::deterministic::AccountId;
 use crate::storage::{AccountStorage, PrvKeyData, PrvKeyDataId, PrvKeyDataInfo, TransactionRecord};

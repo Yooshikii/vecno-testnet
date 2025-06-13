@@ -8,6 +8,11 @@ pub use async_trait::async_trait;
 pub use cfg_if::cfg_if;
 pub use futures::*;
 pub use js_sys::Function;
+pub use serde::{Deserialize, Serialize};
+pub use std::sync::{
+    atomic::{AtomicBool, Ordering},
+    Arc, Mutex,
+};
 pub use vecno_consensus_core::network::{NetworkId, NetworkIdT};
 pub use vecno_notify::{
     error::{Error as NotifyError, Result as NotifyResult},
@@ -23,11 +28,6 @@ pub use vecno_rpc_core::{
     error::RpcResult,
     notify::{connection::ChannelConnection, mode::NotificationMode},
     prelude::*,
-};
-pub use serde::{Deserialize, Serialize};
-pub use std::sync::{
-    atomic::{AtomicBool, Ordering},
-    Arc, Mutex,
 };
 pub use wasm_bindgen::prelude::*;
 pub use workflow_core::{

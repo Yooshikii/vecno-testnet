@@ -1,5 +1,7 @@
 use std::sync::Arc;
 
+use rocksdb::WriteBatch;
+use serde::{Deserialize, Serialize};
 use vecno_consensus_core::BlockHasher;
 use vecno_database::prelude::CachePolicy;
 use vecno_database::prelude::StoreError;
@@ -8,8 +10,6 @@ use vecno_database::prelude::{BatchDbWriter, CachedDbAccess, DirectDbWriter};
 use vecno_database::registry::DatabaseStorePrefixes;
 use vecno_hashes::Hash;
 use vecno_utils::mem_size::MemSizeEstimator;
-use rocksdb::WriteBatch;
-use serde::{Deserialize, Serialize};
 
 pub trait DepthStoreReader {
     fn merge_depth_root(&self, hash: Hash) -> Result<Hash, StoreError>;

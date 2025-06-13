@@ -665,13 +665,13 @@ mod tests {
     use super::create_private_keys;
     use super::ExtendedPrivateKey;
     use crate::imports::LEGACY_ACCOUNT_KIND;
+    use std::str::FromStr;
     use vecno_addresses::Address;
     use vecno_addresses::Prefix;
     use vecno_bip32::secp256k1::SecretKey;
     use vecno_bip32::PrivateKey;
     use vecno_bip32::SecretKeyExt;
     use vecno_wallet_keys::derivation::gen0::PubkeyDerivationManagerV0;
-    use std::str::FromStr;
 
     fn gen0_receive_addresses() -> Vec<&'static str> {
         vec![

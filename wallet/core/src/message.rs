@@ -2,8 +2,8 @@
 //! Message signing and verification functions.
 //!
 
-use vecno_hashes::{Hash, PersonalMessageSigningHash};
 use secp256k1::{Error, XOnlyPublicKey};
+use vecno_hashes::{Hash, PersonalMessageSigningHash};
 
 #[derive(Clone)]
 pub struct PersonalMessage<'a>(pub &'a str);

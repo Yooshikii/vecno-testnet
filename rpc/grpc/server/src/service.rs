@@ -1,4 +1,6 @@
 use crate::{adaptor::Adaptor, manager::Manager};
+use std::sync::Arc;
+use triggered::Listener;
 use vecno_consensus_core::config::Config;
 use vecno_core::{
     debug,
@@ -8,8 +10,6 @@ use vecno_core::{
 use vecno_rpc_service::service::RpcCoreService;
 use vecno_utils::{networking::NetAddress, triggers::SingleTrigger};
 use vecno_utils_tower::counters::TowerConnectionCounters;
-use std::sync::Arc;
-use triggered::Listener;
 
 pub struct GrpcService {
     net_address: NetAddress,

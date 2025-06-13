@@ -78,7 +78,6 @@ use vecno_notify::{events::EventType, notifier::Notify};
 
 use crossbeam_channel::{Receiver as CrossbeamReceiver, Sender as CrossbeamSender};
 use itertools::Itertools;
-use vecno_utils::binary_heap::BinaryHeapExtensions;
 use parking_lot::{RwLock, RwLockUpgradableReadGuard};
 use rand::{seq::SliceRandom, Rng};
 use rayon::{
@@ -92,6 +91,7 @@ use std::{
     ops::Deref,
     sync::{atomic::Ordering, Arc},
 };
+use vecno_utils::binary_heap::BinaryHeapExtensions;
 
 use super::errors::{PruningImportError, PruningImportResult};
 

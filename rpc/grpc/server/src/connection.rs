@@ -10,18 +10,6 @@ use crate::{
 };
 use async_channel::{bounded, Receiver as MpmcReceiver, Sender as MpmcSender, TrySendError as MpmcTrySendError};
 use itertools::Itertools;
-use vecno_core::{debug, info, trace, warn};
-use vecno_grpc_core::{
-    ops::VecnodPayloadOps,
-    protowire::{VecnodRequest, VecnodResponse},
-};
-use vecno_notify::{
-    connection::Connection as ConnectionT,
-    error::Error as NotificationError,
-    listener::{ListenerId, ListenerLifespan},
-    notifier::Notifier,
-};
-use vecno_rpc_core::Notification;
 use parking_lot::Mutex;
 use std::{
     collections::{hash_map::Entry, HashMap},
@@ -38,6 +26,18 @@ use tokio::sync::oneshot::{channel as oneshot_channel, Sender as OneshotSender};
 use tokio::{select, sync::mpsc::error::TrySendError};
 use tonic::Streaming;
 use uuid::Uuid;
+use vecno_core::{debug, info, trace, warn};
+use vecno_grpc_core::{
+    ops::VecnodPayloadOps,
+    protowire::{VecnodRequest, VecnodResponse},
+};
+use vecno_notify::{
+    connection::Connection as ConnectionT,
+    error::Error as NotificationError,
+    listener::{ListenerId, ListenerLifespan},
+    notifier::Notifier,
+};
+use vecno_rpc_core::Notification;
 
 pub type IncomingRoute = MpmcReceiver<VecnodRequest>;
 pub type GrpcNotifier = Notifier<Notification, Connection>;

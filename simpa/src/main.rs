@@ -2,6 +2,8 @@ use async_channel::unbounded;
 use clap::Parser;
 use futures::{future::try_join_all, Future};
 use itertools::Itertools;
+use simulator::network::VecnoNetworkSimulator;
+use std::{collections::VecDeque, sync::Arc, time::Duration};
 use vecno_alloc::init_allocator_with_default_settings;
 use vecno_consensus::{
     config::ConfigBuilder,
@@ -26,8 +28,6 @@ use vecno_database::{create_temp_db, load_existing_db};
 use vecno_hashes::Hash;
 use vecno_perf_monitor::{builder::Builder, counters::CountersSnapshot};
 use vecno_utils::fd_budget;
-use simulator::network::VecnoNetworkSimulator;
-use std::{collections::VecDeque, sync::Arc, time::Duration};
 
 pub mod simulator;
 

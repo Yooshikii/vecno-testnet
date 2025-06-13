@@ -3,12 +3,12 @@ use crate::{
     core::adaptor::ConnectionInitializer,
     handshake::VecnodHandshake,
     pb::{self, VersionMessage},
-    IncomingRoute, VecnodMessagePayloadType, Router,
+    IncomingRoute, Router, VecnodMessagePayloadType,
 };
-use vecno_core::{debug, time::unix_now, trace, warn};
 use std::sync::Arc;
 use tonic::async_trait;
 use uuid::Uuid;
+use vecno_core::{debug, time::unix_now, trace, warn};
 
 /// An example flow, echoing all messages back to the network
 pub struct EchoFlow {

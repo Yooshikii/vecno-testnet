@@ -1,10 +1,10 @@
 use crate::tasks::Task;
 use async_trait::async_trait;
+use std::{sync::Arc, time::Duration};
+use tokio::{task::JoinHandle, time::sleep};
 use vecno_core::warn;
 use vecno_grpc_client::GrpcClient;
 use vecno_utils::triggers::SingleTrigger;
-use std::{sync::Arc, time::Duration};
-use tokio::{task::JoinHandle, time::sleep};
 
 pub struct NotificationDrainerTask {
     clients: Vec<Arc<GrpcClient>>,

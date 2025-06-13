@@ -266,13 +266,13 @@ mod tests {
         processes::reachability::{interval::Interval, tests::gen::generate_complex_dag},
     };
     use itertools::Itertools;
-    use vecno_consensus_core::blockhash::ORIGIN;
-    use vecno_database::prelude::ConnBuilder;
-    use vecno_database::{create_temp_db, prelude::CachePolicy};
     use parking_lot::RwLock;
     use rand::seq::IteratorRandom;
     use rocksdb::WriteBatch;
     use std::{iter::once, ops::Deref};
+    use vecno_consensus_core::blockhash::ORIGIN;
+    use vecno_database::prelude::ConnBuilder;
+    use vecno_database::{create_temp_db, prelude::CachePolicy};
 
     #[test]
     fn test_add_tree_blocks() {

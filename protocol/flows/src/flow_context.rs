@@ -6,37 +6,6 @@ use crate::flowcontext::{
 use crate::{v5, v6};
 use async_trait::async_trait;
 use futures::future::join_all;
-use vecno_addressmanager::AddressManager;
-use vecno_connectionmanager::ConnectionManager;
-use vecno_consensus_core::api::{BlockValidationFuture, BlockValidationFutures};
-use vecno_consensus_core::block::Block;
-use vecno_consensus_core::config::Config;
-use vecno_consensus_core::errors::block::RuleError;
-use vecno_consensus_core::tx::{Transaction, TransactionId};
-use vecno_consensus_notify::{
-    notification::{Notification, PruningPointUtxoSetOverrideNotification},
-    root::ConsensusNotificationRoot,
-};
-use vecno_consensusmanager::{BlockProcessingBatch, ConsensusInstance, ConsensusManager, ConsensusProxy};
-use vecno_core::{
-    debug, info,
-    vecnod_env::{name, version},
-    task::tick::TickService,
-};
-use vecno_core::{time::unix_now, warn};
-use vecno_hashes::Hash;
-use vecno_mining::manager::MiningManagerProxy;
-use vecno_mining::mempool::tx::{Orphan, Priority};
-use vecno_notify::notifier::Notify;
-use vecno_p2p_lib::{
-    common::ProtocolError,
-    convert::model::version::Version,
-    make_message,
-    pb::{vecnod_message::Payload, InvRelayBlockMessage},
-    ConnectionInitializer, Hub, VecnodHandshake, PeerKey, PeerProperties, Router,
-};
-use vecno_utils::iter::IterExtensions;
-use vecno_utils::networking::PeerId;
 use parking_lot::{Mutex, RwLock};
 use std::collections::HashMap;
 use std::time::Instant;
@@ -56,6 +25,37 @@ use tokio::sync::{
 };
 use tokio_stream::{wrappers::UnboundedReceiverStream, StreamExt};
 use uuid::Uuid;
+use vecno_addressmanager::AddressManager;
+use vecno_connectionmanager::ConnectionManager;
+use vecno_consensus_core::api::{BlockValidationFuture, BlockValidationFutures};
+use vecno_consensus_core::block::Block;
+use vecno_consensus_core::config::Config;
+use vecno_consensus_core::errors::block::RuleError;
+use vecno_consensus_core::tx::{Transaction, TransactionId};
+use vecno_consensus_notify::{
+    notification::{Notification, PruningPointUtxoSetOverrideNotification},
+    root::ConsensusNotificationRoot,
+};
+use vecno_consensusmanager::{BlockProcessingBatch, ConsensusInstance, ConsensusManager, ConsensusProxy};
+use vecno_core::{
+    debug, info,
+    task::tick::TickService,
+    vecnod_env::{name, version},
+};
+use vecno_core::{time::unix_now, warn};
+use vecno_hashes::Hash;
+use vecno_mining::manager::MiningManagerProxy;
+use vecno_mining::mempool::tx::{Orphan, Priority};
+use vecno_notify::notifier::Notify;
+use vecno_p2p_lib::{
+    common::ProtocolError,
+    convert::model::version::Version,
+    make_message,
+    pb::{vecnod_message::Payload, InvRelayBlockMessage},
+    ConnectionInitializer, Hub, PeerKey, PeerProperties, Router, VecnodHandshake,
+};
+use vecno_utils::iter::IterExtensions;
+use vecno_utils::networking::PeerId;
 
 /// The P2P protocol version. Currently the only one supported.
 const PROTOCOL_VERSION: u32 = 6;

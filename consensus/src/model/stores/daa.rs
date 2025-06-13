@@ -1,5 +1,6 @@
 use std::sync::Arc;
 
+use rocksdb::WriteBatch;
 use vecno_consensus_core::{BlockHashSet, BlockHasher};
 use vecno_database::prelude::CachePolicy;
 use vecno_database::prelude::StoreError;
@@ -7,7 +8,6 @@ use vecno_database::prelude::DB;
 use vecno_database::prelude::{BatchDbWriter, CachedDbAccess, DirectDbWriter};
 use vecno_database::registry::DatabaseStorePrefixes;
 use vecno_hashes::Hash;
-use rocksdb::WriteBatch;
 
 pub trait DaaStoreReader {
     fn get_mergeset_non_daa(&self, hash: Hash) -> Result<Arc<BlockHashSet>, StoreError>;

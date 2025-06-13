@@ -1,5 +1,6 @@
 use std::sync::Arc;
 
+use rocksdb::WriteBatch;
 use vecno_consensus_core::{utxo::utxo_diff::UtxoDiff, BlockHasher};
 use vecno_database::prelude::CachePolicy;
 use vecno_database::prelude::StoreError;
@@ -7,7 +8,6 @@ use vecno_database::prelude::DB;
 use vecno_database::prelude::{BatchDbWriter, CachedDbAccess, DirectDbWriter};
 use vecno_database::registry::DatabaseStorePrefixes;
 use vecno_hashes::Hash;
-use rocksdb::WriteBatch;
 
 /// Store for holding the UTXO difference (delta) of a block relative to its selected parent.
 /// Note that this data is lazy-computed only for blocks which are candidates to being chain

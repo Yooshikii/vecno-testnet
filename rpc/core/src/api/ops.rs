@@ -1,6 +1,6 @@
 use borsh::{BorshDeserialize, BorshSerialize};
-use vecno_notify::events::EventType;
 use serde::{Deserialize, Serialize};
+use vecno_notify::events::EventType;
 use workflow_core::enums::Describe;
 
 /// Rpc Api version (4 x short values); First short is reserved.

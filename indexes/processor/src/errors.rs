@@ -1,6 +1,6 @@
+use thiserror::Error;
 use vecno_notify::events::EventType;
 use vecno_utxoindex::errors::UtxoIndexError;
-use thiserror::Error;
 
 #[derive(Error, Debug)]
 pub enum IndexError {

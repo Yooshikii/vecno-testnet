@@ -2,6 +2,7 @@
 //!
 //! We use newtypes in order to simplify changing the underlying lock in the future
 
+use std::{ops::Deref, sync::Arc};
 use vecno_consensus_core::{
     acceptance_data::AcceptanceData,
     api::{BlockCount, BlockValidationFutures, ConsensusApi, ConsensusStats, DynConsensus},
@@ -16,7 +17,6 @@ use vecno_consensus_core::{
     BlockHashSet, BlueWorkType, ChainPath, Hash,
 };
 use vecno_utils::sync::rwlock::*;
-use std::{ops::Deref, sync::Arc};
 
 pub use tokio::task::spawn_blocking;
 

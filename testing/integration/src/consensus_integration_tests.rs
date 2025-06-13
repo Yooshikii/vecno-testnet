@@ -44,6 +44,18 @@ use vecno_hashes::Hash;
 use flate2::read::GzDecoder;
 use futures_util::future::try_join_all;
 use itertools::Itertools;
+use serde::{Deserialize, Serialize};
+use std::cmp::{max, Ordering};
+use std::collections::HashSet;
+use std::path::Path;
+use std::sync::Arc;
+use std::{
+    collections::HashMap,
+    fs::File,
+    future::Future,
+    io::{BufRead, BufReader},
+    str::{from_utf8, FromStr},
+};
 use vecno_core::core::Core;
 use vecno_core::signals::Shutdown;
 use vecno_core::task::runtime::AsyncRuntime;
@@ -57,18 +69,6 @@ use vecno_notify::subscription::context::SubscriptionContext;
 use vecno_txscript::caches::TxScriptCacheCounters;
 use vecno_utxoindex::api::{UtxoIndexApi, UtxoIndexProxy};
 use vecno_utxoindex::UtxoIndex;
-use serde::{Deserialize, Serialize};
-use std::cmp::{max, Ordering};
-use std::collections::HashSet;
-use std::path::Path;
-use std::sync::Arc;
-use std::{
-    collections::HashMap,
-    fs::File,
-    future::Future,
-    io::{BufRead, BufReader},
-    str::{from_utf8, FromStr},
-};
 
 use crate::common;
 

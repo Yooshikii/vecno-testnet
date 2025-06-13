@@ -60,8 +60,8 @@ async fn get_status_all_nodes() -> impl IntoResponse {
 
 // respond with a JSON object containing the elected node
 async fn get_elected_node(Query(_query): Query<QueryParams>, Path(params): Path<PathParams>) -> impl IntoResponse {
-    // println!("params: {:?}", params);
-    // println!("query: {:?}", query);
+    println!("params: {:?}", params);
+    println!("query: {:?}", _query);
 
     if let Some(json) = monitor().get_json(&params) {
         ([(header::CONTENT_TYPE, HeaderValue::from_static(mime::APPLICATION_JSON.as_ref()))], json).into_response()

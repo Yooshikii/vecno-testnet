@@ -1,7 +1,7 @@
 use crate::model::*;
+use std::sync::Arc;
 use vecno_consensus_client::*;
 use vecno_consensus_core::tx as cctx;
-use std::sync::Arc;
 
 impl From<RpcUtxosByAddressesEntry> for UtxoEntry {
     fn from(entry: RpcUtxosByAddressesEntry) -> UtxoEntry {

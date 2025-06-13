@@ -1,7 +1,7 @@
 use super::error::ConversionError;
 use crate::pb as protowire;
-use vecno_consensus_core::header::Header;
 use std::sync::Arc;
+use vecno_consensus_core::header::Header;
 
 // ----------------------------------------------------------------------------
 // consensus_core to protowire

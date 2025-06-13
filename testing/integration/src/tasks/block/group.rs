@@ -7,13 +7,13 @@ use crate::{
 };
 use async_trait::async_trait;
 use itertools::chain;
+use rand::thread_rng;
+use std::sync::Arc;
+use tokio::task::JoinHandle;
 use vecno_addresses::Address;
 use vecno_consensus_core::network::NetworkId;
 use vecno_core::debug;
 use vecno_utils::triggers::SingleTrigger;
-use rand::thread_rng;
-use std::sync::Arc;
-use tokio::task::JoinHandle;
 
 pub struct MinerGroupTask {
     submitter: Arc<BlockSubmitterTask>,

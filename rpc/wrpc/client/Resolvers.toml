@@ -1,11 +1,7 @@
 [[resolver]]
-url = "https://wallet.vecnoscan.org"
 enable = true
-
-[[resolver]]
-url = "https://wallet.vecnoscan.org"
-enable = true
-
-[[resolver]]
 url = "http://127.0.0.1:8888"
-enable = false
+
+[[resolver]]
+enable = true
+url = "https://seed.vecnoscan.org"

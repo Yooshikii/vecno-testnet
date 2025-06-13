@@ -1,8 +1,8 @@
 pub mod cpu_miner;
 pub mod error;
 pub mod imports;
-pub mod vecnod;
 pub mod result;
+pub mod vecnod;
 
 use std::fmt::Display;
 

@@ -1,5 +1,5 @@
-use vecno_consensus_core::subnets::SubnetworkConversionError;
 use thiserror::Error;
+use vecno_consensus_core::subnets::SubnetworkConversionError;
 
 #[derive(Clone, Debug, Error)]
 pub enum ConversionError {

@@ -2,6 +2,7 @@ use std::{str::FromStr, sync::Arc, time::Duration};
 
 use crate::common::{client_notify::ChannelNotify, daemon::Daemon};
 use futures_util::future::try_join_all;
+use tokio::task::JoinHandle;
 use vecno_addresses::{Address, Prefix, Version};
 use vecno_consensus::params::SIMNET_GENESIS;
 use vecno_consensus_core::{constants::MAX_SOMPI, subnets::SubnetworkId, tx::Transaction};
@@ -18,7 +19,6 @@ use vecno_notify::{
 use vecno_rpc_core::{api::rpc::RpcApi, model::*, Notification};
 use vecno_utils::{fd_budget, networking::ContextualNetAddress};
 use vecnod_lib::args::Args;
-use tokio::task::JoinHandle;
 
 #[macro_export]
 macro_rules! tst {

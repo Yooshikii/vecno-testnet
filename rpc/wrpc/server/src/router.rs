@@ -1,8 +1,8 @@
 use crate::{connection::*, server::*};
+use std::sync::Arc;
 use vecno_notify::scope::Scope;
 use vecno_rpc_core::{api::ops::RpcApiOps, prelude::*};
 use vecno_rpc_macros::build_wrpc_server_interface;
-use std::sync::Arc;
 use workflow_rpc::server::prelude::*;
 
 /// A wrapper that creates an [`Interface`] instance and initializes
