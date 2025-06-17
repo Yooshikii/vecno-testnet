@@ -3,13 +3,13 @@ use crate::constants;
 use crate::errors::{BlockProcessResult, RuleError};
 use crate::model::services::reachability::ReachabilityService;
 use crate::model::stores::statuses::StatusesStoreReader;
-use std::cmp::max;
 use vecno_consensus_core::blockhash::BlockHashExtensions;
 use vecno_consensus_core::blockstatus::BlockStatus::StatusInvalid;
 use vecno_consensus_core::header::Header;
 use vecno_consensus_core::BlockLevel;
 use vecno_core::time::unix_now;
 use vecno_database::prelude::StoreResultExtensions;
+use vecno_pow::calc_level_from_pow;
 
 impl HeaderProcessor {
     /// Validates the header in isolation including pow check against header declared bits.
@@ -102,8 +102,7 @@ impl HeaderProcessor {
         let state = vecno_pow::State::new(header);
         let (passed, pow) = state.check_pow(header.nonce);
         if passed || self.skip_proof_of_work {
-            let signed_block_level = self.max_block_level as i64 - pow.bits() as i64;
-            Ok(max(signed_block_level, 0) as BlockLevel)
+            Ok(calc_level_from_pow(pow, self.max_block_level))
         } else {
             Err(RuleError::InvalidPoW)
         }

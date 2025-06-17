@@ -14,14 +14,13 @@ use tokio::sync::mpsc::{channel as mpsc_channel, Sender as MpscSender};
 use tokio::sync::oneshot::{channel as oneshot_channel, Sender as OneshotSender};
 use tokio_stream::wrappers::ReceiverStream;
 use tokio_stream::StreamExt;
-use tonic::codegen::Body;
 use tonic::transport::{Error as TonicError, Server as TonicServer};
 use tonic::{Request, Response, Status as TonicStatus, Streaming};
 use vecno_core::{debug, info};
 use vecno_utils::networking::NetAddress;
 use vecno_utils_tower::{
     counters::TowerConnectionCounters,
-    middleware::{measure_request_body_size_layer, CountBytesBody, MapResponseBodyLayer, ServiceBuilder},
+    middleware::{BodyExt, CountBytesBody, MapRequestBodyLayer, MapResponseBodyLayer, ServiceBuilder},
 };
 
 #[derive(Error, Debug)]
@@ -80,7 +79,7 @@ impl ConnectionHandler {
 
             // TODO: check whether we should set tcp_keepalive
             let serve_result = TonicServer::builder()
-                .layer(measure_request_body_size_layer(bytes_rx, |b| b))
+                .layer(MapRequestBodyLayer::new(move |body| CountBytesBody::new(body, bytes_rx.clone()).boxed_unsync()))
                 .layer(MapResponseBodyLayer::new(move |body| CountBytesBody::new(body, bytes_tx.clone())))
                 .add_service(proto_server)
                 .serve_with_shutdown(serve_address.into(), termination_receiver.map(drop))
@@ -110,9 +109,7 @@ impl ConnectionHandler {
 
         let channel = ServiceBuilder::new()
             .layer(MapResponseBodyLayer::new(move |body| CountBytesBody::new(body, self.counters.bytes_rx.clone())))
-            .layer(measure_request_body_size_layer(self.counters.bytes_tx.clone(), |body| {
-                body.map_err(|e| tonic::Status::from_error(Box::new(e))).boxed_unsync()
-            }))
+            .layer(MapRequestBodyLayer::new(move |body| CountBytesBody::new(body, self.counters.bytes_tx.clone()).boxed_unsync()))
             .service(channel);
 
         let mut client = ProtoP2pClient::new(channel)
@@ -178,7 +175,9 @@ impl ConnectionHandler {
         }
     }
 
+    // TODO: revisit the below constants
     fn outgoing_network_channel_size() -> usize {
+        // TODO: this number is taken from go-vecnod and should be re-evaluated
         (1 << 17) + 256
     }
 

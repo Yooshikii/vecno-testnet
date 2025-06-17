@@ -47,8 +47,7 @@ impl TransactionsSpread {
         // Keep the launching times aligned to exact intervals. Note that `delta=10.1` seconds will result in
         // adding 10 seconds to last scan time, while `delta=11` will result in adding 20 (assuming scanning
         // interval is 10 seconds).
-        self.last_scanning_time +=
-            Duration::from_secs(((delta.as_secs() + SCANNING_TASK_INTERVAL - 1) / SCANNING_TASK_INTERVAL) * SCANNING_TASK_INTERVAL);
+        self.last_scanning_time += Duration::from_secs(delta.as_secs().div_ceil(SCANNING_TASK_INTERVAL) * SCANNING_TASK_INTERVAL);
 
         self.scanning_job_count += 1;
         self.scanning_task_running = true;
@@ -69,6 +68,14 @@ impl TransactionsSpread {
         self.scanning_task_running = false;
     }
 
+    /// Add the given transactions IDs to a set of IDs to broadcast. The IDs will be broadcasted to all peers
+    /// within transaction Inv messages.
+    ///
+    /// The broadcast itself may happen only during a subsequent call to this function since it is done at most
+    /// every `BROADCAST_INTERVAL` milliseconds or when the queue length is larger than the Inv message
+    /// capacity.
+    ///
+    /// _GO-VECNOD: EnqueueTransactionIDsForPropagation_
     pub async fn broadcast_transactions<I: IntoIterator<Item = TransactionId>>(&mut self, transaction_ids: I, should_throttle: bool) {
         self.transaction_ids.enqueue_chunk(transaction_ids);
 

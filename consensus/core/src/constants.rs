@@ -16,7 +16,7 @@ pub const SOMPI_PER_VECNO: u64 = 100_000_000;
 pub const STORAGE_MASS_PARAMETER: u64 = SOMPI_PER_VECNO * 10_000;
 
 /// MaxSompi is the maximum transaction amount allowed in sompi.
-pub const MAX_SOMPI: u64 = 1_000_000_000 * SOMPI_PER_VECNO;
+pub const MAX_SOMPI: u64 = 20_000_000_000 * SOMPI_PER_VECNO;
 
 // MAX_TX_IN_SEQUENCE_NUM is the maximum sequence number the sequence field
 // of a transaction input can be.

@@ -17,7 +17,6 @@ vecno-addresses.workspace = true
 vecno-consensus-core.workspace = true
 vecno-hashes.workspace = true
 vecno-math.workspace = true
-vecno-muhash.workspace = true
 vecno-txscript.workspace = true
 vecno-utils.workspace = true
 vecno-wasm-core.workspace = true
@@ -39,5 +38,5 @@ itertools.workspace = true
 workflow-wasm.workspace = true
 workflow-log.workspace = true
 
-[lints.clippy]
-empty_docs = "allow"
+[lints]
+workspace = true

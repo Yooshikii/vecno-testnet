@@ -20,7 +20,7 @@ pub use std::sync::atomic::{AtomicBool, Ordering};
 pub use std::sync::{Arc, Mutex, MutexGuard};
 pub use vecno_addresses::{Address, Version as AddressVersion};
 pub use vecno_bip32::{ChildNumber, ExtendedPrivateKey, ExtendedPublicKey, SecretKey};
-pub use vecno_consensus_core::network::NetworkTypeT;
+pub use vecno_consensus_core::network::{NetworkId, NetworkTypeT};
 pub use vecno_utils::hex::*;
 pub use vecno_wasm_core::types::*;
 pub use wasm_bindgen::prelude::*;

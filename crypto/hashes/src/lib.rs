@@ -187,8 +187,11 @@ impl Hash {
 type TryFromError = workflow_wasm::error::Error;
 impl TryCastFromJs for Hash {
     type Error = TryFromError;
-    fn try_cast_from(value: impl AsRef<JsValue>) -> Result<Cast<Self>, Self::Error> {
-        Self::resolve(&value, || {
+    fn try_cast_from<'a, R>(value: &'a R) -> Result<Cast<'a, Self>, Self::Error>
+    where
+        R: AsRef<JsValue> + 'a,
+    {
+        Self::resolve(value, || {
             let bytes = value.as_ref().try_as_vec_u8()?;
             Ok(Hash(
                 <[u8; HASH_SIZE]>::try_from(bytes)
@@ -199,11 +202,6 @@ impl TryCastFromJs for Hash {
 }
 
 pub const ZERO_HASH: Hash = Hash([0; HASH_SIZE]);
-
-pub const EMPTY_MUHASH: Hash = Hash::from_bytes([
-    0x54, 0x4e, 0xb3, 0x14, 0x2c, 0x0, 0xf, 0xa, 0xd2, 0xc7, 0x6a, 0xc4, 0x1f, 0x42, 0x22, 0xab, 0xba, 0xba, 0xbe, 0xd8, 0x30, 0xee,
-    0xaf, 0xee, 0x4b, 0x6d, 0xc5, 0x6b, 0x52, 0xd5, 0xca, 0xc0,
-]);
 
 #[cfg(test)]
 mod tests {

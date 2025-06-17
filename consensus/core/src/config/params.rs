@@ -1,7 +1,7 @@
 pub use super::{
     bps::{Bps, Testnet11Bps},
     constants::consensus::*,
-    genesis::{GenesisBlock, DEVNET_GENESIS, GENESIS, SIMNET_GENESIS, TESTNET11_GENESIS, TESTNET_GENESIS},
+    genesis::{GenesisBlock, DEVNET_GENESIS, GENESIS, SIMNET_GENESIS, TESTNET_GENESIS},
 };
 use crate::{
     constants::STORAGE_MASS_PARAMETER,
@@ -14,6 +14,33 @@ use std::{
 };
 use vecno_addresses::Prefix;
 use vecno_math::Uint256;
+
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+pub struct ForkActivation(u64);
+
+impl ForkActivation {
+    pub const fn new(daa_score: u64) -> Self {
+        Self(daa_score)
+    }
+
+    pub const fn never() -> Self {
+        Self(u64::MAX)
+    }
+
+    pub const fn always() -> Self {
+        Self(0)
+    }
+
+    pub fn is_active(self, current_daa_score: u64) -> bool {
+        current_daa_score >= self.0
+    }
+
+    /// Checks if the fork was "recently" activated, i.e., in the time frame of the provided range.
+    /// This function returns false for forks that were always active, since they were never activated.
+    pub fn is_within_range_from_activation(self, current_daa_score: u64, range: u64) -> bool {
+        self != Self::always() && self.is_active(current_daa_score) && current_daa_score < self.0 + range
+    }
+}
 
 /// Consensus parameters. Contains settings and configurations which are consensus-sensitive.
 /// Changing one of these on a network node would exclude and prevent it from reaching consensus
@@ -41,7 +68,7 @@ pub struct Params {
     pub target_time_per_block: u64,
 
     /// DAA score from which the window sampling starts for difficulty and past median time calculation
-    pub sampling_activation_daa_score: u64,
+    pub sampling_activation: ForkActivation,
 
     /// Defines the highest allowed proof of work difficulty value for a block as a [`Uint256`]
     pub max_difficulty_target: Uint256,
@@ -81,7 +108,19 @@ pub struct Params {
     pub storage_mass_parameter: u64,
 
     /// DAA score from which storage mass calculation and transaction mass field are activated as a consensus rule
-    pub storage_mass_activation_daa_score: u64,
+    pub storage_mass_activation: ForkActivation,
+
+    /// DAA score from which tx engine:
+    /// 1. Supports 8-byte integer arithmetic operations (previously limited to 4 bytes)
+    /// 2. Supports transaction introspection opcodes:
+    ///    - OpTxInputCount (0xb3): Get number of inputs
+    ///    - OpTxOutputCount (0xb4): Get number of outputs
+    ///    - OpTxInputIndex (0xb9): Get current input index
+    ///    - OpTxInputAmount (0xbe): Get input amount
+    ///    - OpTxInputSpk (0xbf): Get input script public key
+    ///    - OpTxOutputAmount (0xc2): Get output amount
+    ///    - OpTxOutputSpk (0xc3): Get output script public key
+    pub kip10_activation: ForkActivation,
 
     /// DAA score after which the pre-deflationary period switches to the deflationary period
     pub premine_daa_score: u64,
@@ -91,6 +130,9 @@ pub struct Params {
     pub skip_proof_of_work: bool,
     pub max_block_level: BlockLevel,
     pub pruning_proof_m: u64,
+
+    /// Activation rules for when to enable using the payload field in transactions
+    pub payload_activation: ForkActivation,
 }
 
 fn unix_now() -> u64 {
@@ -117,10 +159,10 @@ impl Params {
     #[inline]
     #[must_use]
     pub fn past_median_time_window_size(&self, selected_parent_daa_score: u64) -> usize {
-        if selected_parent_daa_score < self.sampling_activation_daa_score {
-            self.legacy_past_median_time_window_size()
-        } else {
+        if self.sampling_activation.is_active(selected_parent_daa_score) {
             self.sampled_past_median_time_window_size()
+        } else {
+            self.legacy_past_median_time_window_size()
         }
     }
 
@@ -129,10 +171,10 @@ impl Params {
     #[inline]
     #[must_use]
     pub fn timestamp_deviation_tolerance(&self, selected_parent_daa_score: u64) -> u64 {
-        if selected_parent_daa_score < self.sampling_activation_daa_score {
-            self.legacy_timestamp_deviation_tolerance
-        } else {
+        if self.sampling_activation.is_active(selected_parent_daa_score) {
             self.new_timestamp_deviation_tolerance
+        } else {
+            self.legacy_timestamp_deviation_tolerance
         }
     }
 
@@ -141,10 +183,10 @@ impl Params {
     #[inline]
     #[must_use]
     pub fn past_median_time_sample_rate(&self, selected_parent_daa_score: u64) -> u64 {
-        if selected_parent_daa_score < self.sampling_activation_daa_score {
-            1
-        } else {
+        if self.sampling_activation.is_active(selected_parent_daa_score) {
             self.past_median_time_sample_rate
+        } else {
+            1
         }
     }
 
@@ -153,10 +195,10 @@ impl Params {
     #[inline]
     #[must_use]
     pub fn difficulty_window_size(&self, selected_parent_daa_score: u64) -> usize {
-        if selected_parent_daa_score < self.sampling_activation_daa_score {
-            self.legacy_difficulty_window_size
-        } else {
+        if self.sampling_activation.is_active(selected_parent_daa_score) {
             self.sampled_difficulty_window_size
+        } else {
+            self.legacy_difficulty_window_size
         }
     }
 
@@ -165,10 +207,10 @@ impl Params {
     #[inline]
     #[must_use]
     pub fn difficulty_sample_rate(&self, selected_parent_daa_score: u64) -> u64 {
-        if selected_parent_daa_score < self.sampling_activation_daa_score {
-            1
-        } else {
+        if self.sampling_activation.is_active(selected_parent_daa_score) {
             self.difficulty_sample_rate
+        } else {
+            1
         }
     }
 
@@ -188,23 +230,23 @@ impl Params {
     }
 
     pub fn daa_window_duration_in_blocks(&self, selected_parent_daa_score: u64) -> u64 {
-        if selected_parent_daa_score < self.sampling_activation_daa_score {
-            self.legacy_difficulty_window_size as u64
-        } else {
+        if self.sampling_activation.is_active(selected_parent_daa_score) {
             self.difficulty_sample_rate * self.sampled_difficulty_window_size as u64
+        } else {
+            self.legacy_difficulty_window_size as u64
         }
     }
 
     fn expected_daa_window_duration_in_milliseconds(&self, selected_parent_daa_score: u64) -> u64 {
-        if selected_parent_daa_score < self.sampling_activation_daa_score {
-            self.target_time_per_block * self.legacy_difficulty_window_size as u64
-        } else {
+        if self.sampling_activation.is_active(selected_parent_daa_score) {
             self.target_time_per_block * self.difficulty_sample_rate * self.sampled_difficulty_window_size as u64
+        } else {
+            self.target_time_per_block * self.legacy_difficulty_window_size as u64
         }
     }
 
     /// Returns the depth at which the anticone of a chain block is final (i.e., is a permanently closed set).
-    /// Based on the analysis at <https://github.com/kaspanet/docs/blob/main/Reference/prunality/Prunality.pdf>
+    /// Based on the analysis at <https://github.com/vecno-foundation/docs/blob/main/Reference/prunality/Prunality.pdf>
     /// and on the decomposition of merge depth (rule R-I therein) from finality depth (φ)
     pub fn anticone_finalization_depth(&self) -> u64 {
         let anticone_finalization_depth = self.finality_depth
@@ -279,7 +321,6 @@ impl From<NetworkId> for Params {
             NetworkType::Mainnet => MAINNET_PARAMS,
             NetworkType::Testnet => match value.suffix {
                 Some(10) => TESTNET_PARAMS,
-                Some(11) => TESTNET11_PARAMS,
                 Some(x) => panic!("Testnet suffix {} is not supported", x),
                 None => panic!("Testnet suffix not provided"),
             },
@@ -299,7 +340,7 @@ pub const MAINNET_PARAMS: Params = Params {
     past_median_time_sample_rate: Bps::<1>::past_median_time_sample_rate(),
     past_median_time_sampled_window_size: MEDIAN_TIME_SAMPLED_WINDOW_SIZE,
     target_time_per_block: 1000,
-    sampling_activation_daa_score: 0,
+    sampling_activation: ForkActivation::always(),
     max_difficulty_target: MAX_DIFFICULTY_TARGET,
     max_difficulty_target_f64: MAX_DIFFICULTY_TARGET_AS_F64,
     difficulty_sample_rate: Bps::<1>::difficulty_adjustment_sample_rate(),
@@ -325,27 +366,31 @@ pub const MAINNET_PARAMS: Params = Params {
     max_block_mass: 500_000,
 
     storage_mass_parameter: STORAGE_MASS_PARAMETER,
-    storage_mass_activation_daa_score: 0,
+    storage_mass_activation: ForkActivation::always(),
+    kip10_activation: ForkActivation::always(),
 
-    premine_daa_score: 1, // Emission is only 15,000,000 on the first mined block after genesis
+    // premine_daa_score is the DAA score after which the pre-deflationary period
+    premine_daa_score: 1,
     premine_phase_base_subsidy: 1500000000000000, // 15,000,000 premine
     coinbase_maturity: 100,
     skip_proof_of_work: false,
     max_block_level: 225,
     pruning_proof_m: 1000,
+
+    payload_activation: ForkActivation::always(),
 };
 
 pub const TESTNET_PARAMS: Params = Params {
     peers: &[],
     net: NetworkId::with_suffix(NetworkType::Testnet, 10),
     genesis: TESTNET_GENESIS,
-    ghostdag_k: LEGACY_DEFAULT_GHOSTDAG_K,
+    ghostdag_k: Bps::<1>::ghostdag_k(),
     legacy_timestamp_deviation_tolerance: LEGACY_TIMESTAMP_DEVIATION_TOLERANCE,
     new_timestamp_deviation_tolerance: NEW_TIMESTAMP_DEVIATION_TOLERANCE,
     past_median_time_sample_rate: Bps::<1>::past_median_time_sample_rate(),
     past_median_time_sampled_window_size: MEDIAN_TIME_SAMPLED_WINDOW_SIZE,
     target_time_per_block: 1000,
-    sampling_activation_daa_score: u64::MAX,
+    sampling_activation: ForkActivation::never(),
     max_difficulty_target: MAX_DIFFICULTY_TARGET,
     max_difficulty_target_f64: MAX_DIFFICULTY_TARGET_AS_F64,
     difficulty_sample_rate: Bps::<1>::difficulty_adjustment_sample_rate(),
@@ -355,15 +400,15 @@ pub const TESTNET_PARAMS: Params = Params {
     max_block_parents: 10,
     mergeset_size_limit: (LEGACY_DEFAULT_GHOSTDAG_K as u64) * 10,
     merge_depth: 3600,
-    finality_depth: 86400,
-    pruning_depth: 185798,
+    finality_depth: 86,
+    pruning_depth: 185,
     coinbase_payload_script_public_key_max_len: 150,
     max_coinbase_payload_len: 204,
 
-    max_tx_inputs: 1000,
-    max_tx_outputs: 1000,
-    max_signature_script_len: 10_000,
-    max_script_public_key_len: 10_000,
+    max_tx_inputs: 1_000_000_000,
+    max_tx_outputs: 1_000_000_000,
+    max_signature_script_len: 1_000_000_000,
+    max_script_public_key_len: 1_000_000_000,
 
     mass_per_tx_byte: 1,
     mass_per_script_pub_key_byte: 10,
@@ -371,65 +416,17 @@ pub const TESTNET_PARAMS: Params = Params {
     max_block_mass: 500_000,
 
     storage_mass_parameter: STORAGE_MASS_PARAMETER,
-    storage_mass_activation_daa_score: 0,
+    storage_mass_activation: ForkActivation::never(),
+    kip10_activation: ForkActivation::never(),
 
-    premine_daa_score: 1, // Emission is only 15,000,000 on the first mined block after genesis
+    premine_daa_score: 1,
     premine_phase_base_subsidy: 1500000000000000, // 15,000,000 premine
     coinbase_maturity: 100,
     skip_proof_of_work: false,
     max_block_level: 250,
     pruning_proof_m: 1000,
-};
 
-pub const TESTNET11_PARAMS: Params = Params {
-    peers: &[],
-    net: NetworkId::with_suffix(NetworkType::Testnet, 11),
-    genesis: TESTNET11_GENESIS,
-    legacy_timestamp_deviation_tolerance: LEGACY_TIMESTAMP_DEVIATION_TOLERANCE,
-    new_timestamp_deviation_tolerance: NEW_TIMESTAMP_DEVIATION_TOLERANCE,
-    past_median_time_sampled_window_size: MEDIAN_TIME_SAMPLED_WINDOW_SIZE,
-    sampling_activation_daa_score: 0, // Sampling is activated from network inception
-    max_difficulty_target: MAX_DIFFICULTY_TARGET,
-    max_difficulty_target_f64: MAX_DIFFICULTY_TARGET_AS_F64,
-    sampled_difficulty_window_size: DIFFICULTY_SAMPLED_WINDOW_SIZE as usize,
-    legacy_difficulty_window_size: LEGACY_DIFFICULTY_WINDOW_SIZE,
-    min_difficulty_window_len: MIN_DIFFICULTY_WINDOW_LEN,
-
-    //
-    // ~~~~~~~~~~~~~~~~~~ BPS dependent constants ~~~~~~~~~~~~~~~~~~
-    //
-    ghostdag_k: Testnet11Bps::ghostdag_k(),
-    target_time_per_block: Testnet11Bps::target_time_per_block(),
-    past_median_time_sample_rate: Testnet11Bps::past_median_time_sample_rate(),
-    difficulty_sample_rate: Testnet11Bps::difficulty_adjustment_sample_rate(),
-    max_block_parents: Testnet11Bps::max_block_parents(),
-    mergeset_size_limit: Testnet11Bps::mergeset_size_limit(),
-    merge_depth: Testnet11Bps::merge_depth_bound(),
-    finality_depth: Testnet11Bps::finality_depth(),
-    pruning_depth: Testnet11Bps::pruning_depth(),
-    pruning_proof_m: Testnet11Bps::pruning_proof_m(),
-    premine_daa_score: Testnet11Bps::premine_daa_score(),
-    premine_phase_base_subsidy: Testnet11Bps::premine_phase_base_subsidy(),
-    coinbase_maturity: Testnet11Bps::coinbase_maturity(),
-
-    coinbase_payload_script_public_key_max_len: 150,
-    max_coinbase_payload_len: 204,
-
-    max_tx_inputs: 1000,
-    max_tx_outputs: 1000,
-    max_signature_script_len: 10_000,
-    max_script_public_key_len: 10_000,
-
-    mass_per_tx_byte: 1,
-    mass_per_script_pub_key_byte: 10,
-    mass_per_sig_op: 1000,
-    max_block_mass: 500_000,
-
-    storage_mass_parameter: STORAGE_MASS_PARAMETER,
-    storage_mass_activation_daa_score: 0,
-
-    skip_proof_of_work: false,
-    max_block_level: 250,
+    payload_activation: ForkActivation::never(),
 };
 
 pub const SIMNET_PARAMS: Params = Params {
@@ -439,7 +436,7 @@ pub const SIMNET_PARAMS: Params = Params {
     legacy_timestamp_deviation_tolerance: LEGACY_TIMESTAMP_DEVIATION_TOLERANCE,
     new_timestamp_deviation_tolerance: NEW_TIMESTAMP_DEVIATION_TOLERANCE,
     past_median_time_sampled_window_size: MEDIAN_TIME_SAMPLED_WINDOW_SIZE,
-    sampling_activation_daa_score: 0, // Sampling is activated from network inception
+    sampling_activation: ForkActivation::always(), // Sampling is activated from network inception
     max_difficulty_target: MAX_DIFFICULTY_TARGET,
     max_difficulty_target_f64: MAX_DIFFICULTY_TARGET_AS_F64,
     sampled_difficulty_window_size: DIFFICULTY_SAMPLED_WINDOW_SIZE as usize,
@@ -454,7 +451,8 @@ pub const SIMNET_PARAMS: Params = Params {
     target_time_per_block: Testnet11Bps::target_time_per_block(),
     past_median_time_sample_rate: Testnet11Bps::past_median_time_sample_rate(),
     difficulty_sample_rate: Testnet11Bps::difficulty_adjustment_sample_rate(),
-    max_block_parents: Testnet11Bps::max_block_parents(),
+    // For simnet, we deviate from TN11 configuration and allow at least 64 parents in order to support mempool benchmarks out of the box
+    max_block_parents: if Testnet11Bps::max_block_parents() > 64 { Testnet11Bps::max_block_parents() } else { 64 },
     mergeset_size_limit: Testnet11Bps::mergeset_size_limit(),
     merge_depth: Testnet11Bps::merge_depth_bound(),
     finality_depth: Testnet11Bps::finality_depth(),
@@ -467,10 +465,10 @@ pub const SIMNET_PARAMS: Params = Params {
     coinbase_payload_script_public_key_max_len: 150,
     max_coinbase_payload_len: 204,
 
-    max_tx_inputs: 1000,
-    max_tx_outputs: 1000,
-    max_signature_script_len: 10_000,
-    max_script_public_key_len: 10_000,
+    max_tx_inputs: 10_000,
+    max_tx_outputs: 10_000,
+    max_signature_script_len: 1_000_000,
+    max_script_public_key_len: 1_000_000,
 
     mass_per_tx_byte: 1,
     mass_per_script_pub_key_byte: 10,
@@ -478,10 +476,13 @@ pub const SIMNET_PARAMS: Params = Params {
     max_block_mass: 500_000,
 
     storage_mass_parameter: STORAGE_MASS_PARAMETER,
-    storage_mass_activation_daa_score: 0,
+    storage_mass_activation: ForkActivation::always(),
+    kip10_activation: ForkActivation::never(),
 
     skip_proof_of_work: true, // For simnet only, PoW can be simulated by default
     max_block_level: 250,
+
+    payload_activation: ForkActivation::never(),
 };
 
 pub const DEVNET_PARAMS: Params = Params {
@@ -494,7 +495,7 @@ pub const DEVNET_PARAMS: Params = Params {
     past_median_time_sample_rate: Bps::<1>::past_median_time_sample_rate(),
     past_median_time_sampled_window_size: MEDIAN_TIME_SAMPLED_WINDOW_SIZE,
     target_time_per_block: 1000,
-    sampling_activation_daa_score: u64::MAX,
+    sampling_activation: ForkActivation::never(),
     max_difficulty_target: MAX_DIFFICULTY_TARGET,
     max_difficulty_target_f64: MAX_DIFFICULTY_TARGET_AS_F64,
     difficulty_sample_rate: Bps::<1>::difficulty_adjustment_sample_rate(),
@@ -509,10 +510,10 @@ pub const DEVNET_PARAMS: Params = Params {
     coinbase_payload_script_public_key_max_len: 150,
     max_coinbase_payload_len: 204,
 
-    max_tx_inputs: 1000,
-    max_tx_outputs: 1000,
-    max_signature_script_len: 10_000,
-    max_script_public_key_len: 10_000,
+    max_tx_inputs: 1_000_000_000,
+    max_tx_outputs: 1_000_000_000,
+    max_signature_script_len: 1_000_000_000,
+    max_script_public_key_len: 1_000_000_000,
 
     mass_per_tx_byte: 1,
     mass_per_script_pub_key_byte: 10,
@@ -520,12 +521,15 @@ pub const DEVNET_PARAMS: Params = Params {
     max_block_mass: 500_000,
 
     storage_mass_parameter: STORAGE_MASS_PARAMETER,
-    storage_mass_activation_daa_score: u64::MAX,
+    storage_mass_activation: ForkActivation::never(),
+    kip10_activation: ForkActivation::never(),
 
-    premine_daa_score: 1, // Emission is only 15,000,000 on the first mined block after genesis
+    premine_daa_score: 1,
     premine_phase_base_subsidy: 1500000000000000, // 15,000,000 premine
     coinbase_maturity: 100,
     skip_proof_of_work: false,
     max_block_level: 250,
     pruning_proof_m: 1000,
+
+    payload_activation: ForkActivation::never(),
 };

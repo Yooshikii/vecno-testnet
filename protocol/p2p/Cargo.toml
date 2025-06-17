@@ -26,7 +26,6 @@ vecno-consensus-core.workspace = true
 vecno-mining-errors.workspace = true
 vecno-hashes.workspace = true
 vecno-math.workspace = true
-vecno-muhash.workspace = true
 vecno-utils.workspace = true
 vecno-utils-tower.workspace = true
 

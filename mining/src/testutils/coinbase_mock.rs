@@ -1,4 +1,3 @@
-use std::mem::size_of;
 use vecno_consensus_core::{
     coinbase::{CoinbaseData, CoinbaseTransactionTemplate, MinerData},
     constants::{SOMPI_PER_VECNO, TX_VERSION},

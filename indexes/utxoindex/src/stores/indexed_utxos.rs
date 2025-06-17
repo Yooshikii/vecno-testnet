@@ -3,7 +3,6 @@ use crate::core::model::{CompactUtxoCollection, CompactUtxoEntry, UtxoSetByScrip
 use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
 use std::fmt::Display;
-use std::mem::size_of;
 use std::sync::Arc;
 use vecno_consensus_core::tx::{
     ScriptPublicKey, ScriptPublicKeyVersion, ScriptPublicKeys, ScriptVec, TransactionIndexType, TransactionOutpoint,
@@ -67,8 +66,7 @@ impl From<TransactionOutpointKey> for TransactionOutpoint {
     fn from(key: TransactionOutpointKey) -> Self {
         let transaction_id = Hash::from_slice(&key.0[..vecno_hashes::HASH_SIZE]);
         let index = TransactionIndexType::from_le_bytes(
-            <[u8; std::mem::size_of::<TransactionIndexType>()]>::try_from(&key.0[vecno_hashes::HASH_SIZE..])
-                .expect("expected index size"),
+            <[u8; size_of::<TransactionIndexType>()]>::try_from(&key.0[vecno_hashes::HASH_SIZE..]).expect("expected index size"),
         );
         Self::new(transaction_id, index)
     }
@@ -155,6 +153,9 @@ impl DbUtxoSetByScriptPublicKeyStore {
 }
 
 impl UtxoSetByScriptPublicKeyStoreReader for DbUtxoSetByScriptPublicKeyStore {
+    // compared to go-vecnod this gets transaction outpoints from multiple script public keys at once.
+    // TODO: probably ideal way to retrieve is to return a chained iterator which can be used to chunk results and propagate utxo entries
+    // to the rpc via pagination, this would alleviate the memory footprint of script public keys with large amount of utxos.
     fn get_utxos_from_script_public_keys(&self, script_public_keys: ScriptPublicKeys) -> StoreResult<UtxoSetByScriptPublicKey> {
         let script_count = script_public_keys.len();
         let mut entries_count: usize = 0;

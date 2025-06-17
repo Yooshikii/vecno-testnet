@@ -61,6 +61,7 @@ pub enum VecnodPayloadOps {
     GetConnectedPeerInfo,
     AddPeer,
     SubmitTransaction,
+    SubmitTransactionReplacement,
     GetSubnetwork,
     GetVirtualChainFromBlock,
     GetBlockCount,
@@ -78,9 +79,14 @@ pub enum VecnodPayloadOps {
     GetCoinSupply,
     Ping,
     GetMetrics,
+    GetConnections,
+    GetSystemInfo,
     GetServerInfo,
     GetSyncStatus,
     GetDaaScoreTimestampEstimate,
+    GetFeeEstimate,
+    GetFeeEstimateExperimental,
+    GetCurrentBlockColor,
 
     // Subscription commands for starting/stopping notifications
     NotifyBlockAdded,

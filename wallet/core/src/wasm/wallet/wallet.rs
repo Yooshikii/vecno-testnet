@@ -87,7 +87,7 @@ impl Inner {
 /// between the integrated Wallet subsystem providing a high-level interface
 /// for wallet key and account management.
 ///
-/// The Vecno is developed in Rust, and the Wallet class is a Rust implementation
+/// The Rusty Vecno is developed in Rust, and the Wallet class is a Rust implementation
 /// exposed to the JavaScript/TypeScript environment using the WebAssembly (WASM32) interface.
 /// As such, the Wallet implementation can be powered up using native Rust or built
 /// as a WebAssembly module and used in the browser or Node.js environment.

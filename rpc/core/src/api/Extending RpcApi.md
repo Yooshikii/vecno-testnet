@@ -43,5 +43,4 @@ As an illustration, let's pretend that we add a new `submit_block` method.
    a handler for the new method.
 
 ## rpc-test
-
 1. In file `testing\integration\src\rpc_tests.rs` add a new `match` arm for your payload inside the `sanity_test` test

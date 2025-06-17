@@ -35,7 +35,7 @@ struct Args {
     grpc_proxy_address: Option<String>,
 
     // /// wRPC port
-    /// interface:port for wRPC server (wrpc://127.0.0.1:7110)
+    /// interface:port for wRPC server (wrpc://127.0.0.1:8110)
     #[clap(long)]
     interface: Option<String>,
     /// Number of notification serializer threads
@@ -63,7 +63,7 @@ async fn main() -> Result<()> {
         NetworkType::Mainnet
     };
 
-    let vecno_port = network_type.default_rpc_port();
+    let vecnod_port = network_type.default_rpc_port();
 
     let encoding: Encoding = encoding.unwrap_or_else(|| "borsh".to_owned()).parse()?;
     let proxy_port = match encoding {
@@ -73,7 +73,7 @@ async fn main() -> Result<()> {
 
     let options = Arc::new(Options {
         listen_address: interface.unwrap_or_else(|| format!("wrpc://127.0.0.1:{proxy_port}")),
-        grpc_proxy_address: Some(grpc_proxy_address.unwrap_or_else(|| format!("grpc://127.0.0.1:{vecno_port}"))),
+        grpc_proxy_address: Some(grpc_proxy_address.unwrap_or_else(|| format!("grpc://127.0.0.1:{vecnod_port}"))),
         verbose,
         // ..Options::default()
     });
@@ -90,13 +90,15 @@ async fn main() -> Result<()> {
         rpc_handler.clone(),
         router.interface.clone(),
         Some(counters),
+        false,
     );
 
     log_info!("Vecno wRPC server is listening on {}", options.listen_address);
     log_info!("Using `{encoding}` protocol encoding");
 
     let config = WebSocketConfig { max_message_size: Some(1024 * 1024 * 1024), ..Default::default() };
-    server.listen(&options.listen_address, Some(config)).await?;
+    let listener = server.bind(&options.listen_address).await?;
+    server.listen(listener, Some(config)).await?;
 
     Ok(())
 }

@@ -45,7 +45,7 @@ vecno.init_console_panic_hook();
     //     // await wallet.connect();
     //     await wallet.connect({
     //         // url : "ws://foobar",
-    //         url : "wrpc://127.0.0.1:7110",
+    //         url : "wrpc://127.0.0.1:8110",
     //         retry : false,
     //         block : true,
     //     });

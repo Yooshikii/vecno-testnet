@@ -1,6 +1,5 @@
 use rocksdb::WriteBatch;
 use serde::{Deserialize, Serialize};
-use std::mem::size_of;
 use std::sync::Arc;
 use vecno_consensus_core::tx::{TransactionInput, TransactionOutput};
 use vecno_consensus_core::{tx::Transaction, BlockHasher};

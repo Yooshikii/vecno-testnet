@@ -6,12 +6,16 @@ use std::sync::Arc;
 
 pub use vecno_rpc_core::api::ctl::RpcCtl;
 pub use vecno_rpc_core::api::rpc::RpcApi;
-pub type DynRpcApi = dyn RpcApi;
-pub type NotificationChannel = vecno_utils::channel::Channel<vecno_rpc_core::Notification>;
 pub use vecno_rpc_core::notify::mode::NotificationMode;
 pub use vecno_wrpc_client::client::{ConnectOptions, ConnectStrategy};
 pub use vecno_wrpc_client::Resolver;
 pub use vecno_wrpc_client::WrpcEncoding;
+
+/// Type alias for [`dyn RpcApi`](RpcApi).
+pub type DynRpcApi = dyn RpcApi;
+/// Type alias for a concrete [`Channel`](vecno_utils::channel::Channel)
+/// used for handling RPC [`Notification`](vecno_rpc_core::Notification) events.
+pub type NotificationChannel = vecno_utils::channel::Channel<vecno_rpc_core::Notification>;
 
 /// RPC adaptor class that holds the [`RpcApi`]
 /// and [`RpcCtl`] instances.

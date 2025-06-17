@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Vecno-Foundation/vecnod.git"
+    "url": "git+https://github.com/vecno-foundation/vecno-testnet.git"
   },
   "keywords": [
     "vecno",
@@ -18,9 +18,9 @@
   "author": "Vecno developers",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Vecno-Foundation/vecnod/issues"
+    "url": "https://github.com/vecno-foundation/vecno-testnet/issues"
   },
-  "homepage": "https://github.com/Vecno-Foundation/vecnod#readme",
+  "homepage": "https://github.com/vecno-foundation/vecno-testnet#readme",
   "dependencies": {
     "websocket": "1.0.34",
     "vecno-wasm": "0.13.5"

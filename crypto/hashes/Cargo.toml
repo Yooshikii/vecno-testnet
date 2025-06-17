@@ -18,7 +18,6 @@ borsh.workspace = true
 faster-hex.workspace = true
 js-sys.workspace = true
 vecno-utils.workspace = true
-vecno-math.workspace = true
 keccak = { workspace = true, optional = true }
 once_cell.workspace = true
 serde.workspace = true

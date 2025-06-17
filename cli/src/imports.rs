@@ -24,7 +24,7 @@ pub use vecno_utils::hex::*;
 pub use vecno_wallet_core::compat::*;
 pub use vecno_wallet_core::prelude::*;
 pub use vecno_wallet_core::settings::{DefaultSettings, SettingsStore, WalletSettings};
-pub use vecno_wallet_core::utils::*;
+pub use vecno_wrpc_client::prelude::*;
 pub use workflow_core::prelude::*;
 pub use workflow_core::runtime as application_runtime;
 pub use workflow_log::*;

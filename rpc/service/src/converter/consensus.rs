@@ -43,6 +43,9 @@ impl ConsensusConverter {
         self.config.max_difficulty_target_f64 / target.as_f64()
     }
 
+    /// Converts a consensus [`Block`] into an [`RpcBlock`], optionally including transaction verbose data.
+    ///
+    /// _GO-VECNOD: PopulateBlockWithVerboseData_
     pub async fn get_block(
         &self,
         consensus: &ConsensusProxy,
@@ -78,7 +81,7 @@ impl ConsensusConverter {
             vec![]
         };
 
-        Ok(RpcBlock { header: (*block.header).clone(), transactions, verbose_data })
+        Ok(RpcBlock { header: block.header.as_ref().into(), transactions, verbose_data })
     }
 
     pub fn get_mempool_entry(&self, consensus: &ConsensusProxy, transaction: &MutableTransaction) -> RpcMempoolEntry {
@@ -108,6 +111,9 @@ impl ConsensusConverter {
         transaction_ids.iter().map(|x| self.get_mempool_entry(consensus, transactions.get(x).expect("transaction exists"))).collect()
     }
 
+    /// Converts a consensus [`Transaction`] into an [`RpcTransaction`], optionally including verbose data.
+    ///
+    /// _GO-VECNOD: PopulateTransactionWithVerboseData
     pub fn get_transaction(
         &self,
         consensus: &ConsensusProxy,
@@ -119,7 +125,7 @@ impl ConsensusConverter {
             let verbose_data = Some(RpcTransactionVerboseData {
                 transaction_id: transaction.id(),
                 hash: hash(transaction, false),
-                mass: consensus.calculate_transaction_compute_mass(transaction),
+                compute_mass: consensus.calculate_transaction_compute_mass(transaction),
                 // TODO: make block_hash an option
                 block_hash: header.map_or_else(RpcHash::default, |x| x.hash),
                 block_time: header.map_or(0, |x| x.timestamp),
@@ -156,8 +162,9 @@ impl ConsensusConverter {
         &self,
         consensus: &ConsensusProxy,
         chain_path: &ChainPath,
+        merged_blocks_limit: Option<usize>,
     ) -> RpcResult<Vec<RpcAcceptedTransactionIds>> {
-        let acceptance_data = consensus.async_get_blocks_acceptance_data(chain_path.added.clone()).await.unwrap();
+        let acceptance_data = consensus.async_get_blocks_acceptance_data(chain_path.added.clone(), merged_blocks_limit).await.unwrap();
         Ok(chain_path
             .added
             .iter()

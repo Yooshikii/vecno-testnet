@@ -43,13 +43,13 @@ impl Drop for DbLifetime {
 
 pub fn get_vecno_tempdir() -> TempDir {
     let global_tempdir = std::env::temp_dir();
-    let vecno_tempdir = global_tempdir.join("vecnod");
+    let vecno_tempdir = global_tempdir.join("vecno-testnet");
     std::fs::create_dir_all(vecno_tempdir.as_path()).unwrap();
     let db_tempdir = tempfile::tempdir_in(vecno_tempdir.as_path()).unwrap();
     db_tempdir
 }
 
-/// Creates a DB within a temp directory under `<OS SPECIFIC TEMP DIR>/vecnod`
+/// Creates a DB within a temp directory under `<OS SPECIFIC TEMP DIR>/vecno-rust`
 /// Callers must keep the `TempDbLifetime` guard for as long as they wish the DB to exist.
 #[macro_export]
 macro_rules! create_temp_db {

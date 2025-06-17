@@ -33,6 +33,7 @@ downcast.workspace = true
 faster-hex.workspace = true
 futures.workspace = true
 js-sys.workspace = true
+hex.workspace = true
 vecno-addresses.workspace = true
 vecno-bip32.workspace = true
 vecno-consensus-core.workspace = true
@@ -43,6 +44,7 @@ vecno-rpc-core.workspace = true
 vecno-utils.workspace = true
 vecno-wallet-core.workspace = true
 vecno-wallet-keys.workspace = true
+vecno-wallet-pskt.workspace = true
 vecno-wrpc-client.workspace = true
 nw-sys.workspace = true
 pad.workspace = true
@@ -80,5 +82,5 @@ features = [
 [target.'cfg(not(target_arch = "wasm32"))'.dependencies]
 tokio.workspace = true
 
-[lints.clippy]
-empty_docs = "allow"
+[lints]
+workspace = true

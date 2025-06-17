@@ -16,7 +16,7 @@ use tokio::{task::JoinHandle, time::sleep};
 use vecno_addresses::Address;
 use vecno_core::warn;
 use vecno_grpc_client::GrpcClient;
-use vecno_rpc_core::{api::rpc::RpcApi, GetBlockTemplateResponse, RpcBlock};
+use vecno_rpc_core::{api::rpc::RpcApi, GetBlockTemplateResponse, RpcRawBlock};
 use vecno_utils::triggers::SingleTrigger;
 
 pub const COMMUNICATION_DELAY: u64 = 1_000;
@@ -25,7 +25,7 @@ pub struct BlockMinerTask {
     client: Arc<GrpcClient>,
     bps: u64,
     block_count: usize,
-    sender: Sender<RpcBlock>,
+    sender: Sender<RpcRawBlock>,
     template: Arc<Mutex<GetBlockTemplateResponse>>,
     pay_address: Address,
     tx_counter: Arc<AtomicUsize>,
@@ -38,7 +38,7 @@ impl BlockMinerTask {
         client: Arc<GrpcClient>,
         bps: u64,
         block_count: usize,
-        sender: Sender<RpcBlock>,
+        sender: Sender<RpcRawBlock>,
         template: Arc<Mutex<GetBlockTemplateResponse>>,
         pay_address: Address,
         stopper: Stopper,
@@ -60,7 +60,7 @@ impl BlockMinerTask {
         client: Arc<GrpcClient>,
         bps: u64,
         block_count: usize,
-        sender: Sender<RpcBlock>,
+        sender: Sender<RpcRawBlock>,
         template: Arc<Mutex<GetBlockTemplateResponse>>,
         pay_address: Address,
         stopper: Stopper,
@@ -68,7 +68,7 @@ impl BlockMinerTask {
         Arc::new(Self::new(client, bps, block_count, sender, template, pay_address, stopper))
     }
 
-    pub fn sender(&self) -> Sender<RpcBlock> {
+    pub fn sender(&self) -> Sender<RpcRawBlock> {
         self.sender.clone()
     }
 

@@ -8,16 +8,16 @@ use std::{sync::Arc, time::Duration};
 use tokio::{task::JoinHandle, time::sleep};
 use vecno_core::warn;
 use vecno_grpc_client::ClientPool;
-use vecno_rpc_core::{api::rpc::RpcApi, RpcBlock};
+use vecno_rpc_core::{api::rpc::RpcApi, RpcRawBlock};
 use vecno_utils::triggers::SingleTrigger;
 
 pub struct BlockSubmitterTask {
-    pool: ClientPool<RpcBlock>,
+    pool: ClientPool<RpcRawBlock>,
     stopper: Stopper,
 }
 
 impl BlockSubmitterTask {
-    pub fn new(pool: ClientPool<RpcBlock>, stopper: Stopper) -> Self {
+    pub fn new(pool: ClientPool<RpcRawBlock>, stopper: Stopper) -> Self {
         Self { pool, stopper }
     }
 
@@ -26,7 +26,7 @@ impl BlockSubmitterTask {
         Arc::new(Self::new(pool, stopper))
     }
 
-    pub fn sender(&self) -> Sender<RpcBlock> {
+    pub fn sender(&self) -> Sender<RpcRawBlock> {
         self.pool.sender()
     }
 }
@@ -35,7 +35,7 @@ impl BlockSubmitterTask {
 impl Task for BlockSubmitterTask {
     fn start(&self, stop_signal: SingleTrigger) -> Vec<JoinHandle<()>> {
         warn!("Block submitter task starting...");
-        let mut tasks = self.pool.start(|c, block: RpcBlock| async move {
+        let mut tasks = self.pool.start(|c, block: RpcRawBlock| async move {
             loop {
                 match c.submit_block(block.clone(), false).await {
                     Ok(response) => {

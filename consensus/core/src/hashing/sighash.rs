@@ -1,9 +1,9 @@
+use arc_swap::ArcSwapOption;
+use std::cell::Cell;
+use std::sync::Arc;
 use vecno_hashes::{Hash, Hasher, HasherBase, TransactionSigningHash, TransactionSigningHashECDSA, ZERO_HASH};
 
-use crate::{
-    subnets::SUBNETWORK_ID_NATIVE,
-    tx::{ScriptPublicKey, Transaction, TransactionOutpoint, TransactionOutput, VerifiableTransaction},
-};
+use crate::tx::{ScriptPublicKey, Transaction, TransactionOutpoint, TransactionOutput, VerifiableTransaction};
 
 use super::{sighash_type::SigHashType, HasherExtensions};
 
@@ -11,88 +11,190 @@ use super::{sighash_type::SigHashType, HasherExtensions};
 /// the same for all transaction inputs.
 /// Reuse of such values prevents the quadratic hashing problem.
 #[derive(Default)]
-pub struct SigHashReusedValues {
-    previous_outputs_hash: Option<Hash>,
-    sequences_hash: Option<Hash>,
-    sig_op_counts_hash: Option<Hash>,
-    outputs_hash: Option<Hash>,
+pub struct SigHashReusedValuesUnsync {
+    previous_outputs_hash: Cell<Option<Hash>>,
+    sequences_hash: Cell<Option<Hash>>,
+    sig_op_counts_hash: Cell<Option<Hash>>,
+    outputs_hash: Cell<Option<Hash>>,
+    payload_hash: Cell<Option<Hash>>,
 }
 
-impl SigHashReusedValues {
+impl SigHashReusedValuesUnsync {
     pub fn new() -> Self {
-        Self { previous_outputs_hash: None, sequences_hash: None, sig_op_counts_hash: None, outputs_hash: None }
+        Self::default()
     }
 }
 
-pub fn previous_outputs_hash(tx: &Transaction, hash_type: SigHashType, reused_values: &mut SigHashReusedValues) -> Hash {
+#[derive(Default)]
+pub struct SigHashReusedValuesSync {
+    previous_outputs_hash: ArcSwapOption<Hash>,
+    sequences_hash: ArcSwapOption<Hash>,
+    sig_op_counts_hash: ArcSwapOption<Hash>,
+    outputs_hash: ArcSwapOption<Hash>,
+    payload_hash: ArcSwapOption<Hash>,
+}
+
+impl SigHashReusedValuesSync {
+    pub fn new() -> Self {
+        Self::default()
+    }
+}
+
+pub trait SigHashReusedValues {
+    fn previous_outputs_hash(&self, set: impl Fn() -> Hash) -> Hash;
+    fn sequences_hash(&self, set: impl Fn() -> Hash) -> Hash;
+    fn sig_op_counts_hash(&self, set: impl Fn() -> Hash) -> Hash;
+    fn outputs_hash(&self, set: impl Fn() -> Hash) -> Hash;
+    fn payload_hash(&self, set: impl Fn() -> Hash) -> Hash;
+}
+
+impl SigHashReusedValues for SigHashReusedValuesUnsync {
+    fn previous_outputs_hash(&self, set: impl Fn() -> Hash) -> Hash {
+        self.previous_outputs_hash.get().unwrap_or_else(|| {
+            let hash = set();
+            self.previous_outputs_hash.set(Some(hash));
+            hash
+        })
+    }
+
+    fn sequences_hash(&self, set: impl Fn() -> Hash) -> Hash {
+        self.sequences_hash.get().unwrap_or_else(|| {
+            let hash = set();
+            self.sequences_hash.set(Some(hash));
+            hash
+        })
+    }
+
+    fn sig_op_counts_hash(&self, set: impl Fn() -> Hash) -> Hash {
+        self.sig_op_counts_hash.get().unwrap_or_else(|| {
+            let hash = set();
+            self.sig_op_counts_hash.set(Some(hash));
+            hash
+        })
+    }
+
+    fn outputs_hash(&self, set: impl Fn() -> Hash) -> Hash {
+        self.outputs_hash.get().unwrap_or_else(|| {
+            let hash = set();
+            self.outputs_hash.set(Some(hash));
+            hash
+        })
+    }
+
+    fn payload_hash(&self, set: impl Fn() -> Hash) -> Hash {
+        self.payload_hash.get().unwrap_or_else(|| {
+            let hash = set();
+            self.payload_hash.set(Some(hash));
+            hash
+        })
+    }
+}
+
+impl SigHashReusedValues for SigHashReusedValuesSync {
+    fn previous_outputs_hash(&self, set: impl Fn() -> Hash) -> Hash {
+        if let Some(value) = self.previous_outputs_hash.load().as_ref() {
+            return **value;
+        }
+        let hash = set();
+        self.previous_outputs_hash.rcu(|_| Arc::new(hash));
+        hash
+    }
+
+    fn sequences_hash(&self, set: impl Fn() -> Hash) -> Hash {
+        if let Some(value) = self.sequences_hash.load().as_ref() {
+            return **value;
+        }
+        let hash = set();
+        self.sequences_hash.rcu(|_| Arc::new(hash));
+        hash
+    }
+
+    fn sig_op_counts_hash(&self, set: impl Fn() -> Hash) -> Hash {
+        if let Some(value) = self.sig_op_counts_hash.load().as_ref() {
+            return **value;
+        }
+        let hash = set();
+        self.sig_op_counts_hash.rcu(|_| Arc::new(hash));
+        hash
+    }
+
+    fn outputs_hash(&self, set: impl Fn() -> Hash) -> Hash {
+        if let Some(value) = self.outputs_hash.load().as_ref() {
+            return **value;
+        }
+        let hash = set();
+        self.outputs_hash.rcu(|_| Arc::new(hash));
+        hash
+    }
+
+    fn payload_hash(&self, set: impl Fn() -> Hash) -> Hash {
+        if let Some(value) = self.payload_hash.load().as_ref() {
+            return **value;
+        }
+        let hash = set();
+        self.payload_hash.rcu(|_| Arc::new(hash));
+        hash
+    }
+}
+
+pub fn previous_outputs_hash(tx: &Transaction, hash_type: SigHashType, reused_values: &impl SigHashReusedValues) -> Hash {
     if hash_type.is_sighash_anyone_can_pay() {
         return ZERO_HASH;
     }
-
-    if let Some(previous_outputs_hash) = reused_values.previous_outputs_hash {
-        previous_outputs_hash
-    } else {
+    let hash = || {
         let mut hasher = TransactionSigningHash::new();
         for input in tx.inputs.iter() {
             hasher.update(input.previous_outpoint.transaction_id.as_bytes());
             hasher.write_u32(input.previous_outpoint.index);
         }
-        let previous_outputs_hash = hasher.finalize();
-        reused_values.previous_outputs_hash = Some(previous_outputs_hash);
-        previous_outputs_hash
-    }
+        hasher.finalize()
+    };
+    reused_values.previous_outputs_hash(hash)
 }
 
-pub fn sequences_hash(tx: &Transaction, hash_type: SigHashType, reused_values: &mut SigHashReusedValues) -> Hash {
+pub fn sequences_hash(tx: &Transaction, hash_type: SigHashType, reused_values: &impl SigHashReusedValues) -> Hash {
     if hash_type.is_sighash_single() || hash_type.is_sighash_anyone_can_pay() || hash_type.is_sighash_none() {
         return ZERO_HASH;
     }
-
-    if let Some(sequences_hash) = reused_values.sequences_hash {
-        sequences_hash
-    } else {
+    let hash = || {
         let mut hasher = TransactionSigningHash::new();
         for input in tx.inputs.iter() {
             hasher.write_u64(input.sequence);
         }
-        let sequence_hash = hasher.finalize();
-        reused_values.sequences_hash = Some(sequence_hash);
-        sequence_hash
-    }
+        hasher.finalize()
+    };
+    reused_values.sequences_hash(hash)
 }
 
-pub fn sig_op_counts_hash(tx: &Transaction, hash_type: SigHashType, reused_values: &mut SigHashReusedValues) -> Hash {
+pub fn sig_op_counts_hash(tx: &Transaction, hash_type: SigHashType, reused_values: &impl SigHashReusedValues) -> Hash {
     if hash_type.is_sighash_anyone_can_pay() {
         return ZERO_HASH;
     }
 
-    if let Some(sig_op_counts_hash) = reused_values.sig_op_counts_hash {
-        sig_op_counts_hash
-    } else {
+    let hash = || {
         let mut hasher = TransactionSigningHash::new();
         for input in tx.inputs.iter() {
             hasher.write_u8(input.sig_op_count);
         }
-        let sig_op_counts_hash = hasher.finalize();
-        reused_values.sig_op_counts_hash = Some(sig_op_counts_hash);
-        sig_op_counts_hash
-    }
+        hasher.finalize()
+    };
+    reused_values.sig_op_counts_hash(hash)
 }
 
-pub fn payload_hash(tx: &Transaction) -> Hash {
-    if tx.subnetwork_id == SUBNETWORK_ID_NATIVE {
+pub fn payload_hash(tx: &Transaction, reused_values: &impl SigHashReusedValues) -> Hash {
+    if tx.subnetwork_id.is_native() && tx.payload.is_empty() {
         return ZERO_HASH;
     }
 
-    // TODO: Right now this branch will never be executed, since payload is disabled
-    // for all non coinbase transactions. Once payload is enabled, the payload hash
-    // should be cached to make it cost O(1) instead of O(tx.inputs.len()).
-    let mut hasher = TransactionSigningHash::new();
-    hasher.write_var_bytes(&tx.payload);
-    hasher.finalize()
+    let hash = || {
+        let mut hasher = TransactionSigningHash::new();
+        hasher.write_var_bytes(&tx.payload);
+        hasher.finalize()
+    };
+    reused_values.payload_hash(hash)
 }
 
-pub fn outputs_hash(tx: &Transaction, hash_type: SigHashType, reused_values: &mut SigHashReusedValues, input_index: usize) -> Hash {
+pub fn outputs_hash(tx: &Transaction, hash_type: SigHashType, reused_values: &impl SigHashReusedValues, input_index: usize) -> Hash {
     if hash_type.is_sighash_none() {
         return ZERO_HASH;
     }
@@ -107,19 +209,15 @@ pub fn outputs_hash(tx: &Transaction, hash_type: SigHashType, reused_values: &mu
         hash_output(&mut hasher, &tx.outputs[input_index]);
         return hasher.finalize();
     }
-
-    // Otherwise, return hash of all outputs. Re-use hash if available.
-    if let Some(outputs_hash) = reused_values.outputs_hash {
-        outputs_hash
-    } else {
+    let hash = || {
         let mut hasher = TransactionSigningHash::new();
         for output in tx.outputs.iter() {
             hash_output(&mut hasher, output);
         }
-        let outputs_hash = hasher.finalize();
-        reused_values.outputs_hash = Some(outputs_hash);
-        outputs_hash
-    }
+        hasher.finalize()
+    };
+    // Otherwise, return hash of all outputs. Re-use hash if available.
+    reused_values.outputs_hash(hash)
 }
 
 pub fn hash_outpoint(hasher: &mut impl Hasher, outpoint: TransactionOutpoint) {
@@ -141,7 +239,7 @@ pub fn calc_schnorr_signature_hash(
     verifiable_tx: &impl VerifiableTransaction,
     input_index: usize,
     hash_type: SigHashType,
-    reused_values: &mut SigHashReusedValues,
+    reused_values: &impl SigHashReusedValues,
 ) -> Hash {
     let input = verifiable_tx.populated_input(input_index);
     let tx = verifiable_tx.tx();
@@ -161,7 +259,7 @@ pub fn calc_schnorr_signature_hash(
         .write_u64(tx.lock_time)
         .update(&tx.subnetwork_id)
         .write_u64(tx.gas)
-        .update(payload_hash(tx))
+        .update(payload_hash(tx, reused_values))
         .write_u8(hash_type.to_u8());
     hasher.finalize()
 }
@@ -170,7 +268,7 @@ pub fn calc_ecdsa_signature_hash(
     tx: &impl VerifiableTransaction,
     input_index: usize,
     hash_type: SigHashType,
-    reused_values: &mut SigHashReusedValues,
+    reused_values: &impl SigHashReusedValues,
 ) -> Hash {
     let hash = calc_schnorr_signature_hash(tx, input_index, hash_type, reused_values);
     let mut hasher = TransactionSigningHashECDSA::new();
@@ -186,7 +284,7 @@ mod tests {
 
     use crate::{
         hashing::sighash_type::{SIG_HASH_ALL, SIG_HASH_ANY_ONE_CAN_PAY, SIG_HASH_NONE, SIG_HASH_SINGLE},
-        subnets::SubnetworkId,
+        subnets::{SubnetworkId, SUBNETWORK_ID_NATIVE},
         tx::{PopulatedTransaction, Transaction, TransactionId, TransactionInput, UtxoEntry},
     };
 
@@ -194,6 +292,7 @@ mod tests {
 
     #[test]
     fn test_signature_hash() {
+        // TODO: Copy all sighash tests from go vecnod.
         let prev_tx_id = TransactionId::from_str("880eb9819a31821d9d2399e2f35e2433b72637e393d71ecc9b8d0250f49153c3").unwrap();
         let mut bytes = [0u8; 34];
         faster_hex::hex_decode("208325613d2eeaf7176ac6c670b13c0043156c427438ed72d74b7800862ad884e8ac".as_bytes(), &mut bytes).unwrap();
@@ -320,7 +419,7 @@ mod tests {
                 hash_type: SIG_HASH_ALL,
                 input_index: 0,
                 action: ModifyAction::NoAction,
-                expected_hash: "96e4b823085b538f5fe724de88e597d03531c408c49e5b5404bfc058c09e9b98",
+                expected_hash: "03b7ac6927b2b67100734c3cc313ff8c2e8b3ce3e746d46dd660b706a916b1f5",
             },
             TestVector {
                 name: "native-all-0-modify-input-1",
@@ -328,7 +427,7 @@ mod tests {
                 hash_type: SIG_HASH_ALL,
                 input_index: 0,
                 action: ModifyAction::Input(1),
-                expected_hash: "19c33078ca395662973a0af9ef6412c6c5044949c2c5bb87ab99f165179f05af", // should change the hash
+                expected_hash: "a9f563d86c0ef19ec2e4f483901d202e90150580b6123c3d492e26e7965f488c", // should change the hash
             },
             TestVector {
                 name: "native-all-0-modify-output-1",
@@ -336,7 +435,7 @@ mod tests {
                 hash_type: SIG_HASH_ALL,
                 input_index: 0,
                 action: ModifyAction::Output(1),
-                expected_hash: "f9962a6eeb2f47f11e5b1d104b579a013d6aa8e09f60b8d0a566c8a5cd2bedc5", // should change the hash
+                expected_hash: "aad2b61bd2405dfcf7294fc2be85f325694f02dda22d0af30381cb50d8295e0a", // should change the hash
             },
             TestVector {
                 name: "native-all-0-modify-sequence-1",
@@ -344,7 +443,7 @@ mod tests {
                 hash_type: SIG_HASH_ALL,
                 input_index: 0,
                 action: ModifyAction::Sequence(1),
-                expected_hash: "67eaa9280ffcd4e8529ea564f4dd976704dda99db7f21e63edc8b73155f052ee", // should change the hash
+                expected_hash: "0818bd0a3703638d4f01014c92cf866a8903cab36df2fa2506dc0d06b94295e8", // should change the hash
             },
             TestVector {
                 name: "native-all-anyonecanpay-0",
@@ -352,7 +451,7 @@ mod tests {
                 hash_type: SIG_HASH_ALL_ANYONE_CAN_PAY,
                 input_index: 0,
                 action: ModifyAction::NoAction,
-                expected_hash: "54cfd83822d072e2af67ef39a4e7f96342e7f186047f744e2105bc1ac4f849ea", // should change the hash
+                expected_hash: "24821e466e53ff8e5fa93257cb17bb06131a48be4ef282e87f59d2bdc9afebc2", // should change the hash
             },
             TestVector {
                 name: "native-all-anyonecanpay-0-modify-input-0",
@@ -360,7 +459,7 @@ mod tests {
                 hash_type: SIG_HASH_ALL_ANYONE_CAN_PAY,
                 input_index: 0,
                 action: ModifyAction::Input(0),
-                expected_hash: "2891679eac7349d3c743d2ded8c6e5426687ca83947d9053b37f0d813d8e1b70", // should change the hash
+                expected_hash: "d09cb639f335ee69ac71f2ad43fd9e59052d38a7d0638de4cf989346588a7c38", // should change the hash
             },
             TestVector {
                 name: "native-all-anyonecanpay-0-modify-input-1",
@@ -368,7 +467,7 @@ mod tests {
                 hash_type: SIG_HASH_ALL_ANYONE_CAN_PAY,
                 input_index: 0,
                 action: ModifyAction::Input(1),
-                expected_hash: "54cfd83822d072e2af67ef39a4e7f96342e7f186047f744e2105bc1ac4f849ea", // shouldn't change the hash
+                expected_hash: "24821e466e53ff8e5fa93257cb17bb06131a48be4ef282e87f59d2bdc9afebc2", // shouldn't change the hash
             },
             TestVector {
                 name: "native-all-anyonecanpay-0-modify-sequence",
@@ -376,7 +475,7 @@ mod tests {
                 hash_type: SIG_HASH_ALL_ANYONE_CAN_PAY,
                 input_index: 0,
                 action: ModifyAction::Sequence(1),
-                expected_hash: "54cfd83822d072e2af67ef39a4e7f96342e7f186047f744e2105bc1ac4f849ea", // shouldn't change the hash
+                expected_hash: "24821e466e53ff8e5fa93257cb17bb06131a48be4ef282e87f59d2bdc9afebc2", // shouldn't change the hash
             },
             // SIG_HASH_NONE
             TestVector {
@@ -385,7 +484,7 @@ mod tests {
                 hash_type: SIG_HASH_NONE,
                 input_index: 0,
                 action: ModifyAction::NoAction,
-                expected_hash: "5e82c88f8e44e51a5502f2dceb5a7b6168647b2ce6ae4653c9323513f5b99d0d", // should change the hash
+                expected_hash: "38ce4bc93cf9116d2e377b33ff8449c665b7b5e2f2e65303c543b9afdaa4bbba", // should change the hash
             },
             TestVector {
                 name: "native-none-0-modify-output-1",
@@ -393,7 +492,7 @@ mod tests {
                 hash_type: SIG_HASH_NONE,
                 input_index: 0,
                 action: ModifyAction::Output(1),
-                expected_hash: "5e82c88f8e44e51a5502f2dceb5a7b6168647b2ce6ae4653c9323513f5b99d0d", // shouldn't change the hash
+                expected_hash: "38ce4bc93cf9116d2e377b33ff8449c665b7b5e2f2e65303c543b9afdaa4bbba", // shouldn't change the hash
             },
             TestVector {
                 name: "native-none-0-modify-output-1",
@@ -401,7 +500,7 @@ mod tests {
                 hash_type: SIG_HASH_NONE,
                 input_index: 0,
                 action: ModifyAction::Output(1),
-                expected_hash: "5e82c88f8e44e51a5502f2dceb5a7b6168647b2ce6ae4653c9323513f5b99d0d", // should change the hash
+                expected_hash: "38ce4bc93cf9116d2e377b33ff8449c665b7b5e2f2e65303c543b9afdaa4bbba", // should change the hash
             },
             TestVector {
                 name: "native-none-0-modify-sequence-0",
@@ -409,7 +508,7 @@ mod tests {
                 hash_type: SIG_HASH_NONE,
                 input_index: 0,
                 action: ModifyAction::Sequence(0),
-                expected_hash: "c21c13dd0ac58ecd6000fa8e22d30c2db4231d00ed9a53db1e187a5049b9e40c", // shouldn't change the hash
+                expected_hash: "d9efdd5edaa0d3fd0133ee3ab731d8c20e0a1b9f3c0581601ae2075db1109268", // shouldn't change the hash
             },
             TestVector {
                 name: "native-none-0-modify-sequence-1",
@@ -417,7 +516,7 @@ mod tests {
                 hash_type: SIG_HASH_NONE,
                 input_index: 0,
                 action: ModifyAction::Sequence(1),
-                expected_hash: "5e82c88f8e44e51a5502f2dceb5a7b6168647b2ce6ae4653c9323513f5b99d0d", // should change the hash
+                expected_hash: "38ce4bc93cf9116d2e377b33ff8449c665b7b5e2f2e65303c543b9afdaa4bbba", // should change the hash
             },
             TestVector {
                 name: "native-none-anyonecanpay-0",
@@ -425,7 +524,7 @@ mod tests {
                 hash_type: SIG_HASH_NONE_ANYONE_CAN_PAY,
                 input_index: 0,
                 action: ModifyAction::NoAction,
-                expected_hash: "6217cefbabb0bb64ac9c58744a42ca4db62cb0b4603a2b7eaf5094fd27d33c1a", // should change the hash
+                expected_hash: "06aa9f4239491e07bb2b6bda6b0657b921aeae51e193d2c5bf9e81439cfeafa0", // should change the hash
             },
             TestVector {
                 name: "native-none-anyonecanpay-0-modify-amount-spent",
@@ -433,7 +532,7 @@ mod tests {
                 hash_type: SIG_HASH_NONE_ANYONE_CAN_PAY,
                 input_index: 0,
                 action: ModifyAction::AmountSpent(0),
-                expected_hash: "6645f83f8ea16f6883a8e18ee36aa9286072091db46dfda7400ec86dce1b08d1", // should change the hash
+                expected_hash: "f07f45f3634d3ea8c0f2cb676f56e20993edf9be07a83bf0dfdb3debcf1441bf", // should change the hash
             },
             TestVector {
                 name: "native-none-anyonecanpay-0-modify-script-public-key",
@@ -441,7 +540,7 @@ mod tests {
                 hash_type: SIG_HASH_NONE_ANYONE_CAN_PAY,
                 input_index: 0,
                 action: ModifyAction::PrevScriptPublicKey(0),
-                expected_hash: "052395ec90537ef35573ceab230283608cd130671430166cb7cfbd49042710bd", // should change the hash
+                expected_hash: "20a525c54dc33b2a61201f05233c086dbe8e06e9515775181ed96550b4f2d714", // should change the hash
             },
             // SIG_HASH_SINGLE
             TestVector {
@@ -450,7 +549,7 @@ mod tests {
                 hash_type: SIG_HASH_SINGLE,
                 input_index: 0,
                 action: ModifyAction::NoAction,
-                expected_hash: "72c7d4f8086e606f5df188073cc279e2f0463ae69bed6cf4873813bef60234d0", // should change the hash
+                expected_hash: "44a0b407ff7b239d447743dd503f7ad23db5b2ee4d25279bd3dffaf6b474e005", // should change the hash
             },
             TestVector {
                 name: "native-single-0-modify-output-1",
@@ -458,7 +557,7 @@ mod tests {
                 hash_type: SIG_HASH_SINGLE,
                 input_index: 0,
                 action: ModifyAction::Output(1),
-                expected_hash: "72c7d4f8086e606f5df188073cc279e2f0463ae69bed6cf4873813bef60234d0", // should change the hash
+                expected_hash: "44a0b407ff7b239d447743dd503f7ad23db5b2ee4d25279bd3dffaf6b474e005", // should change the hash
             },
             TestVector {
                 name: "native-single-0-modify-sequence-0",
@@ -466,7 +565,7 @@ mod tests {
                 hash_type: SIG_HASH_SINGLE,
                 input_index: 0,
                 action: ModifyAction::Sequence(0),
-                expected_hash: "b957a75eaec79b174c6047b192c9d565edeff398b659f9946bdd47f542d5f322", // should change the hash
+                expected_hash: "83796d22879718eee1165d4aace667bb6778075dab579c32c57be945f466a451", // should change the hash
             },
             TestVector {
                 name: "native-single-0-modify-sequence-1",
@@ -474,7 +573,7 @@ mod tests {
                 hash_type: SIG_HASH_SINGLE,
                 input_index: 0,
                 action: ModifyAction::Sequence(1),
-                expected_hash: "72c7d4f8086e606f5df188073cc279e2f0463ae69bed6cf4873813bef60234d0", // shouldn't change the hash
+                expected_hash: "44a0b407ff7b239d447743dd503f7ad23db5b2ee4d25279bd3dffaf6b474e005", // shouldn't change the hash
             },
             TestVector {
                 name: "native-single-2-no-corresponding-output",
@@ -482,7 +581,7 @@ mod tests {
                 hash_type: SIG_HASH_SINGLE,
                 input_index: 2,
                 action: ModifyAction::NoAction,
-                expected_hash: "396fce8beff7b98ae3bcdf5a87d9361ec24fa47918cb526a5a602efb90b926be", // should change the hash
+                expected_hash: "022ad967192f39d8d5895d243e025ec14cc7a79708c5e364894d4eff3cecb1b0", // should change the hash
             },
             TestVector {
                 name: "native-single-2-no-corresponding-output-modify-output-1",
@@ -490,7 +589,7 @@ mod tests {
                 hash_type: SIG_HASH_SINGLE,
                 input_index: 2,
                 action: ModifyAction::Output(1),
-                expected_hash: "396fce8beff7b98ae3bcdf5a87d9361ec24fa47918cb526a5a602efb90b926be", // shouldn't change the hash
+                expected_hash: "022ad967192f39d8d5895d243e025ec14cc7a79708c5e364894d4eff3cecb1b0", // shouldn't change the hash
             },
             TestVector {
                 name: "native-single-anyonecanpay-0",
@@ -498,7 +597,7 @@ mod tests {
                 hash_type: SIG_HASH_SINGLE_ANYONE_CAN_PAY,
                 input_index: 0,
                 action: ModifyAction::NoAction,
-                expected_hash: "96ec3bf7e46653a2e2925b4b04a218a8bd6c85ddcc4c0760efe9250ea3d4e866", // should change the hash
+                expected_hash: "43b20aba775050cf9ba8d5e48fc7ed2dc6c071d23f30382aea58b7c59cfb8ed7", // should change the hash
             },
             TestVector {
                 name: "native-single-anyonecanpay-2-no-corresponding-output",
@@ -506,7 +605,15 @@ mod tests {
                 hash_type: SIG_HASH_SINGLE_ANYONE_CAN_PAY,
                 input_index: 2,
                 action: ModifyAction::NoAction,
-                expected_hash: "b3f103c0bd381263babcdb7c03b9ad38a0c1ae74e9d76fbfcda05dc5d3176f44", // should change the hash
+                expected_hash: "846689131fb08b77f83af1d3901076732ef09d3f8fdff945be89aa4300562e5f", // should change the hash
+            },
+            TestVector {
+                name: "native-all-0-modify-payload",
+                populated_tx: &native_populated_tx,
+                hash_type: SIG_HASH_ALL,
+                input_index: 0,
+                action: ModifyAction::Payload,
+                expected_hash: "72ea6c2871e0f44499f1c2b556f265d9424bfea67cca9cb343b4b040ead65525", // should change the hash
             },
             // subnetwork transaction
             TestVector {
@@ -515,7 +622,7 @@ mod tests {
                 hash_type: SIG_HASH_ALL,
                 input_index: 0,
                 action: ModifyAction::NoAction,
-                expected_hash: "3a860775f2c2d671b99819ceeb4d5d645dc990caba213845ffe83137ad39280c", // should change the hash
+                expected_hash: "b2f421c933eb7e1a91f1d9e1efa3f120fe419326c0dbac487752189522550e0c", // should change the hash
             },
             TestVector {
                 name: "subnetwork-all-modify-payload",
@@ -523,7 +630,7 @@ mod tests {
                 hash_type: SIG_HASH_ALL,
                 input_index: 0,
                 action: ModifyAction::Payload,
-                expected_hash: "86e3856d5c4f9d42b81244cf3b32d98ece32d317204fcf0ce93fc63070898b7c", // should change the hash
+                expected_hash: "12ab63b9aea3d58db339245a9b6e9cb6075b2253615ce0fb18104d28de4435a1", // should change the hash
             },
             TestVector {
                 name: "subnetwork-all-modify-gas",
@@ -531,7 +638,7 @@ mod tests {
                 hash_type: SIG_HASH_ALL,
                 input_index: 0,
                 action: ModifyAction::Gas,
-                expected_hash: "b54b8571711e3a913722fd38fc6380db19201861f04ca6d289a9fd65f77e40a6", // should change the hash
+                expected_hash: "2501edfc0068d591160c4bd98646c6e6892cdc051182a8be3ccd6d67f104fd17", // should change the hash
             },
             TestVector {
                 name: "subnetwork-all-subnetwork-id",
@@ -539,7 +646,7 @@ mod tests {
                 hash_type: SIG_HASH_ALL,
                 input_index: 0,
                 action: ModifyAction::SubnetworkId,
-                expected_hash: "bf066393873d2984d404f890b790a8576840aceae1840f9d9f5607bed26aab76", // should change the hash
+                expected_hash: "a5d1230ede0dfcfd522e04123a7bcd721462fed1d3a87352031a4f6e3c4389b6", // should change the hash
             },
         ];
 
@@ -572,9 +679,9 @@ mod tests {
                 }
             }
             let populated_tx = PopulatedTransaction::new(&tx, entries);
-            let mut reused_values = SigHashReusedValues::new();
+            let reused_values = SigHashReusedValuesUnsync::new();
             assert_eq!(
-                calc_schnorr_signature_hash(&populated_tx, test.input_index, test.hash_type, &mut reused_values).to_string(),
+                calc_schnorr_signature_hash(&populated_tx, test.input_index, test.hash_type, &reused_values).to_string(),
                 test.expected_hash,
                 "test {} failed",
                 test.name

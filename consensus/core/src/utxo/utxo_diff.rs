@@ -4,7 +4,7 @@ use super::{
 };
 use crate::tx::{TransactionOutpoint, UtxoEntry, VerifiableTransaction};
 use serde::{Deserialize, Serialize};
-use std::{collections::hash_map::Entry::Vacant, mem::size_of};
+use std::collections::hash_map::Entry::Vacant;
 use vecno_utils::mem_size::MemSizeEstimator;
 
 pub trait ImmutableUtxoDiff {

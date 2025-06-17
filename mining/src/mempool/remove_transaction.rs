@@ -4,7 +4,7 @@ use crate::mempool::{
     Mempool,
 };
 use vecno_consensus_core::tx::TransactionId;
-use vecno_core::{debug, warn};
+use vecno_core::debug;
 use vecno_utils::iter::IterExtensions;
 
 impl Mempool {
@@ -43,8 +43,8 @@ impl Mempool {
             TxRemovalReason::Muted => {}
             TxRemovalReason::DoubleSpend => match removed_transactions.len() {
                 0 => {}
-                1 => warn!("Removed transaction ({}) {}{}", reason, removed_transactions[0], extra_info),
-                n => warn!(
+                1 => debug!("Removed transaction ({}) {}{}", reason, removed_transactions[0], extra_info),
+                n => debug!(
                     "Removed {} transactions ({}): {}{}",
                     n,
                     reason,

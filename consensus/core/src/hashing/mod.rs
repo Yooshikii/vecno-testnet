@@ -5,6 +5,8 @@ pub mod header;
 pub mod sighash;
 pub mod sighash_type;
 pub mod tx;
+#[cfg(feature = "wasm32-sdk")]
+pub mod wasm;
 
 pub trait HasherExtensions {
     /// Writes the len as u64 little endian bytes
@@ -26,6 +28,7 @@ pub trait HasherExtensions {
     fn write_u64(&mut self, element: u64) -> &mut Self;
 
     /// Writes blue work as big endian bytes w/o the leading zeros
+    /// (emulates bigint.bytes() in the vecnod golang ref)
     fn write_blue_work(&mut self, work: BlueWorkType) -> &mut Self;
 
     /// Writes the number of bytes followed by the bytes themselves

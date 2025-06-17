@@ -134,7 +134,7 @@ impl Default for Args {
             #[cfg(feature = "devnet-prealloc")]
             prealloc_address: None,
             #[cfg(feature = "devnet-prealloc")]
-            prealloc_amount: 1_000_000,
+            prealloc_amount: 10_000_000_000,
 
             disable_upnp: false,
             disable_dns_seeding: false,
@@ -196,7 +196,7 @@ pub fn cli() -> Command {
 
     #[allow(clippy::let_and_return)]
     let cmd = Command::new("vecnod")
-        .about(format!("{} (vecnod) v{}", env!("CARGO_PKG_DESCRIPTION"), version()))
+        .about(format!("{} (vecno-testnet) v{}", env!("CARGO_PKG_DESCRIPTION"), version()))
         .version(env!("CARGO_PKG_VERSION"))
         .arg(arg!(-C --configfile <CONFIG_FILE> "Path of config file."))
         .arg(arg!(-b --appdir <DATA_DIR> "Directory to store data."))
@@ -366,7 +366,7 @@ Setting to 0 prevents the preallocation and sets the maximum to {}, leading to 0
                 .long("ram-scale")
                 .require_equals(true)
                 .value_parser(clap::value_parser!(f64))
-                .help("Apply a scale factor to memory allocation bounds. Nodes with limited RAM (~4-8GB) should set this to ~0.3-0.5 respectively. Nodes with 
+                .help("Apply a scale factor to memory allocation bounds. Nodes with limited RAM (~4-8GB) should set this to ~0.3-0.5 respectively. Nodes with
 a large RAM (~64GB) can set this value to ~3.0-4.0 and gain superior performance especially for syncing peers faster"),
         )
         ;
@@ -551,7 +551,7 @@ fn arg_match_many_unwrap_or<T: Clone + Send + Sync + 'static>(m: &clap::ArgMatch
       --utxoindex                           Enable the UTXO index
       --archival                            Run as an archival node: don't delete old block data when moving the
                                             pruning point (Warning: heavy disk usage)'
-      --protocol-version=                   Use non default p2p protocol version (default: 5)
+      --protocol-version=                   Use non default p2p protocol version (default: 7)
       --enable-unsynced-mining              Allow the node to accept blocks from RPC while not synced
                                             (required when initiating a new network from genesis)
       --testnet                             Use the test network

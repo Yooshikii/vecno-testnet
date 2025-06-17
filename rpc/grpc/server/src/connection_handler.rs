@@ -45,7 +45,7 @@ use vecno_rpc_core::{
 use vecno_utils::networking::NetAddress;
 use vecno_utils_tower::{
     counters::TowerConnectionCounters,
-    middleware::{measure_request_body_size_layer, CountBytesBody, MapResponseBodyLayer},
+    middleware::{BodyExt, CountBytesBody, MapRequestBodyLayer, MapResponseBodyLayer},
 };
 
 #[derive(Clone)]
@@ -144,7 +144,7 @@ impl ConnectionHandler {
             let serve_result = TonicServer::builder()
                 // .http2_keepalive_interval(Some(GRPC_KEEP_ALIVE_PING_INTERVAL))
                 // .http2_keepalive_timeout(Some(GRPC_KEEP_ALIVE_PING_TIMEOUT))
-                .layer(measure_request_body_size_layer(bytes_rx, |b| b))
+                .layer(MapRequestBodyLayer::new(move |body| CountBytesBody::new(body, bytes_rx.clone()).boxed_unsync()))
                 .layer(MapResponseBodyLayer::new(move |body| CountBytesBody::new(body, bytes_tx.clone())))
                 .add_service(protowire_server)
                 .serve_with_shutdown(

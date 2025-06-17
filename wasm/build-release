@@ -1,5 +1,5 @@
 #!/bin/bash
-# This script builds the Vecno WASM32 SDK release.
+# This script builds the Rusty Vecno WASM32 SDK release.
 
 # make the script fail for any failed command
 set -e

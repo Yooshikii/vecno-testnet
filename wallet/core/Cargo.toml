@@ -71,6 +71,7 @@ vecno-txscript.workspace = true
 vecno-utils.workspace = true
 vecno-wallet-keys.workspace = true
 vecno-wallet-macros.workspace = true
+vecno-wallet-pskt.workspace = true
 vecno-wasm-core.workspace = true
 vecno-wrpc-client.workspace = true
 vecno-wrpc-wasm.workspace = true
@@ -125,5 +126,5 @@ serde_repr.workspace = true
 [target.'cfg(not(target_arch = "wasm32"))'.dev-dependencies]
 tokio.workspace = true
 
-[lints.clippy]
-empty_docs = "allow"
+[lints]
+workspace = true

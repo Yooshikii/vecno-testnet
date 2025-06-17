@@ -71,12 +71,15 @@ impl Account {
                     tprintln!(ctx, "");
                     ctx.term().help(
                         &[
-                            ("account import legacy-data", "Import keydata file or vecno web wallet data on the same domain"),
+                            ("account import legacy-data", "Import KDX keydata file or Vecno web wallet data on the same domain"),
                             (
                                 "account import mnemonic bip32",
-                                "Import Bip32 (12 or 24 word mnemonics used by VecnoWallet, onekey, tangem etc.)",
+                                "Import Bip32 (12 or 24 word mnemonics used by vecnowallet, onekey, tangem etc.)",
                             ),
-                            ("account import mnemonic legacy", "Import accounts 12 word mnemonic used by legacy applications"),
+                            (
+                                "account import mnemonic legacy",
+                                "Import accounts 12 word mnemonic used by legacy applications (KDX and Vecno web wallet)",
+                            ),
                             (
                                 "account import mnemonic multisig [additional keys]",
                                 "Import mnemonic and additional keys for a multisig account",
@@ -137,16 +140,16 @@ impl Account {
                                 )
                                 .await?;
                         } else if application_runtime::is_web() {
-                            return Err("Vecno web wallet storage not found at this domain name".into());
+                            return Err("'vecnod' web wallet storage not found at this domain name".into());
                         } else {
-                            return Err("Keydata file not found".into());
+                            return Err("KDX keydata file not found".into());
                         }
                     }
                     "mnemonic" => {
                         if argv.is_empty() {
                             tprintln!(ctx, "usage: 'account import mnemonic <bip32|legacy|multisig>'");
                             tprintln!(ctx, "please specify the mnemonic type");
-                            tprintln!(ctx, "please use 'legacy' for 12-word vecno web wallet mnemonics\r\n");
+                            tprintln!(ctx, "please use 'legacy' for 12-word KDX and Vecno web wallet mnemonics\r\n");
                             return Ok(());
                         }
 
@@ -174,7 +177,44 @@ impl Account {
                     }
                     _ => {
                         tprintln!(ctx, "unknown account import type: '{import_kind}'");
-                        tprintln!(ctx, "supported import types are: 'mnemonic' or 'legacy-data'\r\n");
+                        tprintln!(ctx, "supported import types are: 'mnemonic', 'legacy-data' or 'multisig-watch'\r\n");
+                        return Ok(());
+                    }
+                }
+            }
+            "watch" => {
+                if argv.is_empty() {
+                    tprintln!(ctx, "usage: 'account watch <watch-type> [account name]'");
+                    tprintln!(ctx, "");
+                    tprintln!(ctx, "examples:");
+                    tprintln!(ctx, "");
+                    ctx.term().help(
+                        &[
+                            ("account watch bip32", "Import a extended public key for a watch-only bip32 account"),
+                            ("account watch multisig", "Import extended public keys for a watch-only multisig account"),
+                        ],
+                        None,
+                    )?;
+
+                    return Ok(());
+                }
+
+                let watch_kind = argv.remove(0);
+
+                let account_name = argv.first().map(|name| name.trim()).filter(|name| !name.is_empty()).map(|name| name.to_string());
+
+                let account_name = account_name.as_deref();
+
+                match watch_kind.as_ref() {
+                    "bip32" => {
+                        wizards::account::bip32_watch(&ctx, account_name).await?;
+                    }
+                    "multisig" => {
+                        wizards::account::multisig_watch(&ctx, account_name).await?;
+                    }
+                    _ => {
+                        tprintln!(ctx, "unknown account watch type: '{watch_kind}'");
+                        tprintln!(ctx, "supported watch types are: 'bip32' or 'multisig'\r\n");
                         return Ok(());
                     }
                 }
@@ -213,7 +253,7 @@ impl Account {
                 (
                     "import <import-type> [<key-type> [extra keys]]",
                     "Import accounts from a private key using 24 or 12 word mnemonic or legacy data \
-                Use 'account import' for additional help.",
+                (KDX and Vecno web wallet). Use 'account import' for additional help.",
                 ),
                 ("name <name>", "Name or rename the selected account (use 'remove' to remove the name"),
                 ("scan [<derivations>] or scan [<start>] [<derivations>]", "Scan extended address derivation chain (legacy accounts)"),

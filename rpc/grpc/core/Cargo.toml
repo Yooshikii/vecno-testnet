@@ -15,7 +15,6 @@ vecno-core.workspace = true
 vecno-notify.workspace = true
 vecno-rpc-core.workspace = true
 vecno-utils.workspace = true
-vecno-muhash.workspace = true
 
 async-channel.workspace = true
 async-stream.workspace = true

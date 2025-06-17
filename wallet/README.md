@@ -1,25 +1,23 @@
-# Vecno Core Wallet
+
+# Rusty Vecno Core Wallet
 
 ## Prerequisites
 
 Latest versions of tools:
-
 * rust 1.70.0+
 * wasm-pack 0.12.1+ https://rustwasm.github.io/wasm-pack/installer/
 * basic-http-server `cargo install basic-http-server`
-  (alternatively you can use your favorite flavor of http server, just make sure to match the ports in this example)
+(alternatively you can use your favorite flavor of http server, just make sure to match the ports in this example)
 
 Both WASM and Native applications are built from the same Rust codebase, so they are identical in their functionality.
 
 ## Starting WASM wallet
-
 ```
 cd wasm
 ./build-web
 cd web
 basic-http-server
 ```
-
 Access the web interface at http://localhost:4000 (`4000` is the default basic-http-server port)
 
 ## Starting Native Wallet
@@ -28,15 +26,13 @@ Access the web interface at http://localhost:4000 (`4000` is the default basic-h
 cd native
 cargo run
 ```
-
 Type `help` for additional help or `exit` to quit the application.
 
 ## Basic Operations
 
 (this section will be updated later, it is intended for development)
 
-After starting the wallet shell (native of WASM) and starting a local vecnod (with `--testnet` and `--utxoindex`), you should perform the following actions:
-
+After starting the wallet shell (native of WASM) and starting a local vecno-testnet Vecnod node (with `--testnet` and `--utxoindex`), you should perform the following actions:
 ```
 network testnet
 server localhost

@@ -1,4 +1,4 @@
-use std::{convert::TryInto, mem::size_of};
+use std::convert::TryInto;
 use vecno_consensus_core::{
     coinbase::*,
     errors::coinbase::{CoinbaseError, CoinbaseResult},
@@ -72,7 +72,7 @@ impl CoinbaseManager {
         // Precomputed subsidy by month table for the actual block per second rate
         // Here values are rounded up so that we keep the same number of rewarding months as in the original 1 BPS table.
         // In a 10 BPS network, the induced increase in total rewards is 51 VE (see tests::calc_high_bps_total_rewards_delta())
-        let subsidy_by_month_table: SubsidyByMonthTable = core::array::from_fn(|i| (SUBSIDY_BY_MONTH_TABLE[i] + bps - 1) / bps);
+        let subsidy_by_month_table: SubsidyByMonthTable = core::array::from_fn(|i| SUBSIDY_BY_MONTH_TABLE[i].div_ceil(bps));
         Self {
             coinbase_payload_script_public_key_max_len,
             max_coinbase_payload_len,
@@ -241,7 +241,8 @@ impl CoinbaseManager {
 }
 
 /*
-    This table was pre-calculated for all months until reaching 0 subsidy.
+    This table was pre-calculated by calling `calcDeflationaryPeriodBlockSubsidyFloatCalc` (in vecnod-go) for all months until reaching 0 subsidy.
+    To regenerate this table, run `TestBuildSubsidyTable` in coinbasemanager_test.go (note the `deflationaryPhaseBaseSubsidy` therein).
     These values apply to 1 block per second.
 */
 #[rustfmt::skip]
@@ -294,10 +295,7 @@ mod tests {
         let total_rewards: u64 = pre_deflationary_rewards + SUBSIDY_BY_MONTH_TABLE.iter().map(|x| x * SECONDS_PER_MONTH).sum::<u64>();
         let testnet_11_bps = TESTNET11_PARAMS.bps();
         let total_high_bps_rewards_rounded_up: u64 = pre_deflationary_rewards
-            + SUBSIDY_BY_MONTH_TABLE
-                .iter()
-                .map(|x| ((x + testnet_11_bps - 1) / testnet_11_bps * testnet_11_bps) * SECONDS_PER_MONTH)
-                .sum::<u64>();
+            + SUBSIDY_BY_MONTH_TABLE.iter().map(|x| (x.div_ceil(testnet_11_bps) * testnet_11_bps) * SECONDS_PER_MONTH).sum::<u64>();
 
         let cbm = create_manager(&TESTNET11_PARAMS);
         let total_high_bps_rewards: u64 =
@@ -322,7 +320,7 @@ mod tests {
             let cbm = create_manager(&network_id.into());
             cbm.subsidy_by_month_table.iter().enumerate().for_each(|(i, x)| {
                 assert_eq!(
-                    (SUBSIDY_BY_MONTH_TABLE[i] + cbm.bps() - 1) / cbm.bps(),
+                    SUBSIDY_BY_MONTH_TABLE[i].div_ceil(cbm.bps()),
                     *x,
                     "{}: locally computed and precomputed values must match",
                     network_id
@@ -331,7 +329,6 @@ mod tests {
         }
     }
 
-    #[ignore] // TODO:
     #[test]
     fn subsidy_test() {
         const PREMINE_PHASE_BASE_SUBSIDY: u64 = 1500000000000000;
@@ -383,7 +380,7 @@ mod tests {
                 Test {
                     name: "after 32 halvings",
                     daa_score: params.premine_daa_score + 32 * blocks_per_halving,
-                    expected: ((DEFLATIONARY_PHASE_INITIAL_SUBSIDY / 2_u64.pow(32)) + cbm.bps() - 1) / cbm.bps(),
+                    expected: (DEFLATIONARY_PHASE_INITIAL_SUBSIDY / 2_u64.pow(32)).div_ceil(cbm.bps()),
                 },
                 Test {
                     name: "just before subsidy depleted",
@@ -410,7 +407,7 @@ mod tests {
         let extra_data = [2u8, 3];
         let data = CoinbaseData {
             blue_score: 56,
-            subsidy: 1400000000,
+            subsidy: 200000000,
             miner_data: MinerData {
                 script_public_key: ScriptPublicKey::new(0, ScriptVec::from_slice(&script_data)),
                 extra_data: &extra_data as &[u8],
@@ -454,7 +451,7 @@ mod tests {
         let extra_data = [2u8, 3, 23, 98];
         let data = CoinbaseData {
             blue_score: 56345,
-            subsidy: 1400000000,
+            subsidy: 200000000,
             miner_data: MinerData {
                 script_public_key: ScriptPublicKey::new(0, ScriptVec::from_slice(&script_data)),
                 extra_data: &extra_data,

@@ -36,6 +36,7 @@ pub mod vecnod_request_convert {
     impl_into_vecnod_request!(GetConnectedPeerInfo);
     impl_into_vecnod_request!(AddPeer);
     impl_into_vecnod_request!(SubmitTransaction);
+    impl_into_vecnod_request!(SubmitTransactionReplacement);
     impl_into_vecnod_request!(GetSubnetwork);
     impl_into_vecnod_request!(GetVirtualChainFromBlock);
     impl_into_vecnod_request!(GetBlocks);
@@ -54,9 +55,14 @@ pub mod vecnod_request_convert {
     impl_into_vecnod_request!(GetCoinSupply);
     impl_into_vecnod_request!(Ping);
     impl_into_vecnod_request!(GetMetrics);
+    impl_into_vecnod_request!(GetConnections);
+    impl_into_vecnod_request!(GetSystemInfo);
     impl_into_vecnod_request!(GetServerInfo);
     impl_into_vecnod_request!(GetSyncStatus);
     impl_into_vecnod_request!(GetDaaScoreTimestampEstimate);
+    impl_into_vecnod_request!(GetFeeEstimate);
+    impl_into_vecnod_request!(GetFeeEstimateExperimental);
+    impl_into_vecnod_request!(GetCurrentBlockColor);
 
     impl_into_vecnod_request!(NotifyBlockAdded);
     impl_into_vecnod_request!(NotifyNewBlockTemplate);
@@ -167,6 +173,7 @@ pub mod vecnod_response_convert {
     impl_into_vecnod_response!(GetConnectedPeerInfo);
     impl_into_vecnod_response!(AddPeer);
     impl_into_vecnod_response!(SubmitTransaction);
+    impl_into_vecnod_response!(SubmitTransactionReplacement);
     impl_into_vecnod_response!(GetSubnetwork);
     impl_into_vecnod_response!(GetVirtualChainFromBlock);
     impl_into_vecnod_response!(GetBlocks);
@@ -185,9 +192,14 @@ pub mod vecnod_response_convert {
     impl_into_vecnod_response!(GetCoinSupply);
     impl_into_vecnod_response!(Ping);
     impl_into_vecnod_response!(GetMetrics);
+    impl_into_vecnod_response!(GetConnections);
+    impl_into_vecnod_response!(GetSystemInfo);
     impl_into_vecnod_response!(GetServerInfo);
     impl_into_vecnod_response!(GetSyncStatus);
     impl_into_vecnod_response!(GetDaaScoreTimestampEstimate);
+    impl_into_vecnod_response!(GetFeeEstimate);
+    impl_into_vecnod_response!(GetFeeEstimateExperimental);
+    impl_into_vecnod_response!(GetCurrentBlockColor);
 
     impl_into_vecnod_notify_response!(NotifyBlockAdded);
     impl_into_vecnod_notify_response!(NotifyNewBlockTemplate);

@@ -1,7 +1,7 @@
 pub const DEFAULT_LOGGER_ENV: &str = "RUST_LOG";
 
-pub const LOG_FILE_NAME: &str = "vecnod.log";
-pub const ERR_LOG_FILE_NAME: &str = "vecnod_err.log";
+pub const LOG_FILE_NAME: &str = "vecno-testnet.log";
+pub const ERR_LOG_FILE_NAME: &str = "vecno-testnet_err.log";
 
 pub const LOG_ARCHIVE_SUFFIX: &str = ".{}.gz";
 

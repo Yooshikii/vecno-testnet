@@ -1,7 +1,7 @@
 [[resolver]]
 enable = false
-url = "http://127.0.0.1:8888"
+address = "http://127.0.0.1:8888"
 
-[[resolver]]
-enable = true
-url = "https://seed.vecnoscan.org"
+[[group]]
+template = "https://*.vecnoscan.org"
+nodes = ["seed"]

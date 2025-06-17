@@ -1,6 +1,8 @@
 #### Vecno Testnet Node
 
-Vecno Testnet node built on rust, based on [rusty-kaspa](https://github.com/kaspanet/rusty-kaspa)
+Vecno Testnet node built on rust, based on [rusty-kaspa](https://github.com/kaspanet/rusty-kaspa).
+
+For a detailed guide how to create a wallet and mine on testnet see the [Testnet Guide](TESTNET-GUIDE.md).
 
 ## Installation
 
@@ -45,7 +47,7 @@ Vecno Testnet node built on rust, based on [rusty-kaspa](https://github.com/kasp
 
    ```bash
    git clone https://github.com/Vecno-Foundation/vecno-testnet
-   cd vecnod
+   cd vecno-testnet
    ```
 
 </details>
@@ -79,7 +81,7 @@ Vecno Testnet node built on rust, based on [rusty-kaspa](https://github.com/kasp
 
    ```bash
    git clone https://github.com/Vecno-Foundation/vecno-testnet
-   cd vecnod
+   cd vecno-testnet
    ```
 
 </details>
@@ -148,7 +150,7 @@ Vecno Testnet node built on rust, based on [rusty-kaspa](https://github.com/kasp
 
    ```bash
    git clone https://github.com/Vecno-Foundation/vecno-testnet
-   cd vecnod
+   cd vecno-testnet
    ```
 
 </details>
@@ -297,8 +299,6 @@ wRPC
   TypeScript capable of running in web browsers and Node.js are available as a part of
   the Vecno WASM framework.
 
-  **wRPC to gRPC Proxy is deprecated and no longer supported.**
-
 </details>
 
 <details>
@@ -405,4 +405,4 @@ Logging in `vecnod` and `simpa` can be [filtered](https://docs.rs/env_logger/0.1
 
    In this command we set the `loglevel` to `INFO`.
 
-</details>
+</details><h1>Vecno Testnet</h1>

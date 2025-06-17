@@ -14,7 +14,7 @@ pub fn decrypt_mnemonic<T: AsRef<[u8]>>(
     let mut aead = chacha20poly1305::XChaCha20Poly1305::new(Key::from_slice(&key));
     let (nonce, ciphertext) = cipher.as_ref().split_at(24);
 
-    let decrypted = aead.decrypt(nonce.into(), ciphertext).unwrap();
+    let decrypted = aead.decrypt(nonce.into(), ciphertext)?;
     Ok(unsafe { String::from_utf8_unchecked(decrypted) })
 }
 
@@ -36,8 +36,10 @@ mod test {
             ecdsa: false,
         };
 
-        let decrypted = decrypt_mnemonic(8, file.encrypted_mnemonic, b"").unwrap();
-        assert_eq!("dizzy uncover funny time weapon chat volume squirrel comic motion until diamond response remind hurt spider door strategy entire oyster hawk marriage soon fabric", decrypted);
+        let decrypted = decrypt_mnemonic(8, file.encrypted_mnemonic, b"");
+        log_info!("decrypted: {decrypted:?}");
+        assert!(decrypted.is_ok(), "decrypt error");
+        assert_eq!("dizzy uncover funny time weapon chat volume squirrel comic motion until diamond response remind hurt spider door strategy entire oyster hawk marriage soon fabric", decrypted.unwrap());
     }
 
     #[tokio::test]
@@ -70,7 +72,7 @@ mod test {
         };
         let import_secret = Secret::new(vec![]);
 
-        let acc = wallet.import_VecnoWallet_golang_single_v1(&import_secret, &wallet_secret, file).await.unwrap();
+        let acc = wallet.import_vecnowallet_golang_single_v1(&import_secret, &wallet_secret, file).await.unwrap();
         assert_eq!(
             acc.receive_address().unwrap(),
             Address::try_from("vecno:qpuvlauc6a5syze9g70dnxzzvykhkuatsjrx87mxqccqh7kf9kcssdkp9ec7w").unwrap(), // taken from golang impl
@@ -121,7 +123,7 @@ mod test {
         };
         let import_secret = Secret::new(vec![]);
 
-        let acc = wallet.import_VecnoWallet_golang_multisig_v1(&import_secret, &wallet_secret, file).await.unwrap();
+        let acc = wallet.import_vecnowallet_golang_multisig_v1(&import_secret, &wallet_secret, file).await.unwrap();
         assert_eq!(
             acc.receive_address().unwrap(),
             Address::try_from("vecno:pqvgkyjeuxmd8k70egrrzpdz5rqj0acmr6y94mwsltxfp6nc50742295c3998").unwrap(), // taken from golang impl

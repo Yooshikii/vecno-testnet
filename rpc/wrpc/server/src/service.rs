@@ -24,7 +24,7 @@ pub struct Options {
 
 impl Default for Options {
     fn default() -> Self {
-        Options { listen_address: "127.0.0.1:7110".to_owned(), verbose: false, grpc_proxy_address: None }
+        Options { listen_address: "127.0.0.1:8110".to_owned(), verbose: false, grpc_proxy_address: None }
     }
 }
 
@@ -123,6 +123,7 @@ impl WrpcService {
             rpc_handler.clone(),
             router.interface.clone(),
             Some(counters),
+            false,
         );
 
         WrpcService { options, server, rpc_handler, shutdown: SingleTrigger::default() }
@@ -146,10 +147,15 @@ impl WrpcService {
         info!("WRPC Server starting on: {}", listen_address);
         tokio::spawn(async move {
             let config = WebSocketConfig { max_message_size: Some(MAX_WRPC_MESSAGE_SIZE), ..Default::default() };
-            let serve_result = self.server.listen(&listen_address, Some(config)).await;
-            match serve_result {
-                Ok(_) => info!("WRPC Server stopped on: {}", listen_address),
-                Err(err) => panic!("WRPC Server {listen_address} stopped with error: {err:?}"),
+            match self.server.bind(&listen_address).await {
+                Ok(listener) => {
+                    let serve_result = self.server.listen(listener, Some(config)).await;
+                    match serve_result {
+                        Ok(_) => info!("WRPC Server stopped on: {}", listen_address),
+                        Err(err) => panic!("WRPC Server {listen_address} stopped with error: {err:?}"),
+                    }
+                }
+                Err(err) => panic!("WRPC Server bind error on {listen_address}: {err:?}"),
             }
         });
 

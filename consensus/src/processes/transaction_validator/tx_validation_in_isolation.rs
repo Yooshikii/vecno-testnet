@@ -8,6 +8,11 @@ use super::{
 };
 
 impl TransactionValidator {
+    /// Performs a variety of transaction validation checks which are independent of any
+    /// context -- header or utxo. **Note** that any check performed here should be moved to
+    /// header contextual validation if it becomes HF activation dependent. This is bcs we rely
+    /// on checks here to be truly independent and avoid calling it multiple times wherever possible
+    /// (e.g., BBT relies on mempool in isolation checks even though virtual daa score might have changed)   
     pub fn validate_tx_in_isolation(&self, tx: &Transaction) -> TxResult<()> {
         self.check_transaction_inputs_in_isolation(tx)?;
         self.check_transaction_outputs_in_isolation(tx)?;
@@ -16,7 +21,7 @@ impl TransactionValidator {
         check_transaction_output_value_ranges(tx)?;
         check_duplicate_transaction_inputs(tx)?;
         check_gas(tx)?;
-        check_transaction_payload(tx)?;
+        check_transaction_subnetwork(tx)?;
         check_transaction_version(tx)
     }
 
@@ -106,14 +111,6 @@ fn check_gas(tx: &Transaction) -> TxResult<()> {
     Ok(())
 }
 
-fn check_transaction_payload(tx: &Transaction) -> TxResult<()> {
-    // This should be revised if subnetworks are activated (along with other validations that weren't copied from vecnod)
-    if !tx.is_coinbase() && !tx.payload.is_empty() {
-        return Err(TxRuleError::NonCoinbaseTxHasPayload);
-    }
-    Ok(())
-}
-
 fn check_transaction_version(tx: &Transaction) -> TxResult<()> {
     if tx.version != TX_VERSION {
         return Err(TxRuleError::UnknownTxVersion(tx.version));
@@ -146,10 +143,18 @@ fn check_transaction_output_value_ranges(tx: &Transaction) -> TxResult<()> {
     Ok(())
 }
 
+fn check_transaction_subnetwork(tx: &Transaction) -> TxResult<()> {
+    if tx.is_coinbase() || tx.subnetwork_id.is_native() {
+        Ok(())
+    } else {
+        Err(TxRuleError::SubnetworksDisabled(tx.subnetwork_id.clone()))
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use vecno_consensus_core::{
-        subnets::{SUBNETWORK_ID_COINBASE, SUBNETWORK_ID_NATIVE},
+        subnets::{SubnetworkId, SUBNETWORK_ID_COINBASE, SUBNETWORK_ID_NATIVE},
         tx::{scriptvec, ScriptPublicKey, Transaction, TransactionId, TransactionInput, TransactionOutpoint, TransactionOutput},
     };
     use vecno_core::assert_match;
@@ -261,6 +266,10 @@ mod tests {
 
         tv.validate_tx_in_isolation(&valid_tx).unwrap();
 
+        let mut tx: Transaction = valid_tx.clone();
+        tx.subnetwork_id = SubnetworkId::from_byte(3);
+        assert_match!(tv.validate_tx_in_isolation(&tx), Err(TxRuleError::SubnetworksDisabled(_)));
+
         let mut tx = valid_tx.clone();
         tx.inputs = vec![];
         assert_match!(tv.validate_tx_in_isolation(&tx), Err(TxRuleError::NoTxInputs));
@@ -291,7 +300,7 @@ mod tests {
 
         let mut tx = valid_tx.clone();
         tx.payload = vec![0];
-        assert_match!(tv.validate_tx_in_isolation(&tx), Err(TxRuleError::NonCoinbaseTxHasPayload));
+        assert_match!(tv.validate_tx_in_isolation(&tx), Ok(()));
 
         let mut tx = valid_tx;
         tx.version = TX_VERSION + 1;

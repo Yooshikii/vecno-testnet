@@ -12,7 +12,7 @@ use vecno_mining::{
     errors::MiningManagerError,
     mempool::{
         errors::RuleError,
-        tx::{Orphan, Priority},
+        tx::{Orphan, Priority, RbfPolicy},
     },
     model::tx_query::TransactionQuery,
     P2pTxCountSample,
@@ -78,6 +78,8 @@ impl RelayTransactionsFlow {
     }
 
     pub fn invs_channel_size() -> usize {
+        // TODO: reevaluate when the node is fully functional and later when the network tx rate increases
+        // Note: in go-vecnod we have 10,000 for this channel combined with tx channel.
         4096
     }
 
@@ -217,7 +219,7 @@ impl RelayTransactionsFlow {
             .ctx
             .mining_manager()
             .clone()
-            .validate_and_insert_transaction_batch(&consensus, transactions, Priority::Low, Orphan::Allowed)
+            .validate_and_insert_transaction_batch(&consensus, transactions, Priority::Low, Orphan::Allowed, RbfPolicy::Allowed)
             .await;
 
         for res in insert_results.iter() {

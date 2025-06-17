@@ -23,7 +23,7 @@ pub type Entropy32 = [u8; KEY_SIZE];
 pub type Entropy16 = [u8; 16];
 
 /// Word count for a BIP39 mnemonic phrase. Identifies mnemonic as 12 or 24 word variants.
-#[derive(Default, Clone, Copy, Debug, Serialize, Deserialize, BorshSerialize, BorshDeserialize)]
+#[derive(Default, PartialEq, Eq, Clone, Copy, Debug, Serialize, Deserialize, BorshSerialize, BorshDeserialize)]
 #[serde(rename_all = "kebab-case")]
 pub enum WordCount {
     #[default]
@@ -85,8 +85,8 @@ impl Mnemonic {
     }
 
     #[wasm_bindgen(js_name = random)]
-    pub fn create_random_js(word_count: JsValue) -> Result<Mnemonic> {
-        let word_count = word_count.as_f64().unwrap_or(24.0) as usize;
+    pub fn create_random_js(word_count: Option<u32>) -> Result<Mnemonic> {
+        let word_count = word_count.unwrap_or(24) as usize;
         Mnemonic::random(word_count.try_into()?, Default::default())
     }
 
@@ -229,8 +229,6 @@ impl Mnemonic {
     }
 
     /// Convert this mnemonic phrase into the BIP39 seed value.
-    //#[cfg(feature = "bip39")]
-    //#[cfg_attr(docsrs, doc(cfg(feature = "bip39")))]
     pub fn to_seed(&self, password: &str) -> Seed {
         let salt = Zeroizing::new(format!("mnemonic{password}"));
         let mut seed = [0u8; Seed::SIZE];
@@ -298,12 +296,12 @@ mod tests {
                 "xprv9s21ZrQH143K2YStJyGeTyoWRBu2N1wkamjidQSdxrVeDziGfvwkmP67L2xf6weijVapZxwi64pW8ywHDvCaBQA8PyrRHqkjuuPY9aapypz"
             ],
             [
-                // VPRV (vecno mainnet xprv)
+                // KPRV (vecno mainnet xprv)
                 "cruise village slam canyon monster scrub myself farm add riot large board sentence outer nice coast raven bird scheme undo december blanket trim hero",
                 "kprv5y2qurMHCsXYr8yytxy6ZwYWLtFbdtWWavDL6bPfz2fNLvnZymmNfE6KpQqNHHjb7mAWYCtuUkZPbkgUR19LSKS9VasqRR852L5GMVY8wf9"
             ],
             [
-                // VTRV (vecno testnet xprv)
+                // KTRV (vecno testnet xprv)
                 "short diagram life tip retreat nothing dynamic absent lamp carry mansion keen truck cram crash science liberty emotion live pepper orphan quiz wide prison",
                 "ktrv5himbbCxArFU23gGTxVHNKahNXXSETHjNWgwc5qm85nKS1p55FEb8DUdTd2CPvQvBUKYFRSjjXb5nagr7wXUE4eSaFSxof8cUd6Sm66NRjA"
             ]

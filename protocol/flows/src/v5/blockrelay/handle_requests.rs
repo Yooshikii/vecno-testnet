@@ -31,6 +31,9 @@ impl HandleRelayBlockRequests {
     }
 
     async fn start_impl(&mut self) -> Result<(), ProtocolError> {
+        // We begin by sending the current sink to the new peer. This is to help nodes to exchange
+        // state even if no new blocks arrive for some reason.
+        // Note: in go-vecnod this was done via a dedicated one-time flow.
         self.send_sink().await?;
         loop {
             let (msg, request_id) = dequeue_with_request_id!(self.incoming_route, Payload::RequestRelayBlocks)?;

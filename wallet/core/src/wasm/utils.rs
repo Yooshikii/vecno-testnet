@@ -8,7 +8,7 @@ use workflow_wasm::prelude::*;
 extern "C" {
     #[wasm_bindgen(typescript_type = "bigint | number | HexString")]
     #[derive(Clone, Debug)]
-    pub type IsompiToVecno;
+    pub type ISompiToVecno;
 }
 
 /// Convert a Vecno string to Sompi represented by bigint.
@@ -26,7 +26,7 @@ pub fn vecno_to_sompi(vecno: String) -> Option<BigInt> {
 /// @category Wallet SDK
 ///
 #[wasm_bindgen(js_name = "sompiToVecnoString")]
-pub fn sompi_to_vecno_string(sompi: IsompiToVecno) -> Result<String> {
+pub fn sompi_to_vecno_string(sompi: ISompiToVecno) -> Result<String> {
     let sompi = sompi.try_as_u64()?;
     Ok(crate::utils::sompi_to_vecno_string(sompi))
 }
@@ -39,7 +39,7 @@ pub fn sompi_to_vecno_string(sompi: IsompiToVecno) -> Result<String> {
 /// @category Wallet SDK
 ///
 #[wasm_bindgen(js_name = "sompiToVecnoStringWithSuffix")]
-pub fn sompi_to_vecno_string_with_suffix(sompi: IsompiToVecno, network: &NetworkTypeT) -> Result<String> {
+pub fn sompi_to_vecno_string_with_suffix(sompi: ISompiToVecno, network: &NetworkTypeT) -> Result<String> {
     let sompi = sompi.try_as_u64()?;
     let network_type = NetworkType::try_from(network)?;
     Ok(crate::utils::sompi_to_vecno_string_with_suffix(sompi, &network_type))

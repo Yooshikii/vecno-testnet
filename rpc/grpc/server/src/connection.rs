@@ -344,7 +344,7 @@ impl Connection {
 
     /// Enqueues a response to be sent to the client
     pub async fn enqueue(&self, response: VecnodResponse) -> GrpcServerResult<()> {
-        assert!(response.payload.is_some(), "Vecno gRPC message should always have a value");
+        assert!(response.payload.is_some(), "Vecnod gRPC message should always have a value");
         match self.inner.outgoing_route.try_send(response) {
             Ok(_) => Ok(()),
             Err(TrySendError::Closed(_)) => Err(GrpcServerError::ConnectionClosed),

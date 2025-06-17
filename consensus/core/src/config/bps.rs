@@ -33,7 +33,7 @@ impl<const BPS: u64> Bps<BPS> {
     }
 
     /// Returns the GHOSTDAG K value which was pre-computed for this BPS
-    /// (see [`calculate_ghostdag_k`] and [`gen_ghostdag_table`] for the full calculation)
+    /// (see [`calculate_ghostdag_k`] and `gen_ghostdag_table` for the full calculation)
     #[rustfmt::skip]
     pub const fn ghostdag_k() -> KType {
         match BPS {
@@ -99,7 +99,7 @@ impl<const BPS: u64> Bps<BPS> {
     }
 
     pub const fn pruning_depth() -> u64 {
-        // Based on the analysis at https://github.com/kaspanet/docs/blob/main/Reference/prunality/Prunality.pdf
+        // Based on the analysis at https://github.com/vecno-foundation/docs/blob/main/Reference/prunality/Prunality.pdf
         // and on the decomposition of merge depth (rule R-I therein) from finality depth (φ)
         // We add an additional merge depth unit as a safety margin for anticone finalization
         Self::finality_depth()
