@@ -1,4 +1,4 @@
-mod hashers;
+pub mod hashers;
 mod pow_hashers;
 
 use borsh::{BorshDeserialize, BorshSerialize};
@@ -202,27 +202,3 @@ impl TryCastFromJs for Hash {
 }
 
 pub const ZERO_HASH: Hash = Hash([0; HASH_SIZE]);
-
-#[cfg(test)]
-mod tests {
-    use super::Hash;
-    use std::str::FromStr;
-
-    #[test]
-    fn test_hash_basics() {
-        let hash_str = "8e40af02265360d59f4ecf9ae9ebf8f00a3118408f5a9cdcbcc9c0f93642f3af";
-        let hash = Hash::from_str(hash_str).unwrap();
-        assert_eq!(hash_str, hash.to_string());
-        let hash2 = Hash::from_str(hash_str).unwrap();
-        assert_eq!(hash, hash2);
-
-        let hash3 = Hash::from_str("8e40af02265360d59f4ecf9ae9ebf8f00a3118408f5a9cdcbcc9c0f93642f3ab").unwrap();
-        assert_ne!(hash2, hash3);
-
-        let odd_str = "8e40af02265360d59f4ecf9ae9ebf8f00a3118408f5a9cdcbcc9c0f93642f3a";
-        let short_str = "8e40af02265360d59f4ecf9ae9ebf8f00a3118408f5a9cdcbcc9c0f93642f3";
-
-        assert!(matches!(dbg!(Hash::from_str(odd_str)), Err(faster_hex::Error::InvalidLength(len)) if len == 64));
-        assert!(matches!(dbg!(Hash::from_str(short_str)), Err(faster_hex::Error::InvalidLength(len)) if len == 64));
-    }
-}

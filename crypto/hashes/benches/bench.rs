@@ -82,7 +82,7 @@ fn bench_pow_hash(c: &mut Criterion) {
     });
 }
 
-fn bench_heavy_hash(c: &mut Criterion) {
+fn bench_mem_hash(c: &mut Criterion) {
     let mut rng = thread_rng();
     let in_hash = Hash::from_bytes(rng.gen());
 
@@ -112,5 +112,5 @@ fn bench_heavy_hash(c: &mut Criterion) {
     });
 }
 
-criterion_group!(benches, bench_pow_hash, bench_heavy_hash, bench_hashers);
+criterion_group!(benches, bench_pow_hash, bench_mem_hash, bench_hashers);
 criterion_main!(benches);

@@ -14,6 +14,8 @@ wasm32-sdk = []
 
 [dependencies]
 js-sys.workspace = true
+sha3.workspace = true
+blake3.workspace = true
 vecno-consensus-core.workspace = true
 vecno-consensus-client.workspace = true
 vecno-hashes.workspace = true

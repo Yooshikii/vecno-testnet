@@ -270,20 +270,18 @@ impl DbGhostdagStore {
             access: CachedDbAccess::new(db.clone(), cache_policy, prefix),
             compact_access: CachedDbAccess::new(db, compact_cache_policy, compact_prefix),
         };
-        // Initialize ORIGIN data
-        store
-            .insert(
-                blockhash::ORIGIN,
-                Arc::new(GhostdagData::new(
-                    0,
-                    0.into(),
-                    blockhash::NONE,
-                    BlockHashes::new(Vec::new()),
-                    BlockHashes::new(Vec::new()),
-                    HashKTypeMap::new(BlockHashMap::new()),
-                )),
-            )
-            .unwrap_or_else(|e| eprintln!("Warning: failed to insert ORIGIN data: {:?}", e));
+        // Initialize ORIGIN data if it doesn't exist
+        if !store.has(blockhash::ORIGIN).unwrap_or(false) {
+            let origin_data = Arc::new(GhostdagData::new(
+                0,
+                0.into(),
+                blockhash::NONE,
+                BlockHashes::new(Vec::new()),
+                BlockHashes::new(Vec::new()),
+                HashKTypeMap::new(BlockHashMap::new()),
+            ));
+            let _ = store.insert(blockhash::ORIGIN, origin_data);
+        }
         store
     }
 
@@ -306,20 +304,18 @@ impl DbGhostdagStore {
             access: CachedDbAccess::new(db.clone(), cache_policy, prefix),
             compact_access: CachedDbAccess::new(db, compact_cache_policy, compact_prefix),
         };
-        // Initialize ORIGIN data
-        store
-            .insert(
-                blockhash::ORIGIN,
-                Arc::new(GhostdagData::new(
-                    0,
-                    0.into(),
-                    blockhash::NONE,
-                    BlockHashes::new(Vec::new()),
-                    BlockHashes::new(Vec::new()),
-                    HashKTypeMap::new(BlockHashMap::new()),
-                )),
-            )
-            .unwrap_or_else(|e| eprintln!("Warning: failed to insert ORIGIN data: {:?}", e));
+        // Initialize ORIGIN data if it doesn't exist
+        if !store.has(blockhash::ORIGIN).unwrap_or(false) {
+            let origin_data = Arc::new(GhostdagData::new(
+                0,
+                0.into(),
+                blockhash::NONE,
+                BlockHashes::new(Vec::new()),
+                BlockHashes::new(Vec::new()),
+                HashKTypeMap::new(BlockHashMap::new()),
+            ));
+            let _ = store.insert(blockhash::ORIGIN, origin_data);
+        }
         store
     }
 
