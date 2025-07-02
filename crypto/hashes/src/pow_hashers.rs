@@ -17,10 +17,11 @@ impl PowHash {
     }
 
     #[inline(always)]
-    pub fn finalize_with_nonce(&mut self, nonce: u64) -> Hash {
-        self.0.update(&nonce.to_le_bytes());
+    pub fn finalize_with_nonce(self, nonce: u64) -> Hash {
+        let mut hasher = self.0;
+        hasher.update(&nonce.to_le_bytes());
         let mut hash_bytes = [0u8; 32];
-        self.0.finalize_xof().fill(&mut hash_bytes);
+        hasher.finalize_xof().fill(&mut hash_bytes);
         Hash::from_bytes(hash_bytes)
     }
 }
@@ -31,7 +32,6 @@ impl VecnoHash {
         let bytes: &[u8] = &in_hash.0;
         let mut hasher = blake3::Hasher::new();
         hasher.update(bytes);
-
         let mut hash = [0u8; 32];
         hasher.finalize_xof().fill(&mut hash);
         Hash(hash)

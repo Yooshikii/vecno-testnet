@@ -76,7 +76,7 @@ pub const GENESIS: GenesisBlock = GenesisBlock {
     ]),
     utxo_commitment: EMPTY_MUHASH,
     timestamp: 1747432800,
-    bits: 520093695,
+    bits: 0x1F1FFFFF,
     nonce: 0x0000a335,
     daa_score: 0,
     #[rustfmt::skip]
