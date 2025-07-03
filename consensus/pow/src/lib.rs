@@ -99,16 +99,18 @@ pub struct State {
     pub(crate) hasher: PowHash,
     pub(crate) pre_pow_hash: [u8; 32], // Store pre-PoW hash for round calculation
     pub(crate) timestamp: u64, // Store timestamp for round calculation
+    pub(crate) merkle_root: [u8; 32], // Store merkle_root for mem_hash
 }
 
 impl State {
     /// Initializes the PoW state with a block header
     ///
     /// Creates a new PoW state with the target difficulty derived from the header's bits,
-    /// a pre-PoW hash computed with nonce and timestamp set to 0, and the block's timestamp.
+    /// a pre-PoW hash computed with nonce and timestamp set to 0, the block's timestamp,
+    /// and the merkle_root.
     ///
     /// # Arguments
-    /// * `header` - The block header containing the bits, timestamp, and other fields.
+    /// * `header` - The block header containing the bits, timestamp, hash_merkle_root, and other fields.
     ///
     /// # Returns
     /// A new `State` instance.
@@ -126,6 +128,7 @@ impl State {
             hasher,
             pre_pow_hash: pre_pow_hash_bytes,
             timestamp: header.timestamp,
+            merkle_root: header.hash_merkle_root.as_bytes().try_into().expect("Merkle root length mismatch"),
         }
     }
 
@@ -162,7 +165,13 @@ impl State {
         }
 
         let m_hash = byte_mixing(&hash_bytes, &b3_hash);
-        let final_hash = mem_hash(Hash::from_bytes(m_hash), self.timestamp);
+        let final_hash = mem_hash(
+            Hash::from_bytes(m_hash),
+            self.timestamp,
+            nonce,
+            self.merkle_root,
+            &self.target,
+        );
         Uint256::from_le_bytes(final_hash.as_bytes())
     }
 
