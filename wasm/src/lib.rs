@@ -227,4 +227,5 @@ cfg_if::cfg_if! {
         };
         pub use vecno_bip32::{DerivationPath, ExtendedPrivateKey, ExtendedPublicKey}; // Explicitly list non-overlapping items
         pub use vecno_wasm_core::types::*;
+    }
 }
