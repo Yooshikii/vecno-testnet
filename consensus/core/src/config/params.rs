@@ -331,7 +331,7 @@ impl From<NetworkId> for Params {
 }
 
 pub const MAINNET_PARAMS: Params = Params {
-    peers: &[],
+    peers: &["89.162.120.57"],
     net: NetworkId::new(NetworkType::Mainnet),
     genesis: GENESIS,
     ghostdag_k: LEGACY_DEFAULT_GHOSTDAG_K,
@@ -350,8 +350,8 @@ pub const MAINNET_PARAMS: Params = Params {
     max_block_parents: 10,
     mergeset_size_limit: (LEGACY_DEFAULT_GHOSTDAG_K as u64) * 10,
     merge_depth: 3600,
-    finality_depth: 1720,
-    pruning_depth: 3700,
+    finality_depth: 86400,
+    pruning_depth: 185798,
     coinbase_payload_script_public_key_max_len: 150,
     max_coinbase_payload_len: 204,
 
@@ -400,8 +400,8 @@ pub const TESTNET_PARAMS: Params = Params {
     max_block_parents: 10,
     mergeset_size_limit: (LEGACY_DEFAULT_GHOSTDAG_K as u64) * 10,
     merge_depth: 3600,
-    finality_depth: 86,
-    pruning_depth: 185,
+    finality_depth: 86400,
+    pruning_depth: 185798,
     coinbase_payload_script_public_key_max_len: 150,
     max_coinbase_payload_len: 204,
 
