@@ -1,4 +1,5 @@
 use crate::State;
+use core::num::dec2flt::float::RawFloat;
 use js_sys::BigInt;
 use vecno_consensus_client::Header;
 use vecno_consensus_client::HeaderT;
