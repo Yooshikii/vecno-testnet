@@ -143,6 +143,7 @@ For more details, please follow the [**Integrating with Vecno**](https://vecno.a
 */
 
 #![allow(unused_imports)]
+#![allow(ambiguous_glob_reexports)]
 
 #[cfg(all(
     any(feature = "wasm32-sdk", feature = "wasm32-rpc", feature = "wasm32-core", feature = "wasm32-keygen"),
