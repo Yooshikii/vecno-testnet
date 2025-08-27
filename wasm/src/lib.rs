@@ -220,11 +220,11 @@ cfg_if::cfg_if! {
         pub use vecno_wasm_core::types::*;
 
     } else if #[cfg(feature = "wasm32-keygen")] {
-
         pub use vecno_addresses::{Address, Version as AddressVersion};
-        pub use vecno_wallet_keys::prelude::*;
-        pub use vecno_bip32::*;
+        pub use vecno_wallet_keys::prelude::{
+            PrivateKey, PublicKey, // Explicitly list required items
+            KeyError, Mnemonic, Seed,
+        };
+        pub use vecno_bip32::{DerivationPath, ExtendedPrivateKey, ExtendedPublicKey}; // Explicitly list non-overlapping items
         pub use vecno_wasm_core::types::*;
-
-    }
 }
