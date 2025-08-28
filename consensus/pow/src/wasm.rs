@@ -14,7 +14,7 @@ use workflow_wasm::error::Error;
 use workflow_wasm::result::Result;
 
 // Import mem_hash from the same folder
-use crate::mem_hash::{mem_hash, VecnoHash};
+use crate::mem_hash::{mem_hash};
 
 #[wasm_bindgen]
 extern "C" {
