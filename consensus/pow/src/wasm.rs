@@ -13,6 +13,9 @@ use workflow_wasm::convert::TryCastFromJs;
 use workflow_wasm::error::Error;
 use workflow_wasm::result::Result;
 
+// Import mem_hash from the same folder
+use crate::mem_hash::{mem_hash, VecnoHash};
+
 #[wasm_bindgen]
 extern "C" {
     #[wasm_bindgen(extends = js_sys::Array, typescript_type = "[boolean, bigint]")]
@@ -58,10 +61,15 @@ impl PoW {
     /// @returns A boolean indicating if it reached the target and a bigint representing the reached target.
     #[wasm_bindgen(js_name=checkWork)]
     pub fn check_work(&self, nonce: u64) -> Result<WorkT> {
-        let (c, v) = self.inner.check_pow(nonce);
+        // Apply mem_hash to match the miner's logic
+        let block_hash = self.inner.hasher.clone().finalize_with_nonce(nonce);
+        let hash = mem_hash(block_hash, self.inner.timestamp, nonce);
+        let pow = Uint256::from_le_bytes(hash.as_bytes());
+        let valid = pow <= self.inner.target;
+
         let array = js_sys::Array::new();
-        array.push(&JsValue::from(c));
-        array.push(&v.to_bigint().map_err(|err| Error::custom(format!("{err:?}")))?.into());
+        array.push(&JsValue::from(valid));
+        array.push(&pow.to_bigint().map_err(|err| Error::custom(format!("{err:?}")))?.into());
 
         Ok(array.unchecked_into())
     }
