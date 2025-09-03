@@ -1,4 +1,3 @@
-
 const fs = require('fs');
 const path = require('path');
 const { Mnemonic, XPrv, PublicKeyGenerator } = require('../nodejs/vecno');
@@ -48,7 +47,7 @@ if (network) {
 
 if (fs.existsSync(configFileName)) {
     let config = JSON.parse(fs.readFileSync(configFileName, "utf8"));
-// console.log("loading mnemonic:", config.mnemonic);
+    // console.log("loading mnemonic:", config.mnemonic);
     let mnemonic = new Mnemonic(config.mnemonic);
     let wallet = basicWallet(config.networkId, mnemonic);
 
@@ -64,7 +63,6 @@ if (fs.existsSync(configFileName)) {
 }
 
 function createConfigFile() {
-    
     if (!network) {
         console.log("... '--network=' argument is not specified ...defaulting to 'testnet-11'");
     }
@@ -91,18 +89,24 @@ function createConfigFile() {
 function basicWallet(networkId, mnemonic) {
     console.log("mnemonic:", mnemonic.phrase);
     let xprv = new XPrv(mnemonic.toSeed());
-    let account_0_root = xprv.derivePath("m/44'/111111'/0'/0").toXPub();
+    // Derive account root: m/44'/111111'/0' using deriveChild to avoid path issues
+    let account_0_root = xprv
+        .deriveChild(44, true)  // m/44'
+        .deriveChild(111111, true)  // m/44'/111111'
+        .deriveChild(0, true)  // m/44'/111111'/0'
+        .toXPub();
     let account_0 = {
-        receive_xpub : account_0_root.deriveChild(0),
-        change_xpub : account_0_root.deriveChild(1),
+        receive_xpub: account_0_root.deriveChild(0, false), // m/44'/111111'/0'/0
+        change_xpub: account_0_root.deriveChild(1, false),  // m/44'/111111'/0'/1
     };
-    let receive = account_0.receive_xpub.deriveChild(0).toPublicKey().toAddress(networkId).toString();
-    let change = account_0.change_xpub.deriveChild(0).toPublicKey().toAddress(networkId).toString();
+    let receive = account_0.receive_xpub.deriveChild(0, false).toPublicKey().toAddress(networkId).toString(); // m/44'/111111'/0'/0/0
+    let change = account_0.change_xpub.deriveChild(0, false).toPublicKey().toAddress(networkId).toString();  // m/44'/111111'/0'/1/0
 
     let keygen = PublicKeyGenerator.fromMasterXPrv(
         xprv.toString(),
         false,
-        0n,0
+        0n,
+        0
     );
 
     // let receive_pubkeys = keygen.receivePubkeys(0,1).map((key) => key.toAddress(networkId).toString());
