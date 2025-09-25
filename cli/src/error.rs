@@ -72,7 +72,7 @@ pub enum Error {
     #[error("wallet secret is required")]
     WalletSecretRequired,
 
-    #[error("watch-only wallet kpub is required")]
+    #[error("watch-only wallet vpub is required")]
     WalletBip32WatchXpubRequired,
 
     #[error("wallet secrets do not match")]

@@ -13,7 +13,7 @@ use crate::imports::*;
 /// This class allows accepts another XPub and and provides
 /// functions for derivation of dependent child public keys.
 ///
-/// Please note that Vecno extended public keys use `kpub` prefix.
+/// Please note that Vecno extended public keys use `vpub` prefix.
 ///
 /// @see {@link PrivateKeyGenerator}, {@link PublicKeyGenerator}, {@link XPrv}, {@link Mnemonic}
 /// @category Wallet SDK
@@ -67,7 +67,7 @@ impl XPub {
 
     #[wasm_bindgen(getter)]
     pub fn xpub(&self) -> Result<String> {
-        let str = self.inner.to_extended_key("kpub".try_into()?).to_string();
+        let str = self.inner.to_extended_key("vpub".try_into()?).to_string();
         Ok(str)
     }
 

@@ -13,7 +13,7 @@ use vecno_consensus_core::network::NetworkType;
 /// Helper class to generate public keys from an extended public key (XPub)
 /// that has been derived up to the co-signer index.
 ///
-/// Please note that in Vecno master public keys use `kpub` prefix.
+/// Please note that in Vecno master public keys use `vpub` prefix.
 ///
 /// @see {@link PrivateKeyGenerator}, {@link XPub}, {@link XPrv}, {@link Mnemonic}
 /// @category Wallet SDK
@@ -25,9 +25,9 @@ pub struct PublicKeyGenerator {
 #[wasm_bindgen]
 impl PublicKeyGenerator {
     #[wasm_bindgen(js_name=fromXPub)]
-    pub fn from_xpub(kpub: &XPubT, cosigner_index: Option<u32>) -> Result<PublicKeyGenerator> {
-        let kpub = XPub::try_cast_from(kpub)?;
-        let xpub = kpub.as_ref().inner();
+    pub fn from_xpub(vpub: &XPubT, cosigner_index: Option<u32>) -> Result<PublicKeyGenerator> {
+        let vpub = XPub::try_cast_from(vpub)?;
+        let xpub = vpub.as_ref().inner();
         let hd_wallet = WalletDerivationManager::from_extended_public_key(xpub.clone(), cosigner_index)?;
         Ok(Self { hd_wallet })
     }

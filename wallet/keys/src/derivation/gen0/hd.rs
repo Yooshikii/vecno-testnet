@@ -493,7 +493,7 @@ impl WalletDerivationManagerV0 {
 
     /// Serialize this key as a self-[`Zeroizing`] `String`.
     pub fn to_string(&self) -> Zeroizing<String> {
-        let key = self.extended_public_key().to_string(Some(Prefix::KPUB));
+        let key = self.extended_public_key().to_string(Some(Prefix::VPUB));
         Zeroizing::new(key)
     }
 

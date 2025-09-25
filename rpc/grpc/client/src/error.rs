@@ -2,7 +2,7 @@ use thiserror::Error;
 use vecno_notify::error::Error as NotifyError;
 use vecno_rpc_core::RpcError;
 
-pub type BoxedStdError = Box<(dyn std::error::Error + Sync + std::marker::Send + 'static)>;
+pub type BoxedStdError = Box<dyn std::error::Error + Sync + std::marker::Send + 'static>;
 
 #[derive(Debug, Error)]
 pub enum Error {

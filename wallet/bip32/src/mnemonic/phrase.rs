@@ -296,14 +296,14 @@ mod tests {
                 "xprv9s21ZrQH143K2YStJyGeTyoWRBu2N1wkamjidQSdxrVeDziGfvwkmP67L2xf6weijVapZxwi64pW8ywHDvCaBQA8PyrRHqkjuuPY9aapypz"
             ],
             [
-                // KPRV (vecno mainnet xprv)
+                // VPRV (vecno mainnet xprv)
                 "cruise village slam canyon monster scrub myself farm add riot large board sentence outer nice coast raven bird scheme undo december blanket trim hero",
-                "kprv5y2qurMHCsXYr8yytxy6ZwYWLtFbdtWWavDL6bPfz2fNLvnZymmNfE6KpQqNHHjb7mAWYCtuUkZPbkgUR19LSKS9VasqRR852L5GMVY8wf9"
+                "vprv9DMUxX4ShgxMM6uAEYqLepVY4Zi546RVk3RXvYLXn6SAsvvrWMQzsrfi2UREGNGoCALa2xrW5N6tScp7byHUQgGAAyr5GXJwjahiFGDGCp3"
             ],
             [
-                // KTRV (vecno testnet xprv)
+                // VTRV (vecno testnet xprv)
                 "short diagram life tip retreat nothing dynamic absent lamp carry mansion keen truck cram crash science liberty emotion live pepper orphan quiz wide prison",
-                "ktrv5himbbCxArFU23gGTxVHNKahNXXSETHjNWgwc5qm85nKS1p55FEb8DUdTd2CPvQvBUKYFRSjjXb5nagr7wXUE4eSaFSxof8cUd6Sm66NRjA"
+                "vtrv8x3QeFv7ffgGX1bSoYMXTCXj6CyuefCiXdu9S2ncv9Z7y1xMbptDLr41fgc4Nzx8FsVbkBQLL98adSpVJufcCRUTFeRCemKVBsiteueq8QC"
             ]
         ];
 
@@ -318,10 +318,10 @@ mod tests {
 
             let seed = mnemonic.to_seed("");
             let xprv = ExtendedPrivateKey::<SecretKey>::new(seed).unwrap();
-            let prefix = if xprv_str.starts_with("kp") {
-                Prefix::KPRV
-            } else if xprv_str.starts_with("kt") {
-                Prefix::KTRV
+            let prefix = if xprv_str.starts_with("vp") {
+                Prefix::VPRV
+            } else if xprv_str.starts_with("vt") {
+                Prefix::VTRV
             } else {
                 Prefix::XPRV
             };

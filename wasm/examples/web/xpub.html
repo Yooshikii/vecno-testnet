@@ -13,7 +13,7 @@
 
             async function tests(){
                 let seed = Mnemonic.random(12).toSeed();
-                const xPrv = new XPrv(seed).intoString("kprv");
+                const xPrv = new XPrv(seed).intoString("vprv");
                 // HD Wallet-style public key generation
                 let xpub = await PublicKeyGenerator.fromMasterXPrv(
                     xPrv,

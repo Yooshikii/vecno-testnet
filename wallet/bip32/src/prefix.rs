@@ -27,17 +27,17 @@ impl Prefix {
     /// Length of a prefix in ASCII characters.
     pub const LENGTH: usize = 4;
 
-    /// `kprv` prefix
-    pub const KPRV: Self = Self::from_parts_unchecked("kprv", 0x038f2ef4);
+    /// `vprv` prefix
+    pub const VPRV: Self = Self::from_parts_unchecked("vprv", 0x045f18bc);
 
-    /// `kpub` prefix
-    pub const KPUB: Self = Self::from_parts_unchecked("kpub", 0x038f332e);
+    /// `vpub` prefix
+    pub const VPUB: Self = Self::from_parts_unchecked("vpub", 0x045f1cf6);
 
-    /// `ktrv` prefix
-    pub const KTRV: Self = Self::from_parts_unchecked("ktrv", 0x03909e07);
+    /// `vtrv` prefix
+    pub const VTRV: Self = Self::from_parts_unchecked("vtrv", 0x046087cf);
 
-    /// `ktub` prefix
-    pub const KTUB: Self = Self::from_parts_unchecked("ktub", 0x0390a241);
+    /// `vtub` prefix
+    pub const VTUB: Self = Self::from_parts_unchecked("vtub", 0x04608c09);
 
     /// `tprv` prefix
     pub const TPRV: Self = Self::from_parts_unchecked("tprv", 0x04358394);
@@ -213,11 +213,11 @@ impl TryFrom<&str> for Prefix {
     type Error = Error;
     fn try_from(value: &str) -> std::result::Result<Self, Self::Error> {
         match value {
-            "kprv" => Ok(Prefix::KPRV),
-            "kpub" => Ok(Prefix::KPUB),
+            "vprv" => Ok(Prefix::VPRV),
+            "vpub" => Ok(Prefix::VPUB),
 
-            "ktrv" => Ok(Prefix::KTRV),
-            "ktub" => Ok(Prefix::KTUB),
+            "vtrv" => Ok(Prefix::VTRV),
+            "vtub" => Ok(Prefix::VTUB),
 
             "tprv" => Ok(Prefix::TPRV),
             "tpub" => Ok(Prefix::TPUB),
@@ -239,10 +239,10 @@ impl From<NetworkId> for Prefix {
     fn from(value: NetworkId) -> Self {
         let network_type = value.network_type();
         match network_type {
-            NetworkType::Mainnet => Prefix::KPUB,
-            NetworkType::Devnet => Prefix::KTUB,
-            NetworkType::Simnet => Prefix::KTUB,
-            NetworkType::Testnet => Prefix::KTUB,
+            NetworkType::Mainnet => Prefix::VPUB,
+            NetworkType::Devnet => Prefix::VTUB,
+            NetworkType::Simnet => Prefix::VTUB,
+            NetworkType::Testnet => Prefix::VTUB,
         }
     }
 }

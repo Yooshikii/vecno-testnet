@@ -2,25 +2,20 @@ const fs = require('fs');
 const path = require('path');
 const { Mnemonic, XPrv, PublicKeyGenerator } = require('../nodejs/vecno');
 const { parseArgs } = require('node:util');
-const { create } = require('domain');
 
 let args = process.argv.slice(2);
 const {
     values,
     positionals,
-    tokens,
 } = parseArgs({
-    args, options: {
-        help: {
-            type: 'boolean',
-        },
-        reset: {
-            type: 'boolean',
-        },
-        network: {
-            type: 'string',
-        },
-    }, tokens: true, allowPositionals: true
+    args,
+    options: {
+        help: { type: 'boolean' },
+        reset: { type: 'boolean' },
+        network: { type: 'string' },
+    },
+    tokens: true,
+    allowPositionals: true,
 });
 
 if (values.help) {
@@ -28,96 +23,133 @@ if (values.help) {
     process.exit(0);
 }
 
-const network = values.network ?? positionals.find((positional) => positional.match(/^(testnet|mainnet|simnet|devnet)-\d+$/)) ?? null;
-
+const network = values.network ?? positionals.find((positional) => positional.match(/^(testnet|mainnet|simnet|devnet)-\d*$/)) ?? null;
 const configFileName = path.join(__dirname, "data", "config.json");
-const exists = fs.existsSync(configFileName);
-if (!exists || values.reset) {
+
+// Ensure data directory exists
+const dataDir = path.join(__dirname, "data");
+if (!fs.existsSync(dataDir)) {
+    fs.mkdirSync(dataDir, { recursive: true });
+}
+
+if (!fs.existsSync(configFileName) || values.reset) {
     createConfigFile();
     process.exit(0);
 }
 
 if (network) {
-    let config = JSON.parse(fs.readFileSync(configFileName, "utf8"));
-    config.networkId = network;
-    fs.writeFileSync(configFileName, JSON.stringify(config, null, 4));
-    console.log("");
-    console.log(`Updating networkId to '${network}'`);
+    try {
+        let config = JSON.parse(fs.readFileSync(configFileName, "utf8"));
+        config.networkId = network;
+        let wallet = basicWallet(network, new Mnemonic(config.mnemonic));
+        config.privateKey = wallet.privateKey;
+        config.xprv = wallet.xprv;
+        config.receive = wallet.receive;
+        config.change = wallet.change;
+        fs.writeFileSync(configFileName, JSON.stringify(config, null, 4));
+        fs.chmodSync(configFileName, 0o600);
+        console.log(`Updated networkId to '${network}' and wallet data in config.json`);
+    } catch (error) {
+        console.error("Error updating config file:", error.message);
+        process.exit(1);
+    }
 }
 
 if (fs.existsSync(configFileName)) {
-    let config = JSON.parse(fs.readFileSync(configFileName, "utf8"));
-    // console.log("loading mnemonic:", config.mnemonic);
-    let mnemonic = new Mnemonic(config.mnemonic);
-    let wallet = basicWallet(config.networkId, mnemonic);
+    try {
+        let config = JSON.parse(fs.readFileSync(configFileName, "utf8"));
+        console.log("Loading mnemonic:", config.mnemonic);
+        let mnemonic = new Mnemonic(config.mnemonic);
+        let wallet = basicWallet(config.networkId, mnemonic);
 
-    console.log("");
-    console.log("networkId:", config.networkId);
-    console.log("mnemonic:", wallet.mnemonic.phrase);
-    console.log("xprv:", wallet.xprv);
-    console.log("receive:", wallet.receive);
-    console.log("change:", wallet.change);
-    console.log("");
-    console.log("Use 'init --reset' to reset the config file");
-    console.log("");
+        console.log("");
+        console.log("networkId:", config.networkId);
+        console.log("mnemonic:", wallet.mnemonic.phrase);
+        console.log("xprv:", wallet.xprv);
+        console.log("receive:", wallet.receive);
+        console.log("change:", wallet.change);
+        console.log("privatekey:", wallet.privateKey);
+        console.log("");
+        console.log("WARNING: privatekey and mnemonic is sensitive. Secure the config.json file and avoid sharing it.");
+        console.log("Use 'init --reset' to reset the config file");
+        console.log("");
+    } catch (error) {
+        console.error("Error reading config file:", error.message);
+        process.exit(1);
+    }
 }
 
 function createConfigFile() {
     if (!network) {
-        console.log("... '--network=' argument is not specified ...defaulting to 'testnet-11'");
+        console.log("... '--network=' argument is not specified ...defaulting to 'mainnet'");
     }
-    let networkId = network ?? "testnet-11";
+    let networkId = network ?? "mainnet";
 
     let wallet = basicWallet(networkId, Mnemonic.random());
 
     let config = {
         networkId,
         mnemonic: wallet.mnemonic.phrase,
+        privateKey: wallet.privateKey,
+        xprv: wallet.xprv,
+        receive: wallet.receive,
+        change: wallet.change,
     };
-    fs.writeFileSync(configFileName, JSON.stringify(config, null, 4));
-    console.log("");
-    console.log("Creating config data in './data/config.json'");
-    console.log("");
-    console.log("networkId:", networkId);
-    console.log("mnemonic:", wallet.mnemonic.phrase);
-    console.log("xprv:", wallet.xprv);
-    console.log("receive:", wallet.receive);
-    console.log("change:", wallet.change);
-    console.log("");
+    try {
+        fs.writeFileSync(configFileName, JSON.stringify(config, null, 4));
+        fs.chmodSync(configFileName, 0o600);
+        console.log("Created config data in './data/config.json'");
+        console.log("");
+        console.log("networkId:", networkId);
+        console.log("mnemonic:", wallet.mnemonic.phrase);
+        console.log("xprv:", wallet.xprv);
+        console.log("receive:", wallet.receive);
+        console.log("change:", wallet.change);
+        console.log("privatekey:", wallet.privateKey);
+        console.log("");
+        console.log("WARNING: privatekey and mnemonic is sensitive. Secure the config.json file and avoid sharing it.");
+    } catch (error) {
+        console.error("Error creating config file:", error.message);
+        process.exit(1);
+    }
 }
 
 function basicWallet(networkId, mnemonic) {
     console.log("mnemonic:", mnemonic.phrase);
     let xprv = new XPrv(mnemonic.toSeed());
-    // Derive account root: m/44'/111111'/0' using deriveChild to avoid path issues
     let account_0_root = xprv
-        .deriveChild(44, true)  // m/44'
-        .deriveChild(111111, true)  // m/44'/111111'
-        .deriveChild(0, true)  // m/44'/111111'/0'
+        .deriveChild(44, true)
+        .deriveChild(111111, true)
+        .deriveChild(0, true)
         .toXPub();
     let account_0 = {
-        receive_xpub: account_0_root.deriveChild(0, false), // m/44'/111111'/0'/0
-        change_xpub: account_0_root.deriveChild(1, false),  // m/44'/111111'/0'/1
+        receive_xpub: account_0_root.deriveChild(0, false),
+        change_xpub: account_0_root.deriveChild(1, false),
     };
-    let receive = account_0.receive_xpub.deriveChild(0, false).toPublicKey().toAddress(networkId).toString(); // m/44'/111111'/0'/0/0
-    let change = account_0.change_xpub.deriveChild(0, false).toPublicKey().toAddress(networkId).toString();  // m/44'/111111'/0'/1/0
+    let receive = account_0.receive_xpub.deriveChild(0, false).toPublicKey().toAddress(networkId).toString();
+    let change = account_0.change_xpub.deriveChild(0, false).toPublicKey().toAddress(networkId).toString();
 
-    let keygen = PublicKeyGenerator.fromMasterXPrv(
+    let privateKey = xprv
+        .deriveChild(44, true)
+        .deriveChild(111111, true)
+        .deriveChild(0, true)
+        .deriveChild(0, false)
+        .deriveChild(0, false)
+        .toPrivateKey()
+        .toString();
+
+    PublicKeyGenerator.fromMasterXPrv(
         xprv.toString(),
         false,
         0n,
         0
     );
 
-    // let receive_pubkeys = keygen.receivePubkeys(0,1).map((key) => key.toAddress(networkId).toString());
-    // let change_pubkeys = keygen.changePubkeys(0,1).map((key) => key.toAddress(networkId).toString());
-    // console.log("receive_pubkeys:", receive_pubkeys);
-    // console.log("change_pubkeys:", change_pubkeys);
-
     return {
         mnemonic,
         xprv: xprv.toString(),
         receive,
         change,
+        privateKey,
     };
 }

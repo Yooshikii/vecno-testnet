@@ -11,7 +11,7 @@ use crate::imports::*;
 /// private keys for the receive and change paths given the pre-set parameters
 /// such as account index, multisig purpose and cosigner index.
 ///
-/// Please note that in Vecno master private keys use `kprv` prefix.
+/// Please note that in Vecno master private keys use `vprv` prefix.
 ///
 /// @see {@link PublicKeyGenerator}, {@link XPub}, {@link XPrv}, {@link Mnemonic}
 /// @category Wallet SDK
