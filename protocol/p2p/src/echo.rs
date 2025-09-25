@@ -92,7 +92,7 @@ pub struct EchoFlowInitializer {}
 
 fn build_dummy_version_message() -> VersionMessage {
     pb::VersionMessage {
-        protocol_version: 5,
+        protocol_version: 1,
         services: 0,
         timestamp: unix_now() as i64,
         address: None,
